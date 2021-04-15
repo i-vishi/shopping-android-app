@@ -10,5 +10,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue_500">#004dca</color>
+    <color name="blue_200">#4284ed</color>
     <color name="blue_accent_300">#02d5ee</color>
 </resources>
