@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="950.0"
+    android:viewportHeight="1000.0">
+    <group
+        android:name="draws_one"
+        android:rotation="0">
+
+        <path
+            android:name="layout_shadow_path"
+            android:fillType="evenOdd"
+            android:pathData="M 575,0 a 275,275 0 0,0 290,100 a 55,55 0 1,1 10,110 a 200,200 0 0,0 -200,150 a 400,400 0 1,1 -900,-100 V0">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:centerX="325"
+                    android:centerY="200"
+                    android:gradientRadius="650"
+                    android:type="radial">
+                    <item
+                        android:color="#095BDE"
+                        android:offset="0.0" />
+                    <item
+                        android:color="#FFFFFF"
+                        android:offset="1.0" />
+                </gradient>
+            </aapt:attr>
+        </path>
+
+        <path
+            android:name="layout_path"
+            android:pathData="M 600,0 a 250,250 0 0,0 250,75 a 55,55 0 1,1 10,110 a 200,200 0 0,0 -200,150 a 400,400 0 1,1 -900,-100 V0">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endColor="#095BDE"
+                    android:endX="400"
+                    android:endY="200"
+                    android:startColor="#4284ed"
+                    android:startX="0"
+                    android:startY="40"
+                    android:type="linear" />
+            </aapt:attr>
+        </path>
+    </group>
+</vector>

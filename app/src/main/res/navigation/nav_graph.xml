@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/SignupFragment">
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.loginSignup.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_login_to_signup"
+            app:destination="@id/SignupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/SignupFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.loginSignup.SignupFragment"
+        android:label="SignupFragment"
+        tools:layout="@layout/fragment_signup">
+        <action
+            android:id="@+id/action_signup_to_login"
+            app:destination="@id/LoginFragment" />
+    </fragment>
+</navigation>
