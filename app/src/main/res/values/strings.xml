@@ -6,4 +6,18 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="login_fragment_label">Login Fragment</string>
     <string name="signup_fragment_label">Signup Fragment</string>
+    <string name="signup_welcome_hello">Hello,</string>
+    <string name="signup_welcome_text">Sign Up!</string>
+    <string name="signup_name_hint">USER NAME</string>
+    <string name="signup_mobile_hint">MOBILE</string>
+    <string name="signup_password_hint">PASSWORD</string>
+    <string name="signup_conf_password_hint">CONFIRM PASSWORD</string>
+    <string name="signup_switch_tnc_label">I accept the policy and terms</string>
+    <string name="signup_btn_text">Sign Up</string>
+    <string name="signup_name_ph">Your Name</string>
+    <string name="signup_mobile_ph">Your Mobile</string>
+    <string name="signup_password_ph">Enter Password</string>
+    <string name="signup_cnf_password_ph">Enter Password Again</string>
+    <string name="bg_img_desc">Image View</string>
+    <string name="signup_login_text">Already have an account?   Log In</string>
 </resources>
