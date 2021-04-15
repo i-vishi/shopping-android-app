@@ -12,7 +12,11 @@
         <path
             android:name="layout_shadow_path"
             android:fillType="evenOdd"
-            android:pathData="M 575,0 a 275,275 0 0,0 290,100 a 55,55 0 1,1 10,110 a 200,200 0 0,0 -200,150 a 400,400 0 1,1 -875,-250 V0">
+            android:pathData="M 575,0
+            a 275,275 0 0,0 260,110
+             a 55,55 0 1,1 5,115
+              a 200,200 0 0,0 -200,150
+              a 400,400 0 1,1 -850,-275 V0">
             <aapt:attr name="android:fillColor">
                 <gradient
                     android:centerX="325"
@@ -32,7 +36,11 @@
         <path
             android:name="layout_path"
             android:fillType="evenOdd"
-            android:pathData="M 600,0 a 250,250 0 0,0 250,75 a 55,55 0 1,1 10,110 a 200,200 0 0,0 -200,150 a 400,400 0 1,1 -850,-250 V0">
+            android:pathData="M 600,0
+            a 250,250 0 0,0 225,70
+             a 60,60 0 1,1 5,125
+             a 200,200 0 0,0 -200,150
+             a 400,400 0 1,1 -850,-250 V0">
             <aapt:attr name="android:fillColor">
                 <gradient
                     android:centerX="-50"
