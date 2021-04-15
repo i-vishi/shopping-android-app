@@ -21,12 +21,4 @@ class FirstFragment : Fragment() {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_first, container, false)
 	}
-
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-
-		view.findViewById<Button>(R.id.button_first).setOnClickListener {
-			findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-		}
-	}
 }
