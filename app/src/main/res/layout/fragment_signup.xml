@@ -185,7 +185,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
             android:checked="false"
             android:paddingStart="2dp"
@@ -210,7 +210,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signup_policy_switch" />
+            app:layout_constraintTop_toBottomOf="@+id/signup_error_text_view" />
 
         <Button
             android:id="@+id/signup_signup_btn"
@@ -228,5 +228,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signup_login_text_view" />
+
+        <TextView
+            android:id="@+id/signup_error_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:drawableTint="?attr/colorError"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.MyTheme.Subtitle2"
+            android:textColor="?attr/colorError"
+            app:drawableStartCompat="@android:drawable/stat_notify_error"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/signup_policy_switch"
+            tools:text="Some error occured" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
