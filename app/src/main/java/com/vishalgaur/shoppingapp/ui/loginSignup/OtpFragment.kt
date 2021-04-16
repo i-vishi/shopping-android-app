@@ -1,19 +1,36 @@
 package com.vishalgaur.shoppingapp.ui.loginSignup
 
-import android.os.Bundle
-import android.view.LayoutInflater
+
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.OTPStatus
+import com.vishalgaur.shoppingapp.databinding.FragmentOtpBinding
 
-class OtpFragment : Fragment() {
+class OtpFragment : LoginSignupBaseFragment<FragmentOtpBinding>() {
+    override fun setViewBinding(): FragmentOtpBinding {
+        return FragmentOtpBinding.inflate(layoutInflater)
+    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_otp, container, false)
+    override fun setUpViews() {
+        super.setUpViews()
+        binding.otpVerifyError.visibility = View.GONE
+
+        binding.otpVerifyBtn.setOnClickListener {
+            onVerify()
+        }
+    }
+
+    override fun observeView() {
+        super.observeView()
+        viewModel.otpStatus.observe(viewLifecycleOwner) {
+            when (it) {
+                OTPStatus.WRONG -> binding.otpVerifyError.visibility = View.VISIBLE
+                else -> binding.otpVerifyError.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun onVerify() {
+        val otp = binding.otpOtpEditText.text.toString()
+        viewModel.verifyOTP(otp)
     }
 }

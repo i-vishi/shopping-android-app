@@ -1,61 +1,36 @@
 package com.vishalgaur.shoppingapp.ui.loginSignup
 
 import android.os.Build
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.EMAIL_ERROR
 import com.vishalgaur.shoppingapp.MOB_ERROR
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.ViewErrors
 import com.vishalgaur.shoppingapp.databinding.FragmentSignupBinding
-import com.vishalgaur.shoppingapp.viewModels.AuthViewModel
-import com.vishalgaur.shoppingapp.viewModels.AuthViewModelFactory
 
-class SignupFragment : Fragment() {
+class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
 
-    private lateinit var binding: FragmentSignupBinding
-
-    private lateinit var authViewModel: AuthViewModel
-
-    @RequiresApi(Build.VERSION_CODES.P)
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentSignupBinding.inflate(inflater, container, false)
-
-        if (this.activity != null) {
-            val viewModelFactory = AuthViewModelFactory(this.requireActivity().application)
-            authViewModel = ViewModelProvider(this, viewModelFactory).get(AuthViewModel::class.java)
-        }
-
-        setViews()
-
-        setObservers()
-
-        return binding.root
+    override fun setViewBinding(): FragmentSignupBinding {
+        return FragmentSignupBinding.inflate(layoutInflater)
     }
 
-    private fun setObservers() {
-        authViewModel.errorStatus.observe(viewLifecycleOwner, { err ->
+    override fun observeView() {
+        super.observeView()
+        viewModel.errorStatus.observe(viewLifecycleOwner) { err ->
             modifyErrors(err)
-        })
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
-    private fun setViews() {
+    override fun setUpViews() {
+        super.setUpViews()
         binding.signupErrorTextView.visibility = View.GONE
 
         binding.signupSignupBtn.setOnClickListener {
             onSignUp()
-            if (authViewModel.errorStatus.value == ViewErrors.NONE)
+            if (viewModel.errorStatus.value == ViewErrors.NONE)
                 findNavController().navigate(R.id.action_signup_to_otp)
         }
     }
@@ -69,7 +44,7 @@ class SignupFragment : Fragment() {
         val password2 = binding.signupCnfPasswordEditText.text.toString()
         val isAccepted = binding.signupPolicySwitch.isChecked
 
-        authViewModel.submitData(name, mobile, email, password1, password2, isAccepted)
+        viewModel.submitData(name, mobile, email, password1, password2, isAccepted)
     }
 
     private fun modifyErrors(err: ViewErrors) {

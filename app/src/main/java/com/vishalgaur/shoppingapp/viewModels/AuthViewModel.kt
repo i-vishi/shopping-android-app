@@ -2,6 +2,7 @@ package com.vishalgaur.shoppingapp.viewModels
 
 import android.app.Application
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -12,9 +13,9 @@ import com.vishalgaur.shoppingapp.*
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.isEmailValid
 import com.vishalgaur.shoppingapp.repository.AuthRepository
-import com.vishalgaur.shoppingapp.ui.loginSignup.LoginSignupActivity
-import com.vishalgaur.shoppingapp.ui.loginSignup.SignupFragment
 import kotlinx.coroutines.launch
+
+private const val TAG = "AuthViewModel"
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -28,10 +29,14 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _errorStatus = MutableLiveData<ViewErrors>()
     val errorStatus: LiveData<ViewErrors> get() = _errorStatus
 
+    private val _otpStatus = MutableLiveData<OTPStatus>()
+    val otpStatus: LiveData<OTPStatus> get() = _otpStatus
+
     init {
         _isLoggedIn.value = false
         currUser = MutableLiveData()
         _errorStatus.value = ViewErrors.NONE
+        _otpStatus.value = OTPStatus.NONE
         refreshStatus()
     }
 
@@ -79,7 +84,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                                     email.trim(),
                                     pwd1.trim(),
                                 )
-                            signUp(email, pwd1)
+                            signUp(newData)
                         }
                         (ERR_INIT + ERR_EMAIL) -> _errorStatus.value = ViewErrors.ERR_EMAIL
                         (ERR_INIT + ERR_MOBILE) -> _errorStatus.value = ViewErrors.ERR_MOBILE
@@ -92,16 +97,23 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun signUp(newData: UserData) {
+        viewModelScope.launch {
+            verifyMobile(newData.mobile)
+            authRepository.signUp(newData.email, newData.password)
+        }
+    }
+
     private fun verifyMobile(mobile: String) {
 
     }
 
-    private fun login() {}
-
-    @RequiresApi(Build.VERSION_CODES.P)
-    private fun signUp(email: String, password: String) {
-        authRepository.signUp(email, password)
+    fun verifyOTP(otp: String) {
+        Log.d(TAG, "OTP: $otp")
     }
+
+    private fun login() {}
 
     private fun getCurrUser() {
         currUser = authRepository.firebaseUser

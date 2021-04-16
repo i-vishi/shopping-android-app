@@ -4,6 +4,8 @@ import java.util.regex.Pattern
 
 enum class ViewErrors { NONE, ERR_EMAIL, ERR_MOBILE, ERR_EMAIL_MOBILE, ERR_EMPTY, ERR_NOT_ACC, ERR_PWD12NS }
 
+enum class OTPStatus {NONE, CORRECT, WRONG}
+
 const val MOB_ERROR = "Enter valid mobile number!"
 const val EMAIL_ERROR = "Enter valid email address!"
 const val ERR_INIT = "ERROR"
