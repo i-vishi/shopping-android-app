@@ -6,6 +6,7 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="login_fragment_label">Login Fragment</string>
     <string name="signup_fragment_label">Signup Fragment</string>
+    <string name="otp_fragment_label">Otp Fragment</string>
     <string name="signup_welcome_hello">Hello,</string>
     <string name="signup_welcome_text">Sign Up!</string>
     <string name="signup_name_hint">USER NAME</string>
@@ -16,10 +17,12 @@
     <string name="signup_btn_text">Sign Up</string>
     <string name="signup_name_ph">Your Name</string>
     <string name="signup_mobile_ph">Your Mobile</string>
+    <string name="signup_email_hint">E-Mail</string>
+    <string name="signup_email_ph">Your email</string>
     <string name="signup_password_ph">Enter Password</string>
     <string name="signup_cnf_password_ph">Enter Password Again</string>
-    <string name="bg_img_desc">Image View</string>
     <string name="signup_login_text">Already have an account?   Log In</string>
+    <string name="bg_img_desc">Image View</string>
     <string name="login_welcome">Welcome Back,</string>
     <string name="login_welcome_text">Log In!</string>
     <string name="login_mobile_hint">MOBILE NUMBER</string>
@@ -29,4 +32,10 @@
     <string name="login_switch_remember_text">Remember Me</string>
     <string name="login_btn_text">Log In</string>
     <string name="login_forgot_text">Forgot Password?</string>
+    <string name="otp_label_text">Enter the OTP received on Registered Mobile Number</string>
+    <string name="otp_otp_ph">6 Digit OTP</string>
+    <string name="otp_verify_btn_text">VERIFY</string>
+    <string name="otp_verify_error_text">Wrong OTP!</string>
+    <string name="otp_message_1">One Step to go…</string>
+    <string name="otp_message_2">O T P</string>
 </resources>

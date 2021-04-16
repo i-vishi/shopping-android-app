@@ -7,19 +7,43 @@
     <fragment
         android:id="@+id/LoginFragment"
         android:name="com.vishalgaur.shoppingapp.ui.loginSignup.LoginFragment"
-        android:label="LoginFragment"
+        android:label="@string/login_fragment_label"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_login_to_signup"
-            app:destination="@id/SignupFragment" />
+            app:destination="@id/SignupFragment"
+            app:popUpTo="@id/SignupFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_login_to_otp"
+            app:destination="@id/otpFragment" />
     </fragment>
     <fragment
         android:id="@+id/SignupFragment"
         android:name="com.vishalgaur.shoppingapp.ui.loginSignup.SignupFragment"
-        android:label="SignupFragment"
+        android:label="@string/signup_fragment_label"
         tools:layout="@layout/fragment_signup">
         <action
             android:id="@+id/action_signup_to_login"
             app:destination="@id/LoginFragment" />
+        <action
+            android:id="@+id/action_signup_to_otp"
+            app:destination="@id/otpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/otpFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.loginSignup.OtpFragment"
+        android:label="@string/otp_fragment_label"
+        tools:layout="@layout/fragment_otp">
+        <action
+            android:id="@+id/action_otp_to_login"
+            app:destination="@id/LoginFragment"
+            app:popUpTo="@id/LoginFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_otp_to_signup"
+            app:destination="@id/SignupFragment"
+            app:popUpTo="@id/SignupFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
