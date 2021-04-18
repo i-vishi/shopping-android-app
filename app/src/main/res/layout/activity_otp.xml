@@ -5,12 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.loginSignup.OtpFragment">
+    tools:context=".ui.loginSignup.OtpActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ui.loginSignup.OtpFragment">
+        tools:context=".ui.loginSignup.OtpActivity">
 
         <ImageView
             android:id="@+id/otp_image_view"

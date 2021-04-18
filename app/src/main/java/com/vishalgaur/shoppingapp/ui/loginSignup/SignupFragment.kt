@@ -1,12 +1,12 @@
 package com.vishalgaur.shoppingapp.ui.loginSignup
 
+import android.content.Intent
 import android.os.Build
+import android.os.Parcelable
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.EMAIL_ERROR
 import com.vishalgaur.shoppingapp.MOB_ERROR
-import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.ViewErrors
 import com.vishalgaur.shoppingapp.databinding.FragmentSignupBinding
 
@@ -31,8 +31,17 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
         binding.signupSignupBtn.setOnClickListener {
             onSignUp()
             if (viewModel.errorStatus.value == ViewErrors.NONE)
-                findNavController().navigate(R.id.action_signup_to_otp)
+                launchOtpActivity()
         }
+    }
+
+
+    private fun launchOtpActivity() {
+        val intent = Intent(context, OtpActivity::class.java).putExtra(
+            "uData",
+            viewModel.userData.value
+        )
+        startActivity(intent)
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -44,7 +53,12 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
         val password2 = binding.signupCnfPasswordEditText.text.toString()
         val isAccepted = binding.signupPolicySwitch.isChecked
 
-        viewModel.submitData(name, mobile, email, password1, password2, isAccepted)
+        activity?.let {
+            viewModel.submitData(
+                name, mobile, email, password1, password2, isAccepted,
+                it
+            )
+        }
     }
 
     private fun modifyErrors(err: ViewErrors) {

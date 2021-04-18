@@ -1,5 +1,6 @@
 package com.vishalgaur.shoppingapp.ui.loginSignup
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,13 +28,9 @@ abstract class LoginSignupBaseFragment<VBinding : ViewBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         setUpViews()
         observeView()
+        return binding.root
     }
 
     open fun setUpViews() {}
@@ -48,4 +45,5 @@ abstract class LoginSignupBaseFragment<VBinding : ViewBinding> : Fragment() {
                 ViewModelProvider(this, viewModelFactory).get(AuthViewModel::class.java)
         }
     }
+
 }

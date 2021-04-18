@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,7 +22,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     var currUser: LiveData<FirebaseUser?>
 
-    private val authRepository = AuthRepository(application)
+    val authRepository = AuthRepository(application)
+
+    private val _userData = MutableLiveData<UserData>()
+    val userData: LiveData<UserData> get() = _userData
 
     private val _isLoggedIn = MutableLiveData<Boolean>()
     val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
@@ -29,14 +33,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _errorStatus = MutableLiveData<ViewErrors>()
     val errorStatus: LiveData<ViewErrors> get() = _errorStatus
 
-    private val _otpStatus = MutableLiveData<OTPStatus>()
-    val otpStatus: LiveData<OTPStatus> get() = _otpStatus
-
     init {
         _isLoggedIn.value = false
         currUser = MutableLiveData()
         _errorStatus.value = ViewErrors.NONE
-        _otpStatus.value = OTPStatus.NONE
         refreshStatus()
     }
 
@@ -54,7 +54,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         email: String,
         pwd1: String,
         pwd2: String,
-        isAccepted: Boolean
+        isAccepted: Boolean,
+        activity: FragmentActivity
     ) {
         if (name.isBlank() || mobile.isBlank() || email.isBlank() || pwd1.isBlank() || pwd2.isBlank()) {
             _errorStatus.value = ViewErrors.ERR_EMPTY
@@ -80,11 +81,12 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                                 UserData(
                                     uId,
                                     name.trim(),
-                                    mobile.trim(),
+                                    "+91" + mobile.trim(),
                                     email.trim(),
                                     pwd1.trim(),
                                 )
-                            signUp(newData)
+                            _userData.value = newData
+                            signUp(newData, activity)
                         }
                         (ERR_INIT + ERR_EMAIL) -> _errorStatus.value = ViewErrors.ERR_EMAIL
                         (ERR_INIT + ERR_MOBILE) -> _errorStatus.value = ViewErrors.ERR_MOBILE
@@ -98,19 +100,14 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
-    private fun signUp(newData: UserData) {
+    private fun signUp(newData: UserData, activity: FragmentActivity) {
         viewModelScope.launch {
-            verifyMobile(newData.mobile)
-            authRepository.signUp(newData.email, newData.password)
+//            authRepository.verifyPhoneOTPStart(newData.mobile, activity)
+//            if(authRepository.storedVerificationId != null){
+//                _verId.value = authRepository.storedVerificationId
+//            }
+//            authRepository.signUp(newData.email, newData.password)
         }
-    }
-
-    private fun verifyMobile(mobile: String) {
-
-    }
-
-    fun verifyOTP(otp: String) {
-        Log.d(TAG, "OTP: $otp")
     }
 
     private fun login() {}
