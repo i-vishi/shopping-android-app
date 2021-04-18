@@ -1,6 +1,7 @@
 package com.vishalgaur.shoppingapp.ui.loginSignup
 
 import android.app.Application
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.vishalgaur.shoppingapp.OTPStatus
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.databinding.ActivityOtpBinding
+import com.vishalgaur.shoppingapp.ui.home.MainActivity
 import com.vishalgaur.shoppingapp.viewModels.OtpViewModel
 import java.lang.IllegalArgumentException
 
@@ -59,6 +61,17 @@ class OtpActivity : AppCompatActivity() {
                 else -> binding.otpVerifyError.visibility = View.GONE
             }
         }
+
+        viewModel.isLoggedIn.observe(this) {
+            if (it) {
+                launchHome()
+            }
+        }
+    }
+
+    private fun launchHome() {
+        val homeIntent = Intent(this, MainActivity::class.java)
+        startActivity(homeIntent)
     }
 
     @RequiresApi(Build.VERSION_CODES.P)

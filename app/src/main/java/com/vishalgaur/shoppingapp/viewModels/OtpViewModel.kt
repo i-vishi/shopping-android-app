@@ -19,6 +19,9 @@ class OtpViewModel(application: Application, uData: UserData?) : AndroidViewMode
 
     val authRepository = AuthRepository(application)
 
+    private val _isLoggedIn = MutableLiveData<Boolean>()
+    val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
+
     private val _verId = MutableLiveData<String>()
     val verId: LiveData<String> get() = _verId
 
@@ -37,6 +40,7 @@ class OtpViewModel(application: Application, uData: UserData?) : AndroidViewMode
                 _verId.value = authRepository.storedVerificationId
             }
             authRepository.verifyPhoneWithCode(verId.value!!, otp)
+            _isLoggedIn.postValue(authRepository.isLoggedIn.value)
         }
     }
 }
