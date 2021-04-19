@@ -38,4 +38,6 @@
     <string name="otp_verify_error_text">Wrong OTP!</string>
     <string name="otp_message_1">One Step to go…</string>
     <string name="otp_message_2">O T P</string>
+    <string name="login_error_text">Incorrect Mobile Number or Password</string>
+    <string name="login_signup_text">New User? Sign Up</string>
 </resources>
