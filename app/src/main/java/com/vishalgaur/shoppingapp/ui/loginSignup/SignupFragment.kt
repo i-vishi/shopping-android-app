@@ -3,12 +3,20 @@ package com.vishalgaur.shoppingapp.ui.loginSignup
 import android.content.Intent
 import android.os.Build
 import android.os.Parcelable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.EMAIL_ERROR
 import com.vishalgaur.shoppingapp.MOB_ERROR
+import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.ViewErrors
 import com.vishalgaur.shoppingapp.databinding.FragmentSignupBinding
+import com.vishalgaur.shoppingapp.network.SignUpErrors
 
 class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
 
@@ -30,8 +38,29 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
 
         binding.signupSignupBtn.setOnClickListener {
             onSignUp()
-            if (viewModel.errorStatus.value == ViewErrors.NONE)
+            if (viewModel.errorStatus.value == ViewErrors.NONE &&
+                (viewModel.signErrorStatus.value != null && viewModel.signErrorStatus.value == SignUpErrors.NONE)
+            )
                 launchOtpActivity()
+        }
+
+        setUpClickableLoginText()
+    }
+
+    private fun setUpClickableLoginText() {
+        val loginText = getString(R.string.signup_login_text)
+        val ss = SpannableString(loginText)
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                findNavController().navigate(R.id.action_signup_to_login)
+            }
+        }
+
+        ss.setSpan(clickableSpan, 25, 31, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.signupLoginTextView.apply {
+            text = ss
+            movementMethod = LinkMovementMethod.getInstance()
         }
     }
 

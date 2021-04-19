@@ -21,7 +21,7 @@
     <string name="signup_email_ph">Your email</string>
     <string name="signup_password_ph">Enter Password</string>
     <string name="signup_cnf_password_ph">Enter Password Again</string>
-    <string name="signup_login_text">Already have an account?   Log In</string>
+    <string name="signup_login_text">Already have an account? Log In</string>
     <string name="bg_img_desc">Image View</string>
     <string name="login_welcome">Welcome Back,</string>
     <string name="login_welcome_text">Log In!</string>

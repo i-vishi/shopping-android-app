@@ -42,7 +42,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
                 _verId.value = authRepository.storedVerificationId
             }
             authRepository.verifyPhoneWithCode(verId.value!!, otp)
-//            signUp(uData)
+            signUp(uData)
             _isLoggedIn.postValue(authRepository.isLoggedIn.value)
         }
     }

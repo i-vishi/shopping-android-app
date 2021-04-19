@@ -2,7 +2,7 @@ package com.vishalgaur.shoppingapp
 
 import java.util.regex.Pattern
 
-enum class ViewErrors { NONE, ERR_EMAIL, ERR_MOBILE, ERR_EMAIL_MOBILE, ERR_EMPTY, ERR_NOT_ACC, ERR_PWD12NS }
+enum class ViewErrors { NONE, ERR_EMAIL, ERR_MOBILE, ERR_EMAIL_MOBILE, ERR_EMPTY, ERR_NOT_ACC, ERR_PWD12NS}
 
 enum class OTPStatus {NONE, CORRECT, WRONG}
 

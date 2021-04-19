@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.vishalgaur.shoppingapp.*
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.isEmailValid
+import com.vishalgaur.shoppingapp.network.SignUpErrors
 import com.vishalgaur.shoppingapp.repository.AuthRepository
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _isLoggedIn = MutableLiveData<Boolean>()
     val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
+
+    private val _signErrorStatus = MutableLiveData<SignUpErrors?>()
+    val signErrorStatus: LiveData<SignUpErrors?> get() = _signErrorStatus
 
     private val _errorStatus = MutableLiveData<ViewErrors>()
     val errorStatus: LiveData<ViewErrors> get() = _errorStatus
@@ -86,6 +90,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                                     pwd1.trim(),
                                 )
                             _userData.value = newData
+                            signUp(newData)
                         }
                         (ERR_INIT + ERR_EMAIL) -> _errorStatus.value = ViewErrors.ERR_EMAIL
                         (ERR_INIT + ERR_MOBILE) -> _errorStatus.value = ViewErrors.ERR_MOBILE
@@ -96,6 +101,13 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
+    }
+
+    private fun signUp(uData: UserData) {
+        viewModelScope.launch {
+            authRepository.checkEmailMobile(uData.email, uData.mobile)
+            _signErrorStatus.value = authRepository.sErrStatus.value
+        }
     }
 
     private fun login() {}

@@ -11,9 +11,17 @@ import java.util.concurrent.TimeUnit
 
 
 private const val TAG = "FirebaseUtils"
+
+enum class SignUpErrors  {NONE, SERR}
+
 class FirebaseUtils {
 
     private var firebaseAuth: FirebaseAuth = Firebase.auth
 
-    fun signUp(email:String, password: String){}
+    fun signUp(email: String, password: String) {}
 }
+
+data class EmailMobileData(
+    val emails: ArrayList<String> = ArrayList(),
+    val mobiles: ArrayList<String> = ArrayList()
+)

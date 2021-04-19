@@ -17,12 +17,15 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.database.UserDatabase
+import com.vishalgaur.shoppingapp.network.EmailMobileData
+import com.vishalgaur.shoppingapp.network.SignUpErrors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 private const val TAG = "AuthRepository"
+private const val USERS_COLLECTION = "users"
 
 class AuthRepository(private val application: Application) {
 
@@ -37,6 +40,9 @@ class AuthRepository(private val application: Application) {
 
     private val _isLoggedIn = MutableLiveData<Boolean>()
     val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
+
+    private val _sErrStatus = MutableLiveData<SignUpErrors?>()
+    val sErrStatus: LiveData<SignUpErrors?> get() = _sErrStatus
 
     private var verificationInProgress = false
     var storedVerificationId: String? = ""
@@ -111,14 +117,48 @@ class AuthRepository(private val application: Application) {
             userDatabase.userDao().insert(uData)
             Log.d(TAG, "updating data on Network...")
 
-            firebaseDb.collection("users").add(uData.toHashMap()).addOnSuccessListener { docRef ->
-                Log.d(TAG, "Doc added")
-            }
+            firebaseDb.collection(USERS_COLLECTION).add(uData.toHashMap())
+                .addOnSuccessListener { docRef ->
+                    Log.d(TAG, "Doc added")
+                }
                 .addOnFailureListener { e ->
                     Log.d(TAG, "firestore error occurred: $e")
                 }
         }
 
+    }
+
+    suspend fun checkEmailMobile(email: String, mobile: String) {
+        withContext(Dispatchers.IO) {
+            Log.d(TAG, "checking email and password")
+            firebaseDb.collection(USERS_COLLECTION).document("emailAndMobiles")
+                .get()
+                .addOnSuccessListener { doc ->
+                    Log.d(TAG, "mob = $mobile")
+                    val emObj = doc.toObject(EmailMobileData::class.java)
+                    val mob = emObj?.mobiles?.contains(mobile)
+                    val em = emObj?.emails?.contains(email)
+                    Log.d(TAG, "m = $mob, e = $em")
+                    if (mob == false && em == false) {
+                        _sErrStatus.value = SignUpErrors.NONE
+                    } else {
+                        _sErrStatus.value = SignUpErrors.SERR
+                    }
+
+                    when {
+                        mob == false && em == true -> makeSignErrToast("Email is already registered!")
+                        mob == true && em == false -> makeSignErrToast("Mobile is already registered!")
+                        mob == true && em == true -> makeSignErrToast("Email and mobile is already registered!")
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.d(TAG, "exception: $e")
+                }
+        }
+    }
+
+    private fun makeSignErrToast(text: String) {
+        Toast.makeText(application.applicationContext, text, Toast.LENGTH_LONG).show()
     }
 
     fun verifyPhoneOTPStart(phoneNumber: String, activity: FragmentActivity) {
