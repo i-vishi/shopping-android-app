@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
 import com.vishalgaur.shoppingapp.OTPStatus
 import com.vishalgaur.shoppingapp.database.UserData
@@ -12,7 +13,8 @@ import kotlinx.coroutines.launch
 
 private const val TAG = "OtpViewModel"
 
-class OtpViewModel(application: Application, uData: UserData?) : AndroidViewModel(application) {
+class OtpViewModel(application: Application, private val uData: UserData) :
+    AndroidViewModel(application) {
 
     private val _otpStatus = MutableLiveData<OTPStatus>()
     val otpStatus: LiveData<OTPStatus> get() = _otpStatus
@@ -40,7 +42,15 @@ class OtpViewModel(application: Application, uData: UserData?) : AndroidViewMode
                 _verId.value = authRepository.storedVerificationId
             }
             authRepository.verifyPhoneWithCode(verId.value!!, otp)
+//            signUp(uData)
             _isLoggedIn.postValue(authRepository.isLoggedIn.value)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun signUp(newData: UserData) {
+        viewModelScope.launch {
+            authRepository.signUp(newData)
         }
     }
 }

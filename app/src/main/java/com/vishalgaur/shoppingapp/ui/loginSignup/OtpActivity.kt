@@ -22,7 +22,7 @@ class OtpActivity : AppCompatActivity() {
     private lateinit var viewModel: OtpViewModel
 
     class OtpViewModelFactory(
-        private val application: Application, private val uData: UserData?
+        private val application: Application, private val uData: UserData
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -39,13 +39,11 @@ class OtpActivity : AppCompatActivity() {
         binding = ActivityOtpBinding.inflate(layoutInflater)
 
         val uData: UserData? = intent.getParcelableExtra("uData")
-
-        val viewModelFactory = OtpViewModelFactory(application, uData)
-        viewModel =
-            ViewModelProvider(this, viewModelFactory).get(OtpViewModel::class.java)
-
-
         if (uData != null) {
+            val viewModelFactory = OtpViewModelFactory(application, uData)
+            viewModel =
+                ViewModelProvider(this, viewModelFactory).get(OtpViewModel::class.java)
+
             viewModel.authRepository.verifyPhoneOTPStart(uData.mobile, this)
         }
         setViews()
@@ -71,7 +69,11 @@ class OtpActivity : AppCompatActivity() {
 
     private fun launchHome() {
         val homeIntent = Intent(this, MainActivity::class.java)
+        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(homeIntent)
+        finish()
     }
 
     @RequiresApi(Build.VERSION_CODES.P)

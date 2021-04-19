@@ -13,7 +13,12 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.vishalgaur.shoppingapp.database.UserData
+import com.vishalgaur.shoppingapp.database.UserDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
@@ -21,7 +26,11 @@ private const val TAG = "AuthRepository"
 
 class AuthRepository(private val application: Application) {
 
-    private lateinit var firebaseAuth: FirebaseAuth
+    private var userDatabase: UserDatabase
+
+    private var firebaseAuth: FirebaseAuth
+
+    private var firebaseDb = Firebase.firestore
 
     private val _firebaseUser = MutableLiveData<FirebaseUser?>()
     val firebaseUser: LiveData<FirebaseUser?> get() = _firebaseUser
@@ -30,19 +39,20 @@ class AuthRepository(private val application: Application) {
     val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
 
     private var verificationInProgress = false
-     var storedVerificationId: String? = ""
+    var storedVerificationId: String? = ""
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     private var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
-
 
 
     init {
         firebaseAuth = Firebase.auth
 
+        userDatabase = UserDatabase.getInstance(application)
+
         if (firebaseAuth.currentUser != null) {
             _firebaseUser.postValue(firebaseAuth.currentUser)
             _isLoggedIn.postValue(true)
-        }else {
+        } else {
             _firebaseUser.value = null
             _isLoggedIn.value = false
         }
@@ -94,26 +104,24 @@ class AuthRepository(private val application: Application) {
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
-    fun signUp(email: String, password: String) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(application.mainExecutor) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail:success")
-                    _firebaseUser.postValue(firebaseAuth.currentUser)
-                    _isLoggedIn.postValue(true)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        application.applicationContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+    suspend fun signUp(uData: UserData) {
+        withContext(Dispatchers.IO) {
+            Log.d(TAG, "updating data on Room")
+            userDatabase.userDao().clear()
+            userDatabase.userDao().insert(uData)
+            Log.d(TAG, "updating data on Network...")
+
+            firebaseDb.collection("users").add(uData.toHashMap()).addOnSuccessListener { docRef ->
+                Log.d(TAG, "Doc added")
             }
+                .addOnFailureListener { e ->
+                    Log.d(TAG, "firestore error occurred: $e")
+                }
+        }
+
     }
 
-    fun verifyPhoneOTPStart(phoneNumber:String, activity: FragmentActivity) {
+    fun verifyPhoneOTPStart(phoneNumber: String, activity: FragmentActivity) {
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
             .setPhoneNumber(phoneNumber)       // Phone number to verify
             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
@@ -161,7 +169,8 @@ class AuthRepository(private val application: Application) {
                         // The verification code entered was invalid
                         Log.d(TAG, "createUserWithMobile:failure", task.exception)
                         Toast.makeText(
-                            application.applicationContext, "Authentication failed! Enter Correct OTP",
+                            application.applicationContext,
+                            "Authentication failed! Enter Correct OTP",
                             Toast.LENGTH_LONG
                         ).show()
                     }

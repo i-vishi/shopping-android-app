@@ -86,7 +86,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                                     pwd1.trim(),
                                 )
                             _userData.value = newData
-                            signUp(newData, activity)
                         }
                         (ERR_INIT + ERR_EMAIL) -> _errorStatus.value = ViewErrors.ERR_EMAIL
                         (ERR_INIT + ERR_MOBILE) -> _errorStatus.value = ViewErrors.ERR_MOBILE
@@ -97,17 +96,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
-    }
-
-    @RequiresApi(Build.VERSION_CODES.P)
-    private fun signUp(newData: UserData, activity: FragmentActivity) {
-        viewModelScope.launch {
-//            authRepository.verifyPhoneOTPStart(newData.mobile, activity)
-//            if(authRepository.storedVerificationId != null){
-//                _verId.value = authRepository.storedVerificationId
-//            }
-//            authRepository.signUp(newData.email, newData.password)
-        }
     }
 
     private fun login() {}
