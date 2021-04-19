@@ -37,7 +37,6 @@ class OtpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOtpBinding.inflate(layoutInflater)
-
         val uData: UserData? = intent.getParcelableExtra("uData")
         if (uData != null) {
             val viewModelFactory = OtpViewModelFactory(application, uData)

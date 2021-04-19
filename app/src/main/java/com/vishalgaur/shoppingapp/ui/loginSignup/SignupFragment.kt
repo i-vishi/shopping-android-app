@@ -1,18 +1,16 @@
 package com.vishalgaur.shoppingapp.ui.loginSignup
 
-import android.content.Intent
 import android.os.Build
-import android.os.Parcelable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
-import com.vishalgaur.shoppingapp.EMAIL_ERROR
-import com.vishalgaur.shoppingapp.MOB_ERROR
+import com.vishalgaur.shoppingapp.EMAIL_ERROR_TEXT
+import com.vishalgaur.shoppingapp.MOB_ERROR_TEXT
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.ViewErrors
 import com.vishalgaur.shoppingapp.databinding.FragmentSignupBinding
@@ -40,8 +38,10 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
             onSignUp()
             if (viewModel.errorStatus.value == ViewErrors.NONE &&
                 (viewModel.signErrorStatus.value != null && viewModel.signErrorStatus.value == SignUpErrors.NONE)
-            )
-                launchOtpActivity()
+            ) {
+                val bundle = bundleOf("uData" to viewModel.userData.value)
+                launchOtpActivity(getString(R.string.signup_fragment_label), bundle)
+            }
         }
 
         setUpClickableLoginText()
@@ -65,14 +65,6 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
     }
 
 
-    private fun launchOtpActivity() {
-        val intent = Intent(context, OtpActivity::class.java).putExtra(
-            "uData",
-            viewModel.userData.value
-        )
-        startActivity(intent)
-    }
-
     @RequiresApi(Build.VERSION_CODES.P)
     private fun onSignUp() {
         val name = binding.signupNameEditText.text.toString()
@@ -82,20 +74,15 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
         val password2 = binding.signupCnfPasswordEditText.text.toString()
         val isAccepted = binding.signupPolicySwitch.isChecked
 
-        activity?.let {
-            viewModel.submitData(
-                name, mobile, email, password1, password2, isAccepted,
-                it
-            )
-        }
+        viewModel.signUpSubmitData(name, mobile, email, password1, password2, isAccepted)
     }
 
     private fun modifyErrors(err: ViewErrors) {
         when (err) {
             ViewErrors.NONE -> setEditTextsError()
-            ViewErrors.ERR_EMAIL -> setEditTextsError(emailError = EMAIL_ERROR)
-            ViewErrors.ERR_MOBILE -> setEditTextsError(mobError = MOB_ERROR)
-            ViewErrors.ERR_EMAIL_MOBILE -> setEditTextsError(EMAIL_ERROR, MOB_ERROR)
+            ViewErrors.ERR_EMAIL -> setEditTextsError(emailError = EMAIL_ERROR_TEXT)
+            ViewErrors.ERR_MOBILE -> setEditTextsError(mobError = MOB_ERROR_TEXT)
+            ViewErrors.ERR_EMAIL_MOBILE -> setEditTextsError(EMAIL_ERROR_TEXT, MOB_ERROR_TEXT)
             ViewErrors.ERR_EMPTY -> setErrorText("Fill all details.")
             ViewErrors.ERR_NOT_ACC -> setErrorText("Accept the Terms.")
             ViewErrors.ERR_PWD12NS -> setErrorText("Both passwords are not same!")

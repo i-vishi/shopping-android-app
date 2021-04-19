@@ -33,6 +33,14 @@ abstract class LoginSignupBaseFragment<VBinding : ViewBinding> : Fragment() {
         return binding.root
     }
 
+    fun launchOtpActivity(from: String, extras: Bundle) {
+        val intent = Intent(context, OtpActivity::class.java).putExtra(
+            "from",
+            from
+        ).putExtras(extras)
+        startActivity(intent)
+    }
+
     open fun setUpViews() {}
 
     open fun observeView() {}

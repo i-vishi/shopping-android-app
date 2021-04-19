@@ -17,15 +17,13 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.database.UserDatabase
-import com.vishalgaur.shoppingapp.network.EmailMobileData
-import com.vishalgaur.shoppingapp.network.SignUpErrors
+import com.vishalgaur.shoppingapp.network.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 private const val TAG = "AuthRepository"
-private const val USERS_COLLECTION = "users"
 
 class AuthRepository(private val application: Application) {
 
@@ -43,6 +41,9 @@ class AuthRepository(private val application: Application) {
 
     private val _sErrStatus = MutableLiveData<SignUpErrors?>()
     val sErrStatus: LiveData<SignUpErrors?> get() = _sErrStatus
+
+    private val _lErrStatus = MutableLiveData<LogInErrors?>()
+    val lErrStatus: LiveData<LogInErrors?> get() = _lErrStatus
 
     private var verificationInProgress = false
     var storedVerificationId: String? = ""
@@ -130,11 +131,10 @@ class AuthRepository(private val application: Application) {
 
     suspend fun checkEmailMobile(email: String, mobile: String) {
         withContext(Dispatchers.IO) {
-            Log.d(TAG, "checking email and password")
-            firebaseDb.collection(USERS_COLLECTION).document("emailAndMobiles")
+            Log.d(TAG, "checking email and mobile")
+            firebaseDb.collection(USERS_COLLECTION).document(EMAIL_MOBILE_DOC)
                 .get()
                 .addOnSuccessListener { doc ->
-                    Log.d(TAG, "mob = $mobile")
                     val emObj = doc.toObject(EmailMobileData::class.java)
                     val mob = emObj?.mobiles?.contains(mobile)
                     val em = emObj?.emails?.contains(email)
@@ -159,6 +159,23 @@ class AuthRepository(private val application: Application) {
 
     private fun makeSignErrToast(text: String) {
         Toast.makeText(application.applicationContext, text, Toast.LENGTH_LONG).show()
+    }
+
+    suspend fun checkLogin(mobile: String, password: String) {
+        withContext(Dispatchers.IO) {
+            Log.d(TAG, "checking mobile and password")
+            firebaseDb.collection(USERS_COLLECTION).document(EMAIL_MOBILE_DOC)
+                .get()
+                .addOnSuccessListener { doc ->
+                    val emObj = doc.toObject(EmailMobileData::class.java)
+                    val mob = emObj?.mobiles?.contains(mobile)
+                    if (mob == false) {
+                        _lErrStatus.value = LogInErrors.LERR
+                    } else {
+                        _lErrStatus.value = LogInErrors.NONE
+                    }
+                }
+        }
     }
 
     fun verifyPhoneOTPStart(phoneNumber: String, activity: FragmentActivity) {
