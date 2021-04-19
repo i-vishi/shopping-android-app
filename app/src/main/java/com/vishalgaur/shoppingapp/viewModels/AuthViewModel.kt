@@ -15,6 +15,7 @@ import com.vishalgaur.shoppingapp.isEmailValid
 import com.vishalgaur.shoppingapp.network.LogInErrors
 import com.vishalgaur.shoppingapp.network.SignUpErrors
 import com.vishalgaur.shoppingapp.repository.AuthRepository
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 private const val TAG = "AuthViewModel"
@@ -27,9 +28,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _userData = MutableLiveData<UserData>()
     val userData: LiveData<UserData> get() = _userData
-
-    private val _loginMobile = MutableLiveData<String>()
-    val loginMobile: LiveData<String> get() = _loginMobile
 
     private val _isLoggedIn = MutableLiveData<Boolean>()
     val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
@@ -128,17 +126,27 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 _errorStatusLoginFragment.value = LoginViewErrors.ERR_MOBILE
             } else {
                 _errorStatusLoginFragment.value = LoginViewErrors.NONE
-                _loginMobile.value = mobile.trim()
-                logIn(mobile.trim(), password)
+                logIn("+91" + mobile.trim(), password)
             }
         }
+
+
     }
 
-    private fun logIn(phoneNumber: String, pwd: String) {
+    private fun logIn(
+        phoneNumber: String,
+        pwd: String
+    ) {
         viewModelScope.launch {
             Log.d(TAG, "checking mobile")
-            authRepository.checkLogin(phoneNumber, pwd)
-            _loginErrorStatus.value = authRepository.lErrStatus.value
+            val res = async { authRepository.checkLogin(phoneNumber, pwd) }
+            _userData.value = res.await()
+            Log.d(TAG, "data = ${_userData.value}")
+            if (_userData.value != null) {
+                _loginErrorStatus.postValue(LogInErrors.NONE)
+            } else {
+                _loginErrorStatus.postValue(LogInErrors.LERR)
+            }
         }
     }
 

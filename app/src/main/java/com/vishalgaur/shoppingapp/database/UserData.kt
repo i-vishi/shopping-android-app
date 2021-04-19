@@ -9,11 +9,11 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "users")
 data class UserData(
 	@PrimaryKey
-	var userId: String,
-	var name: String,
-	var mobile: String,
-	var email: String,
-	var password: String
+	var userId: String = "",
+	var name: String = "",
+	var mobile: String = "",
+	var email: String = "",
+	var password: String = ""
 ) : Parcelable {
     fun toHashMap(): HashMap<String, String> {
         return hashMapOf(

@@ -4,6 +4,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
@@ -39,14 +40,24 @@ class LoginFragment : LoginSignupBaseFragment<FragmentLoginBinding>() {
         binding.loginErrorTextView.visibility = View.GONE
 
         binding.loginLoginBtn.setOnClickListener {
+            Log.d("TAGTAGTAG", "check  on click")
+
             onLogin()
-            if (viewModel.errorStatusLoginFragment.value == LoginViewErrors.NONE
-                && (viewModel.loginErrorStatus.value != null && viewModel.loginErrorStatus.value == LogInErrors.NONE)
-            ) {
-                val bundle = bundleOf(
-                    "mobile" to viewModel.loginMobile.value
-                )
-                launchOtpActivity(getString(R.string.login_fragment_label), bundle)
+            Log.d(
+                "TAGTAGTAG",
+                "check outside if, ${viewModel.errorStatusLoginFragment.value}, ${viewModel.loginErrorStatus.value}"
+            )
+
+            if (viewModel.errorStatusLoginFragment.value == LoginViewErrors.NONE) {
+                viewModel.loginErrorStatus.observe(viewLifecycleOwner) {
+                    if (it == LogInErrors.NONE) {
+                        val bundle = bundleOf(
+                            "uData" to viewModel.userData.value
+                        )
+                        Log.d("TAGTAGTAG", "check inside if")
+                        launchOtpActivity(getString(R.string.login_fragment_label), bundle)
+                    }
+                }
             }
         }
 

@@ -1,6 +1,5 @@
 package com.vishalgaur.shoppingapp.repository
 
-import android.app.Activity
 import android.app.Application
 import android.os.Build
 import android.util.Log
@@ -19,6 +18,7 @@ import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.database.UserDatabase
 import com.vishalgaur.shoppingapp.network.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
@@ -45,6 +45,8 @@ class AuthRepository(private val application: Application) {
     private val _lErrStatus = MutableLiveData<LogInErrors?>()
     val lErrStatus: LiveData<LogInErrors?> get() = _lErrStatus
 
+    val loggedInUserData: MutableLiveData<UserData?>
+
     private var verificationInProgress = false
     var storedVerificationId: String? = ""
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
@@ -53,6 +55,8 @@ class AuthRepository(private val application: Application) {
 
     init {
         firebaseAuth = Firebase.auth
+
+        loggedInUserData = MutableLiveData()
 
         userDatabase = UserDatabase.getInstance(application)
 
@@ -110,7 +114,6 @@ class AuthRepository(private val application: Application) {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     suspend fun signUp(uData: UserData) {
         withContext(Dispatchers.IO) {
             Log.d(TAG, "updating data on Room")
@@ -161,21 +164,31 @@ class AuthRepository(private val application: Application) {
         Toast.makeText(application.applicationContext, text, Toast.LENGTH_LONG).show()
     }
 
-    suspend fun checkLogin(mobile: String, password: String) {
-        withContext(Dispatchers.IO) {
-            Log.d(TAG, "checking mobile and password")
-            firebaseDb.collection(USERS_COLLECTION).document(EMAIL_MOBILE_DOC)
-                .get()
-                .addOnSuccessListener { doc ->
-                    val emObj = doc.toObject(EmailMobileData::class.java)
-                    val mob = emObj?.mobiles?.contains(mobile)
-                    if (mob == false) {
-                        _lErrStatus.value = LogInErrors.LERR
-                    } else {
-                        _lErrStatus.value = LogInErrors.NONE
-                    }
-                }
-        }
+    suspend fun checkLogin(mobile: String, password: String): UserData? {
+        Log.d(TAG, "checking mobile and password")
+        val queryData = firebaseDb.collection(USERS_COLLECTION).whereEqualTo("mobile", mobile)
+            .whereEqualTo("password", password)
+            .get().await().documents
+        //            .addOnSuccessListener { docs ->
+//                var emObj: UserData? = null
+//                for (doc in docs) {
+//                    emObj = doc.toObject(UserData::class.java)
+//                }
+//
+//                Log.d(TAG, "user = $emObj")
+//
+//                if(emObj!= null){
+//                    res = emObj
+//                }
+//
+////                if (emObj != null) {
+////                    loggedInUserData.value = emObj
+////                    _lErrStatus.value = LogInErrors.NONE
+////                } else {
+////                    _lErrStatus.value = LogInErrors.LERR
+////                }
+//            }
+        return if (queryData.size > 0) queryData[0].toObject(UserData::class.java) else null
     }
 
     fun verifyPhoneOTPStart(phoneNumber: String, activity: FragmentActivity) {
