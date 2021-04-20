@@ -1,15 +1,20 @@
 package com.vishalgaur.shoppingapp.viewModels
 
 import android.app.Application
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
+import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
 import com.vishalgaur.shoppingapp.OTPStatus
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.repository.AuthRepository
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 private const val TAG = "OtpViewModel"
 
@@ -21,36 +26,63 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 
     val authRepository = AuthRepository(application)
 
-    private val _isLoggedIn = MutableLiveData<Boolean>()
-    val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
-
-    private val _verId = MutableLiveData<String>()
-    val verId: LiveData<String> get() = _verId
-
-    init {
-        _verId.value = authRepository.storedVerificationId
-        Log.d(TAG, "ver id: ${_verId.value}")
-    }
+    var storedVerificationId: String? = ""
+    var verificationInProgress = false
+    private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
 
-    @RequiresApi(Build.VERSION_CODES.P)
     fun verifyOTP(otp: String) {
         Log.d(TAG, "OTP: $otp")
-        _verId.value = authRepository.storedVerificationId
         viewModelScope.launch {
-            if (authRepository.storedVerificationId != null) {
-                _verId.value = authRepository.storedVerificationId
-            }
-            authRepository.verifyPhoneWithCode(verId.value!!, otp)
+            authRepository.verifyPhoneWithCode(storedVerificationId!!, otp)
             signUp(uData)
-            _isLoggedIn.postValue(authRepository.isLoggedIn.value)
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     private fun signUp(newData: UserData) {
         viewModelScope.launch {
             authRepository.signUp(newData)
+        }
+    }
+
+    fun verifyPhoneOTPStart(phoneNumber: String, activity: FragmentActivity) {
+        val options = PhoneAuthOptions.newBuilder(authRepository.getFirebaseAuth())
+            .setPhoneNumber(phoneNumber)       // Phone number to verify
+            .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+            .setActivity(activity)                 // Activity (for callback binding)
+            .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
+
+        verificationInProgress = true
+    }
+
+    private val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+        override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+            Log.d(TAG, "onVerificationCompleted:$credential")
+            authRepository.signInWithPhoneAuthCredential(credential)
+        }
+
+        override fun onVerificationFailed(e: FirebaseException) {
+            Log.w(TAG, "onVerificationFailed", e)
+
+            if (e is FirebaseAuthInvalidCredentialsException) {
+                Log.w(TAG, "onVerificationFailed, invalid request, ", e)
+            } else if (e is FirebaseTooManyRequestsException) {
+                Log.w(TAG, "onVerificationFailed, sms quota exceeded, ", e)
+            }
+        }
+
+        override fun onCodeSent(
+            verificationId: String,
+            token: PhoneAuthProvider.ForceResendingToken
+        ) {
+            Log.d(TAG, "onCodeSent:$verificationId")
+
+            // Save verification ID and resending token so we can use them later
+            storedVerificationId = verificationId
+            resendToken = token
         }
     }
 }

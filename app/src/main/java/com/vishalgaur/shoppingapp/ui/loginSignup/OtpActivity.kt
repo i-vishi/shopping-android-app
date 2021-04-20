@@ -43,7 +43,7 @@ class OtpActivity : AppCompatActivity() {
             viewModel =
                 ViewModelProvider(this, viewModelFactory).get(OtpViewModel::class.java)
 
-            viewModel.authRepository.verifyPhoneOTPStart(uData.mobile, this)
+            viewModel.verifyPhoneOTPStart(uData.mobile, this)
         }
         setViews()
 
@@ -59,8 +59,14 @@ class OtpActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.isLoggedIn.observe(this) {
-            if (it) {
+//        viewModel.isLoggedIn.observe(this) {
+//            if (it == true) {
+//                launchHome()
+//            }
+//        }
+
+        viewModel.authRepository.isLoggedIn.observe(this) {
+            if (it == true) {
                 launchHome()
             }
         }
