@@ -7,14 +7,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.database.UserDatabase
 import com.vishalgaur.shoppingapp.network.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 private const val TAG = "AuthRepository"
@@ -33,9 +32,6 @@ class AuthRepository(private val application: Application) {
     private val _isLoggedIn = MutableLiveData<Boolean>()
     val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
 
-    private val _sErrStatus = MutableLiveData<SignUpErrors?>()
-    val sErrStatus: LiveData<SignUpErrors?> get() = _sErrStatus
-
     init {
         if (firebaseAuth.currentUser != null) {
             _firebaseUser.postValue(firebaseAuth.currentUser)
@@ -48,49 +44,45 @@ class AuthRepository(private val application: Application) {
 
     fun getFirebaseAuth(): FirebaseAuth = firebaseAuth
 
-    suspend fun signUp(uData: UserData) {
-        withContext(Dispatchers.IO) {
-            Log.d(TAG, "updating data on Room")
-            userDatabase.userDao().clear()
-            userDatabase.userDao().insert(uData)
-            Log.d(TAG, "updating data on Network...")
+    fun signUp(uData: UserData) {
+        Log.d(TAG, "updating data on Room")
+        userDatabase.userDao().clear()
+        userDatabase.userDao().insert(uData)
+        Log.d(TAG, "updating data on Network...")
 
-            firebaseDb.collection(USERS_COLLECTION).add(uData.toHashMap())
-                .addOnSuccessListener { docRef ->
-                    Log.d(TAG, "Doc added")
-                }
-                .addOnFailureListener { e ->
-                    Log.d(TAG, "firestore error occurred: $e")
-                }
-        }
+        firebaseDb.collection(USERS_COLLECTION).add(uData.toHashMap())
+            .addOnSuccessListener {
+                Log.d(TAG, "Doc added")
+            }
+            .addOnFailureListener { e ->
+                Log.d(TAG, "firestore error occurred: $e")
+            }
 
+        val emRef = firebaseDb.collection(USERS_COLLECTION).document(EMAIL_MOBILE_DOC)
+        emRef.update("emails", FieldValue.arrayUnion(uData.email))
+        emRef.update("mobiles", FieldValue.arrayUnion(uData.mobile))
     }
 
-    suspend fun checkEmailMobile(email: String, mobile: String) {
-        withContext(Dispatchers.IO) {
-            Log.d(TAG, "checking email and mobile")
-            firebaseDb.collection(USERS_COLLECTION).document(EMAIL_MOBILE_DOC)
-                .get()
-                .addOnSuccessListener { doc ->
-                    val emObj = doc.toObject(EmailMobileData::class.java)
-                    val mob = emObj?.mobiles?.contains(mobile)
-                    val em = emObj?.emails?.contains(email)
-                    Log.d(TAG, "m = $mob, e = $em")
-                    if (mob == false && em == false) {
-                        _sErrStatus.value = SignUpErrors.NONE
-                    } else {
-                        _sErrStatus.value = SignUpErrors.SERR
-                        when {
-                            mob == false && em == true -> makeErrToast("Email is already registered!")
-                            mob == true && em == false -> makeErrToast("Mobile is already registered!")
-                            mob == true && em == true -> makeErrToast("Email and mobile is already registered!")
-                        }
-                    }
+    suspend fun checkEmailMobile(email: String, mobile: String): SignUpErrors? {
+        Log.d(TAG, "checking email and mobile")
+        val queryData = firebaseDb.collection(USERS_COLLECTION).document(EMAIL_MOBILE_DOC)
+            .get().await().toObject(EmailMobileData::class.java)
+        var sErr: SignUpErrors? = null
+        if (queryData != null) {
+            val mob = queryData.mobiles.contains(mobile)
+            val em = queryData.emails.contains(email)
+            if (!mob && !em) {
+                sErr = SignUpErrors.NONE
+            } else {
+                sErr = SignUpErrors.SERR
+                when {
+                    !mob && em -> makeErrToast("Email is already registered!")
+                    mob && !em -> makeErrToast("Mobile is already registered!")
+                    mob && em -> makeErrToast("Email and mobile is already registered!")
                 }
-                .addOnFailureListener { e ->
-                    Log.d(TAG, "exception: $e")
-                }
+            }
         }
+        return sErr
     }
 
     private fun makeErrToast(text: String) {

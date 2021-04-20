@@ -27,7 +27,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
     val authRepository = AuthRepository(application)
 
     var storedVerificationId: String? = ""
-    var verificationInProgress = false
+    private var verificationInProgress = false
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
 
@@ -35,13 +35,12 @@ class OtpViewModel(application: Application, private val uData: UserData) :
         Log.d(TAG, "OTP: $otp")
         viewModelScope.launch {
             authRepository.verifyPhoneWithCode(storedVerificationId!!, otp)
-            signUp(uData)
         }
     }
 
-    private fun signUp(newData: UserData) {
+    fun signUp() {
         viewModelScope.launch {
-            authRepository.signUp(newData)
+            authRepository.signUp(uData)
         }
     }
 

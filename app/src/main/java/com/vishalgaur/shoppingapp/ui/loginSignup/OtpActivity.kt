@@ -59,14 +59,9 @@ class OtpActivity : AppCompatActivity() {
             }
         }
 
-//        viewModel.isLoggedIn.observe(this) {
-//            if (it == true) {
-//                launchHome()
-//            }
-//        }
-
         viewModel.authRepository.isLoggedIn.observe(this) {
             if (it == true) {
+                viewModel.signUp()
                 launchHome()
             }
         }

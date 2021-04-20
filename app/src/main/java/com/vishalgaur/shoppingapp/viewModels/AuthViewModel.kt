@@ -29,9 +29,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _userData = MutableLiveData<UserData>()
     val userData: LiveData<UserData> get() = _userData
 
-    private val _isLoggedIn = MutableLiveData<Boolean>()
-    val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
-
     private val _signErrorStatus = MutableLiveData<SignUpErrors?>()
     val signErrorStatus: LiveData<SignUpErrors?> get() = _signErrorStatus
 
@@ -45,7 +42,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     val loginErrorStatus: LiveData<LogInErrors?> get() = _loginErrorStatus
 
     init {
-        _isLoggedIn.value = false
         currUser = MutableLiveData()
         _errorStatus.value = ViewErrors.NONE
         _errorStatusLoginFragment.value = LoginViewErrors.NONE
@@ -55,7 +51,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private fun refreshStatus() {
         viewModelScope.launch {
             getCurrUser()
-            _isLoggedIn.value = currUser.value != null
         }
     }
 
@@ -87,7 +82,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     when (err) {
                         ERR_INIT -> {
                             _errorStatus.value = ViewErrors.NONE
-                            val uId = getRandomString(32)
+                            val uId = getRandomString(32, "91" + mobile.trim(), 6)
                             val newData =
                                 UserData(
                                     uId,
@@ -97,7 +92,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                                     pwd1.trim(),
                                 )
                             _userData.value = newData
-                            signUp(newData)
+                            checkUniqueUser(newData)
                         }
                         (ERR_INIT + ERR_EMAIL) -> _errorStatus.value = ViewErrors.ERR_EMAIL
                         (ERR_INIT + ERR_MOBILE) -> _errorStatus.value = ViewErrors.ERR_MOBILE
@@ -110,11 +105,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    private fun signUp(uData: UserData) {
+    private fun checkUniqueUser(uData: UserData) {
         viewModelScope.launch {
             Log.d(TAG, "checking email and mobile")
-            authRepository.checkEmailMobile(uData.email, uData.mobile)
-            _signErrorStatus.value = authRepository.sErrStatus.value
+            val res = async { authRepository.checkEmailMobile(uData.email, uData.mobile) }
+            _signErrorStatus.value = res.await()
         }
     }
 
@@ -129,14 +124,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 logIn("+91" + mobile.trim(), password)
             }
         }
-
-
     }
 
-    private fun logIn(
-        phoneNumber: String,
-        pwd: String
-    ) {
+    private fun logIn(phoneNumber: String, pwd: String) {
         viewModelScope.launch {
             Log.d(TAG, "checking mobile")
             val res = async { authRepository.checkLogin(phoneNumber, pwd) }
