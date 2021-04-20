@@ -7,8 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.database.UserDatabase
@@ -24,7 +22,7 @@ class AuthRepository(private val application: Application) {
 
     private var firebaseAuth: FirebaseAuth = Firebase.auth
 
-    private var firebaseDb = Firebase.firestore
+    private var db = FirebaseDbUtils()
 
     private val _firebaseUser = MutableLiveData<FirebaseUser?>()
     val firebaseUser: LiveData<FirebaseUser?> get() = _firebaseUser
@@ -50,7 +48,7 @@ class AuthRepository(private val application: Application) {
         userDatabase.userDao().insert(uData)
         Log.d(TAG, "updating data on Network...")
 
-        firebaseDb.collection(USERS_COLLECTION).add(uData.toHashMap())
+        db.addUser(uData.toHashMap())
             .addOnSuccessListener {
                 Log.d(TAG, "Doc added")
             }
@@ -58,15 +56,12 @@ class AuthRepository(private val application: Application) {
                 Log.d(TAG, "firestore error occurred: $e")
             }
 
-        val emRef = firebaseDb.collection(USERS_COLLECTION).document(EMAIL_MOBILE_DOC)
-        emRef.update("emails", FieldValue.arrayUnion(uData.email))
-        emRef.update("mobiles", FieldValue.arrayUnion(uData.mobile))
+        db.updateEmailsAndMobiles(uData.email, uData.mobile)
     }
 
     suspend fun checkEmailMobile(email: String, mobile: String): SignUpErrors? {
         Log.d(TAG, "checking email and mobile")
-        val queryData = firebaseDb.collection(USERS_COLLECTION).document(EMAIL_MOBILE_DOC)
-            .get().await().toObject(EmailMobileData::class.java)
+        val queryData = db.getEmailsAndMobiles().await().toObject(EmailMobileData::class.java)
         var sErr: SignUpErrors? = null
         if (queryData != null) {
             val mob = queryData.mobiles.contains(mobile)
@@ -91,9 +86,7 @@ class AuthRepository(private val application: Application) {
 
     suspend fun checkLogin(mobile: String, password: String): UserData? {
         Log.d(TAG, "checking mobile and password")
-        val queryData = firebaseDb.collection(USERS_COLLECTION).whereEqualTo("mobile", mobile)
-            .whereEqualTo("password", password)
-            .get().await().documents
+        val queryData = db.getUserByMobileAndPassword(mobile, password).await().documents
         return if (queryData.size > 0) queryData[0].toObject(UserData::class.java) else null
     }
 

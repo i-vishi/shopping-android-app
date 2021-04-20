@@ -107,7 +107,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun checkUniqueUser(uData: UserData) {
         viewModelScope.launch {
-            Log.d(TAG, "checking email and mobile")
             val res = async { authRepository.checkEmailMobile(uData.email, uData.mobile) }
             _signErrorStatus.value = res.await()
         }
@@ -128,10 +127,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun logIn(phoneNumber: String, pwd: String) {
         viewModelScope.launch {
-            Log.d(TAG, "checking mobile")
             val res = async { authRepository.checkLogin(phoneNumber, pwd) }
             _userData.value = res.await()
-            Log.d(TAG, "data = ${_userData.value}")
             if (_userData.value != null) {
                 _loginErrorStatus.postValue(LogInErrors.NONE)
             } else {

@@ -32,7 +32,6 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 
 
     fun verifyOTP(otp: String) {
-        Log.d(TAG, "OTP: $otp")
         viewModelScope.launch {
             authRepository.verifyPhoneWithCode(storedVerificationId!!, otp)
         }
@@ -77,8 +76,6 @@ class OtpViewModel(application: Application, private val uData: UserData) :
             verificationId: String,
             token: PhoneAuthProvider.ForceResendingToken
         ) {
-            Log.d(TAG, "onCodeSent:$verificationId")
-
             // Save verification ID and resending token so we can use them later
             storedVerificationId = verificationId
             resendToken = token

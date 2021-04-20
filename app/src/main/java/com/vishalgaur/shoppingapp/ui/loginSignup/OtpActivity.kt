@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.vishalgaur.shoppingapp.OTPStatus
+import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.databinding.ActivityOtpBinding
 import com.vishalgaur.shoppingapp.ui.home.MainActivity
@@ -20,6 +21,8 @@ class OtpActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOtpBinding
 
     private lateinit var viewModel: OtpViewModel
+
+    private lateinit var fromWhere: String
 
     class OtpViewModelFactory(
         private val application: Application, private val uData: UserData
@@ -38,6 +41,7 @@ class OtpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityOtpBinding.inflate(layoutInflater)
         val uData: UserData? = intent.getParcelableExtra("uData")
+        fromWhere = intent.getStringExtra("from").toString()
         if (uData != null) {
             val viewModelFactory = OtpViewModelFactory(application, uData)
             viewModel =
@@ -61,7 +65,9 @@ class OtpActivity : AppCompatActivity() {
 
         viewModel.authRepository.isLoggedIn.observe(this) {
             if (it == true) {
-                viewModel.signUp()
+                if (fromWhere == getString(R.string.signup_fragment_label)) {
+                    viewModel.signUp()
+                }
                 launchHome()
             }
         }
