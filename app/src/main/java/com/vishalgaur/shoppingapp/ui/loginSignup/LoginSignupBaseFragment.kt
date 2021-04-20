@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
+import com.vishalgaur.shoppingapp.ui.MyOnFocusChangeListener
 import com.vishalgaur.shoppingapp.viewModels.AuthViewModel
 import com.vishalgaur.shoppingapp.viewModels.AuthViewModelFactory
 
@@ -17,6 +18,8 @@ abstract class LoginSignupBaseFragment<VBinding : ViewBinding> : Fragment() {
 
     protected lateinit var binding: VBinding
     protected abstract fun setViewBinding(): VBinding
+
+    protected val focusChangeListener = MyOnFocusChangeListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

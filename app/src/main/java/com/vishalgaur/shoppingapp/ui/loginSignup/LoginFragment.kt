@@ -38,7 +38,10 @@ class LoginFragment : LoginSignupBaseFragment<FragmentLoginBinding>() {
 
         binding.loginErrorTextView.visibility = View.GONE
 
-        binding.loginLoginBtn.setOnClickListener(object : OnClickListener{
+        binding.loginMobileEditText.onFocusChangeListener = focusChangeListener
+        binding.loginPasswordEditText.onFocusChangeListener = focusChangeListener
+
+        binding.loginLoginBtn.setOnClickListener(object : OnClickListener {
             override fun onClick(v: View?) {
                 onLogin()
                 if (viewModel.errorStatusLoginFragment.value == LoginViewErrors.NONE) {

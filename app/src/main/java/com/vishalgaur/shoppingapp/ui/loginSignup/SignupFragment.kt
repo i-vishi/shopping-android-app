@@ -31,6 +31,12 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
         super.setUpViews()
         binding.signupErrorTextView.visibility = View.GONE
 
+        binding.signupNameEditText.onFocusChangeListener = focusChangeListener
+        binding.signupMobileEditText.onFocusChangeListener = focusChangeListener
+        binding.signupEmailEditText.onFocusChangeListener = focusChangeListener
+        binding.signupPasswordEditText.onFocusChangeListener = focusChangeListener
+        binding.signupCnfPasswordEditText.onFocusChangeListener = focusChangeListener
+
         binding.signupSignupBtn.setOnClickListener(object : OnClickListener {
             override fun onClick(v: View?) {
                 onSignUp()
