@@ -2,10 +2,8 @@ package com.vishalgaur.shoppingapp.ui.loginSignup
 
 import android.app.Application
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -36,7 +34,6 @@ class OtpActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOtpBinding.inflate(layoutInflater)
@@ -82,7 +79,6 @@ class OtpActivity : AppCompatActivity() {
         finish()
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     private fun setViews() {
         binding.otpVerifyError.visibility = View.GONE
 
@@ -91,7 +87,6 @@ class OtpActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     private fun onVerify() {
         val otp = binding.otpOtpEditText.text.toString()
         viewModel.verifyOTP(otp)

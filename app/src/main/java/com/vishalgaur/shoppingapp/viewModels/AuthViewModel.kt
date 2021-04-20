@@ -1,9 +1,7 @@
 package com.vishalgaur.shoppingapp.viewModels
 
 import android.app.Application
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -54,7 +52,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     fun signUpSubmitData(
         name: String,
         mobile: String,
@@ -138,6 +135,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun getCurrUser() {
+        Log.d(TAG, "refreshing data...")
         currUser = authRepository.firebaseUser
     }
 }

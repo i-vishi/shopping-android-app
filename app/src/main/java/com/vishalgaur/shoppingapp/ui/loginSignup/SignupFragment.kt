@@ -1,12 +1,10 @@
 package com.vishalgaur.shoppingapp.ui.loginSignup
 
-import android.os.Build
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.EMAIL_ERROR_TEXT
@@ -29,7 +27,6 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     override fun setUpViews() {
         super.setUpViews()
         binding.signupErrorTextView.visibility = View.GONE
@@ -66,8 +63,6 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
         }
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.P)
     private fun onSignUp() {
         val name = binding.signupNameEditText.text.toString()
         val mobile = binding.signupMobileEditText.text.toString()
