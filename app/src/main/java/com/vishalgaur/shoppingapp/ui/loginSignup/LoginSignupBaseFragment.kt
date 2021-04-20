@@ -54,4 +54,5 @@ abstract class LoginSignupBaseFragment<VBinding : ViewBinding> : Fragment() {
         }
     }
 
+    interface OnClickListener: View.OnClickListener
 }

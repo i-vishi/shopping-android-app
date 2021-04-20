@@ -31,17 +31,20 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
         super.setUpViews()
         binding.signupErrorTextView.visibility = View.GONE
 
-        binding.signupSignupBtn.setOnClickListener {
-            onSignUp()
-            if (viewModel.errorStatus.value == ViewErrors.NONE) {
-                viewModel.signErrorStatus.observe(viewLifecycleOwner) {
-                    if (it == SignUpErrors.NONE) {
-                        val bundle = bundleOf("uData" to viewModel.userData.value)
-                        launchOtpActivity(getString(R.string.signup_fragment_label), bundle)
+        binding.signupSignupBtn.setOnClickListener(object : OnClickListener {
+            override fun onClick(v: View?) {
+                onSignUp()
+                if (viewModel.errorStatus.value == ViewErrors.NONE) {
+                    viewModel.signErrorStatus.observe(viewLifecycleOwner) {
+                        if (it == SignUpErrors.NONE) {
+                            val bundle = bundleOf("uData" to viewModel.userData.value)
+                            launchOtpActivity(getString(R.string.signup_fragment_label), bundle)
+                        }
                     }
                 }
             }
-        }
+
+        })
 
         setUpClickableLoginText()
     }
