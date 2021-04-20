@@ -27,6 +27,9 @@ class FirebaseDbUtils {
         usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, mobile)
             .whereEqualTo(USERS_PWD_FIELD, pwd).get()
 
+    fun getUserByMobile(mobile: String) =
+        usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, mobile).get()
+
     fun updateEmailsAndMobiles(email: String, mobile: String) {
         allEmailsMobilesRef().update(EMAIL_MOBILE_EMAIL_FIELD, FieldValue.arrayUnion(email))
         allEmailsMobilesRef().update(EMAIL_MOBILE_MOB_FIELD, FieldValue.arrayUnion(mobile))

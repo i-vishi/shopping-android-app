@@ -22,7 +22,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private var currUser: LiveData<FirebaseUser?>
 
-    private val authRepository = AuthRepository(application)
+    val authRepository = AuthRepository(application)
 
     private val _userData = MutableLiveData<UserData>()
     val userData: LiveData<UserData> get() = _userData
@@ -127,15 +127,16 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             val res = async { authRepository.checkLogin(phoneNumber, pwd) }
             _userData.value = res.await()
             if (_userData.value != null) {
-                _loginErrorStatus.postValue(LogInErrors.NONE)
+                _loginErrorStatus.value = LogInErrors.NONE
             } else {
-                _loginErrorStatus.postValue(LogInErrors.LERR)
+                _loginErrorStatus.value = LogInErrors.LERR
             }
         }
     }
 
-    private fun getCurrUser() {
+    private suspend fun getCurrUser() {
         Log.d(TAG, "refreshing data...")
+        authRepository.refreshData()
         currUser = authRepository.firebaseUser
     }
 }

@@ -30,10 +30,11 @@ class AuthRepository(private val application: Application) {
     private val _isLoggedIn = MutableLiveData<Boolean>()
     val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
 
-    init {
+    suspend fun refreshData() {
         if (firebaseAuth.currentUser != null) {
             _firebaseUser.postValue(firebaseAuth.currentUser)
-//            _isLoggedIn.postValue(true)
+            updateUserInRoom(firebaseAuth.currentUser.phoneNumber)
+            _isLoggedIn.postValue(true)
         } else {
             _firebaseUser.value = null
             _isLoggedIn.value = false
@@ -43,10 +44,10 @@ class AuthRepository(private val application: Application) {
     fun getFirebaseAuth(): FirebaseAuth = firebaseAuth
 
     fun signUp(uData: UserData) {
-        Log.d(TAG, "updating data on Room")
+        Log.d(TAG, "updating user data on Room")
         userDatabase.userDao().clear()
         userDatabase.userDao().insert(uData)
-        Log.d(TAG, "updating data on Network...")
+        Log.d(TAG, "updating user data on Network...")
 
         db.addUser(uData.toHashMap())
             .addOnSuccessListener {
@@ -103,6 +104,7 @@ class AuthRepository(private val application: Application) {
     fun signOut() {
         firebaseAuth.signOut()
         _isLoggedIn.postValue(false)
+        userDatabase.userDao().clear()
     }
 
     fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
@@ -118,10 +120,22 @@ class AuthRepository(private val application: Application) {
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         Log.d(TAG, "createUserWithMobile:failure", task.exception)
                         _isLoggedIn.postValue(false)
+                        _firebaseUser.postValue(null)
                         makeErrToast("Wrong OTP!")
                     }
                 }
             }
+    }
+
+    private suspend fun updateUserInRoom(pNumber: String?) {
+        if (pNumber != null) {
+            val uData =
+                db.getUserByMobile(pNumber).await().documents[0].toObject(UserData::class.java)
+            if (uData != null) {
+                userDatabase.userDao().clear()
+                userDatabase.userDao().insert(uData)
+            }
+        }
     }
 
 }
