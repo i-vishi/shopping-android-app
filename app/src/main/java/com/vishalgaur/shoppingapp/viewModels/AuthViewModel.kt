@@ -113,12 +113,12 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 _errorStatusLoginFragment.value = LoginViewErrors.ERR_MOBILE
             } else {
                 _errorStatusLoginFragment.value = LoginViewErrors.NONE
-                logIn("+91" + mobile.trim(), password)
+                logIn("+91" + mobile.trim(), password, isRemOn)
             }
         }
     }
 
-    private fun logIn(phoneNumber: String, pwd: String) {
+    private fun logIn(phoneNumber: String, pwd: String, rememberMe: Boolean) {
         viewModelScope.launch {
             val res = async { authRepository.checkLogin(phoneNumber, pwd) }
             _userData.value = res.await()

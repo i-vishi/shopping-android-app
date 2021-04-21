@@ -3,27 +3,24 @@ package com.vishalgaur.shoppingapp.database
 import android.content.Context
 import android.content.SharedPreferences
 
-class SessionManager(context: Context) {
+class ShoppingAppSessionManager(context: Context) {
 
     var userSession: SharedPreferences =
         context.getSharedPreferences("userLoginSession", Context.MODE_PRIVATE)
     var editor: SharedPreferences.Editor = userSession.edit()
 
 
-    fun createLoginSession(id: String, name: String, mobile: String) {
+    fun createLoginSession(id: String, name: String, mobile: String, isRemOn: Boolean) {
         editor.putBoolean(IS_LOGIN, true)
         editor.putString(KEY_ID, id)
         editor.putString(KEY_NAME, name)
         editor.putString(KEY_MOBILE, mobile)
+        editor.putBoolean(KEY_REMEMBER_ME, isRemOn)
 
         editor.commit()
     }
 
-    fun loginToSession(mobile: String?) {
-        editor.putBoolean(IS_LOGIN, true)
-        editor.putString(KEY_MOBILE, mobile)
-        editor.commit()
-    }
+    fun isRememberMeOn() : Boolean = userSession.getBoolean(KEY_REMEMBER_ME, false)
 
     fun getPhoneNumber(): String? = userSession.getString(KEY_MOBILE, null)
 
@@ -47,5 +44,6 @@ class SessionManager(context: Context) {
         private const val KEY_NAME = "userName"
         private const val KEY_MOBILE = "userMobile"
         private const val KEY_ID = "userId"
+        private const val KEY_REMEMBER_ME = "isRemOn"
     }
 }

@@ -1,15 +1,10 @@
 package com.vishalgaur.shoppingapp.ui.home
 
-import android.os.Binder
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.navigation.fragment.findNavController
-import com.vishalgaur.shoppingapp.R
-import com.vishalgaur.shoppingapp.database.SessionManager
 import com.vishalgaur.shoppingapp.databinding.FragmentFirstBinding
 
 /**

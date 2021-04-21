@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.vishalgaur.shoppingapp.database.SessionManager
+import com.vishalgaur.shoppingapp.database.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.database.UserDatabase
 import com.vishalgaur.shoppingapp.network.*
@@ -24,7 +24,7 @@ class AuthRepository(private val application: Application) {
 
     private var db = FirebaseDbUtils()
 
-    private var sessionManager = SessionManager(application.applicationContext)
+    private var sessionManager = ShoppingAppSessionManager(application.applicationContext)
 
     var isLoggedIn = MutableLiveData(false)
 
@@ -42,7 +42,7 @@ class AuthRepository(private val application: Application) {
     fun getFirebaseAuth(): FirebaseAuth = firebaseAuth
 
     fun signUp(uData: UserData) {
-        sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile)
+        sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile, false)
         Log.d(TAG, "updating user data on Room")
         userDatabase.userDao().clear()
         userDatabase.userDao().insert(uData)
@@ -59,8 +59,8 @@ class AuthRepository(private val application: Application) {
         db.updateEmailsAndMobiles(uData.email, uData.mobile)
     }
 
-    fun login(uData: UserData) {
-        sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile)
+    fun login(uData: UserData, rememberMe: Boolean) {
+        sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile, rememberMe)
     }
 
     suspend fun checkEmailMobile(email: String, mobile: String): SignUpErrors? {
@@ -118,7 +118,6 @@ class AuthRepository(private val application: Application) {
                     Log.d(TAG, "signInWithCredential:success")
                     val user = task.result?.user
                     if (user != null) {
-                        sessionManager.loginToSession(user.phoneNumber)
                         isLoggedIn.value = true
                     }
                 } else {
@@ -138,7 +137,6 @@ class AuthRepository(private val application: Application) {
             val uData =
                 db.getUserByMobile(pNumber).await().documents[0].toObject(UserData::class.java)
             if (uData != null) {
-                sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile)
                 userDatabase.userDao().insert(uData)
             }
         }

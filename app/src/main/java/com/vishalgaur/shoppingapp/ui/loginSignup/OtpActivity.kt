@@ -10,7 +10,6 @@ import com.vishalgaur.shoppingapp.OTPStatus
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.databinding.ActivityOtpBinding
-import com.vishalgaur.shoppingapp.network.LogInErrors
 import com.vishalgaur.shoppingapp.ui.launchHome
 import com.vishalgaur.shoppingapp.viewModels.OtpViewModel
 import java.lang.IllegalArgumentException
@@ -64,9 +63,9 @@ class OtpActivity : AppCompatActivity() {
             if (it == true) {
                 if (fromWhere == getString(R.string.signup_fragment_label)) {
                     viewModel.signUp()
-                }
-                else {
-                    viewModel.login()
+                } else {
+                    val rememberMe = intent.getBooleanExtra("loginRememberMe", false)
+                    viewModel.login(rememberMe)
                 }
                 launchHome(this)
                 finish()

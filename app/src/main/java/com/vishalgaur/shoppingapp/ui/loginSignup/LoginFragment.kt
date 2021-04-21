@@ -47,8 +47,10 @@ class LoginFragment : LoginSignupBaseFragment<FragmentLoginBinding>() {
                 if (viewModel.errorStatusLoginFragment.value == LoginViewErrors.NONE) {
                     viewModel.loginErrorStatus.observe(viewLifecycleOwner) {
                         if (it == LogInErrors.NONE) {
+                            val isRemOn = binding.loginRemSwitch.isChecked
                             val bundle = bundleOf(
-                                "uData" to viewModel.userData.value
+                                "uData" to viewModel.userData.value,
+                                "loginRememberMe" to isRemOn
                             )
                             launchOtpActivity(getString(R.string.login_fragment_label), bundle)
                         }
