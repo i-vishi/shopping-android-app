@@ -1,5 +1,6 @@
 package com.vishalgaur.shoppingapp.ui.home
 
+import android.os.Binder
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,17 +9,24 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.database.SessionManager
+import com.vishalgaur.shoppingapp.databinding.FragmentFirstBinding
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class FirstFragment : Fragment() {
 
+	private lateinit var binding: FragmentFirstBinding
+
+
 	override fun onCreateView(
 			inflater: LayoutInflater, container: ViewGroup?,
 			savedInstanceState: Bundle?
 	): View? {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_first, container, false)
+		binding = FragmentFirstBinding.inflate(layoutInflater)
+
+		return binding.root
 	}
 }

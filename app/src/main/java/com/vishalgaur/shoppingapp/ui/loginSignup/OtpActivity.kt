@@ -1,7 +1,6 @@
 package com.vishalgaur.shoppingapp.ui.loginSignup
 
 import android.app.Application
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +10,8 @@ import com.vishalgaur.shoppingapp.OTPStatus
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.databinding.ActivityOtpBinding
-import com.vishalgaur.shoppingapp.ui.home.MainActivity
+import com.vishalgaur.shoppingapp.network.LogInErrors
+import com.vishalgaur.shoppingapp.ui.launchHome
 import com.vishalgaur.shoppingapp.viewModels.OtpViewModel
 import java.lang.IllegalArgumentException
 
@@ -65,18 +65,23 @@ class OtpActivity : AppCompatActivity() {
                 if (fromWhere == getString(R.string.signup_fragment_label)) {
                     viewModel.signUp()
                 }
-                launchHome()
+                else {
+                    viewModel.login()
+                }
+                launchHome(this)
+                finish()
             }
         }
-    }
 
-    private fun launchHome() {
-        val homeIntent = Intent(this, MainActivity::class.java)
-        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(homeIntent)
-        finish()
+//        viewModel.loginStatus.observe(this) {
+//            if (it == LogInErrors.NONE) {
+//                if (fromWhere == getString(R.string.signup_fragment_label)) {
+//                    viewModel.signUp()
+//                }
+//                launchHome(this)
+//                finish()
+//            }
+//        }
     }
 
     private fun setViews() {

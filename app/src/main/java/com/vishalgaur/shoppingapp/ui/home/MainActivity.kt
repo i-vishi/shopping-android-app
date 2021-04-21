@@ -1,17 +1,25 @@
 package com.vishalgaur.shoppingapp.ui.home
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
-import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.database.SessionManager
+import com.vishalgaur.shoppingapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_main)
-	}
+    private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val sessionManager = SessionManager(this)
+
+        val uData: HashMap<String, String?>?
+        if (sessionManager.isLoggedIn()) {
+            uData = sessionManager.getUserDataFromSession()
+            val s = "UserName: " + uData["userName"]
+            binding.textView.text = s
+        }
+        setContentView(binding.root)
+    }
 }

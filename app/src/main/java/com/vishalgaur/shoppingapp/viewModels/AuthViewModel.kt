@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseUser
 import com.vishalgaur.shoppingapp.*
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.isEmailValid
@@ -20,9 +19,7 @@ private const val TAG = "AuthViewModel"
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var currUser: LiveData<FirebaseUser?>
-
-    val authRepository = AuthRepository(application)
+    private val authRepository = AuthRepository(application)
 
     private val _userData = MutableLiveData<UserData>()
     val userData: LiveData<UserData> get() = _userData
@@ -40,7 +37,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     val loginErrorStatus: LiveData<LogInErrors?> get() = _loginErrorStatus
 
     init {
-        currUser = MutableLiveData()
         _errorStatus.value = ViewErrors.NONE
         _errorStatusLoginFragment.value = LoginViewErrors.NONE
         refreshStatus()
@@ -137,6 +133,5 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private suspend fun getCurrUser() {
         Log.d(TAG, "refreshing data...")
         authRepository.refreshData()
-        currUser = authRepository.firebaseUser
     }
 }

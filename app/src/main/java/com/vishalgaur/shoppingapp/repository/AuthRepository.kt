@@ -3,11 +3,11 @@ package com.vishalgaur.shoppingapp.repository
 import android.app.Application
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.vishalgaur.shoppingapp.database.SessionManager
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.database.UserDatabase
 import com.vishalgaur.shoppingapp.network.*
@@ -24,26 +24,25 @@ class AuthRepository(private val application: Application) {
 
     private var db = FirebaseDbUtils()
 
-    private val _firebaseUser = MutableLiveData<FirebaseUser?>()
-    val firebaseUser: LiveData<FirebaseUser?> get() = _firebaseUser
+    private var sessionManager = SessionManager(application.applicationContext)
 
-    private val _isLoggedIn = MutableLiveData<Boolean>()
-    val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
+    var isLoggedIn = MutableLiveData(false)
 
     suspend fun refreshData() {
-        if (firebaseAuth.currentUser != null) {
-            _firebaseUser.postValue(firebaseAuth.currentUser)
-            updateUserInRoom(firebaseAuth.currentUser.phoneNumber)
-            _isLoggedIn.postValue(true)
+        if (sessionManager.isLoggedIn()) {
+            isLoggedIn.value = true
+            updateUserInRoom(sessionManager.getPhoneNumber())
         } else {
-            _firebaseUser.value = null
-            _isLoggedIn.value = false
+            sessionManager.logoutFromSession()
+            deleteUserDataFromRoom()
+            isLoggedIn.value = false
         }
     }
 
     fun getFirebaseAuth(): FirebaseAuth = firebaseAuth
 
     fun signUp(uData: UserData) {
+        sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile)
         Log.d(TAG, "updating user data on Room")
         userDatabase.userDao().clear()
         userDatabase.userDao().insert(uData)
@@ -58,6 +57,10 @@ class AuthRepository(private val application: Application) {
             }
 
         db.updateEmailsAndMobiles(uData.email, uData.mobile)
+    }
+
+    fun login(uData: UserData) {
+        sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile)
     }
 
     suspend fun checkEmailMobile(email: String, mobile: String): SignUpErrors? {
@@ -102,8 +105,9 @@ class AuthRepository(private val application: Application) {
     }
 
     fun signOut() {
+        sessionManager.logoutFromSession()
         firebaseAuth.signOut()
-        _isLoggedIn.postValue(false)
+        isLoggedIn.value = false
         userDatabase.userDao().clear()
     }
 
@@ -113,14 +117,15 @@ class AuthRepository(private val application: Application) {
                 if (task.isSuccessful) {
                     Log.d(TAG, "signInWithCredential:success")
                     val user = task.result?.user
-                    _firebaseUser.postValue(user)
-                    _isLoggedIn.postValue(true)
+                    if (user != null) {
+                        sessionManager.loginToSession(user.phoneNumber)
+                        isLoggedIn.value = true
+                    }
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         Log.d(TAG, "createUserWithMobile:failure", task.exception)
-                        _isLoggedIn.postValue(false)
-                        _firebaseUser.postValue(null)
+                        isLoggedIn.value = false
                         makeErrToast("Wrong OTP!")
                     }
                 }
@@ -128,14 +133,19 @@ class AuthRepository(private val application: Application) {
     }
 
     private suspend fun updateUserInRoom(pNumber: String?) {
+        userDatabase.userDao().clear()
         if (pNumber != null) {
             val uData =
                 db.getUserByMobile(pNumber).await().documents[0].toObject(UserData::class.java)
             if (uData != null) {
-                userDatabase.userDao().clear()
+                sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile)
                 userDatabase.userDao().insert(uData)
             }
         }
+    }
+
+    private fun deleteUserDataFromRoom() {
+        userDatabase.userDao().clear()
     }
 
 }

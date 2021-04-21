@@ -11,6 +11,7 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.vishalgaur.shoppingapp.OTPStatus
+import com.vishalgaur.shoppingapp.database.SessionManager
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.repository.AuthRepository
 import kotlinx.coroutines.launch
@@ -26,6 +27,8 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 
     val authRepository = AuthRepository(application)
 
+    private val sessionManager = SessionManager(application.applicationContext)
+
     var storedVerificationId: String? = ""
     private var verificationInProgress = false
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
@@ -40,6 +43,12 @@ class OtpViewModel(application: Application, private val uData: UserData) :
     fun signUp() {
         viewModelScope.launch {
             authRepository.signUp(uData)
+        }
+    }
+
+    fun login() {
+        viewModelScope.launch {
+            authRepository.login(uData)
         }
     }
 
