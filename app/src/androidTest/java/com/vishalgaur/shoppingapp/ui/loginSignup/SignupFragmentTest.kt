@@ -8,14 +8,11 @@ import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import androidx.test.platform.app.InstrumentationRegistry
 import com.vishalgaur.shoppingapp.R
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.containsString
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -32,7 +29,7 @@ class SignupFragmentTest {
         navController = TestNavHostController(ApplicationProvider.getApplicationContext())
 
         runOnUiThread {
-            navController.setGraph(R.navigation.nav_graph)
+            navController.setGraph(R.navigation.signup_nav_graph)
             signUpScenario.onFragment {
                 Navigation.setViewNavController(it.requireView(), navController)
             }

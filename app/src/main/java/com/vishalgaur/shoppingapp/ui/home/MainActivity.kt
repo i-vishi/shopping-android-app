@@ -1,35 +1,37 @@
 package com.vishalgaur.shoppingapp.ui.home
 
+import android.app.Service
+import android.content.Intent
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.vishalgaur.shoppingapp.database.ShoppingAppSessionManager
-import com.vishalgaur.shoppingapp.databinding.ActivityMainBinding
+import androidx.lifecycle.ViewModelProvider
+import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.viewModels.HomeViewModel
+import com.vishalgaur.shoppingapp.viewModels.HomeViewModelFactory
+
+private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var sessionManager :ShoppingAppSessionManager
+	private lateinit var viewModel: HomeViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        sessionManager = ShoppingAppSessionManager(this)
+	override fun onCreate(savedInstanceState: Bundle?) {
+		Log.d(TAG, "onCreate starts")
+		super.onCreate(savedInstanceState)
+		val viewModelFactory = HomeViewModelFactory(application)
+		viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
+		setContentView(R.layout.activity_main)
+	}
 
-        val uData: HashMap<String, String?>?
-        if (sessionManager.isLoggedIn()) {
-            uData = sessionManager.getUserDataFromSession()
-            val s = "UserName: " + uData["userName"]
-            binding.textView.text = s
-        }
-        setContentView(binding.root)
-    }
 
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        if(!sessionManager.isRememberMeOn()){
-//            sessionManager.logoutFromSession()
-//        }
-//        Log.d("TAGTAGTAG", "MainActivity destroyed")
-//    }
+//	override fun onDestroy() {
+//		Log.d(TAG, "MainActivity destroyed")
+//		if (!viewModel.authRepository.isRememberMeOn()) {
+//			viewModel.authRepository.signOut()
+//		}
+//		super.onDestroy()
+//	}
+
 }
