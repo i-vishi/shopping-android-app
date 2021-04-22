@@ -10,7 +10,7 @@ import com.vishalgaur.shoppingapp.databinding.FragmentFirstBinding
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class HomeFragment : Fragment() {
 
 	private lateinit var binding: FragmentFirstBinding
 

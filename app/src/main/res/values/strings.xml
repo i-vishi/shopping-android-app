@@ -41,4 +41,19 @@
     <string name="login_error_text">Incorrect Mobile Number or Password</string>
     <string name="login_signup_text">New User? Sign Up</string>
     <string name="signup_seller_text">Do you wish to sell any products?</string>
+    <string name="home_add_fab_desc">Add Product FAB</string>
+    <string name="add_pro_name_label_text">Product Name</string>
+    <string name="add_pro_price_label_text">Price</string>
+    <string name="add_pro_desc_label_text">Description</string>
+    <string name="add_pro_sizes_label_text">Sizes Available</string>
+    <string name="chip_size_5">5</string>
+    <string name="chip_size_6">6</string>
+    <string name="chip_size_7">7</string>
+    <string name="chip_size_8">8</string>
+    <string name="chip_size_9">9</string>
+    <string name="chip_size_10">10</string>
+    <string name="chip_size_11">11</string>
+    <string name="chip_size_12">12</string>
+    <string name="app_pro_btn_text">Add Product</string>
+
 </resources>
