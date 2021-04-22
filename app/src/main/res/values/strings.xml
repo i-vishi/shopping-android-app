@@ -55,5 +55,8 @@
     <string name="chip_size_11">11</string>
     <string name="chip_size_12">12</string>
     <string name="app_pro_btn_text">Add Product</string>
+    <string name="pro_cat_dialog_title">Select Product Category</string>
+    <string name="pro_cat_dialog_cancel_btn">Cancel</string>
+    <string name="pro_cat_dialog_ok_btn">OK</string>
 
 </resources>

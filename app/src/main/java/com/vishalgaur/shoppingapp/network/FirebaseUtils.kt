@@ -19,11 +19,13 @@ class FirebaseDbUtils {
     private var firebaseDb = Firebase.firestore
 
     private fun usersCollectionRef() = firebaseDb.collection(USERS_COLLECTION)
-
+    private fun productsCollectionRef() = firebaseDb.collection(PRODUCT_COLLECTION)
     private fun allEmailsMobilesRef() =
         firebaseDb.collection(USERS_COLLECTION).document(EMAIL_MOBILE_DOC)
 
     fun addUser(data: HashMap<String, String>) = usersCollectionRef().add(data)
+
+    fun addProduct(data: HashMap<String, Any>) = productsCollectionRef().add(data)
 
     fun getUserByMobileAndPassword(mobile: String, pwd: String) =
         usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, mobile)
@@ -39,6 +41,12 @@ class FirebaseDbUtils {
 
     fun getEmailsAndMobiles() = allEmailsMobilesRef().get()
 
+    fun getAllProductsByOwner(ownerId: String) =
+        productsCollectionRef().whereEqualTo(PRODUCT_OWNER_FIELD, ownerId).get()
+
+    fun getProductById(productId: String) =
+        productsCollectionRef().whereEqualTo(PRODUCT_ID_FIELD, productId).get()
+
 
     companion object {
         private const val USERS_COLLECTION = "users"
@@ -47,5 +55,8 @@ class FirebaseDbUtils {
         private const val EMAIL_MOBILE_DOC = "emailAndMobiles"
         private const val EMAIL_MOBILE_EMAIL_FIELD = "emails"
         private const val EMAIL_MOBILE_MOB_FIELD = "mobiles"
+        private const val PRODUCT_COLLECTION = "products"
+        private const val PRODUCT_OWNER_FIELD = "owner"
+        private const val PRODUCT_ID_FIELD = "productId"
     }
 }
