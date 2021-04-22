@@ -42,7 +42,8 @@ class AuthRepository(private val application: Application) {
     fun getFirebaseAuth(): FirebaseAuth = firebaseAuth
 
     fun signUp(uData: UserData) {
-        sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile, false)
+        val isSeller = uData.userType == UserType.SELLER.name
+        sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile, false, isSeller)
         Log.d(TAG, "updating user data on Room")
         userDatabase.userDao().clear()
         userDatabase.userDao().insert(uData)
@@ -60,7 +61,8 @@ class AuthRepository(private val application: Application) {
     }
 
     fun login(uData: UserData, rememberMe: Boolean) {
-        sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile, rememberMe)
+        val isSeller = uData.userType == UserType.SELLER.name
+        sessionManager.createLoginSession(uData.userId, uData.name, uData.mobile, rememberMe, isSeller)
     }
 
     suspend fun checkEmailMobile(email: String, mobile: String): SignUpErrors? {

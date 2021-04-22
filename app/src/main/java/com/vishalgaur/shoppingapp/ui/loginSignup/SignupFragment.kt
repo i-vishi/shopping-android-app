@@ -79,8 +79,9 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
         val password1 = binding.signupPasswordEditText.text.toString()
         val password2 = binding.signupCnfPasswordEditText.text.toString()
         val isAccepted = binding.signupPolicySwitch.isChecked
+        val isSeller = binding.signupSellerSwitch.isChecked
 
-        viewModel.signUpSubmitData(name, mobile, email, password1, password2, isAccepted)
+        viewModel.signUpSubmitData(name, mobile, email, password1, password2, isAccepted, isSeller)
     }
 
     private fun modifyErrors(err: ViewErrors) {

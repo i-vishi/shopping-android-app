@@ -51,7 +51,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
             android:hint="@string/signup_name_hint"
             app:expandedHintEnabled="false"
@@ -181,7 +180,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/signup_policy_switch"
+            android:id="@+id/signup_seller_switch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -190,11 +189,27 @@
             android:checked="false"
             android:paddingStart="2dp"
             android:paddingEnd="2dp"
+            android:text="@string/signup_seller_text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/confirmPasswordOutlinedTextField"
+            app:switchPadding="4dp" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/signup_policy_switch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:checked="false"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             android:text="@string/signup_switch_tnc_label"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/confirmPasswordOutlinedTextField"
+            app:layout_constraintTop_toBottomOf="@+id/signup_seller_switch"
             app:switchPadding="8dp"
             app:switchTextAppearance="@style/TextAppearance.MyTheme.Caption" />
 

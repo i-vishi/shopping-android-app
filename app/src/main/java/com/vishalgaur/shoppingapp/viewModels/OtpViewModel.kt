@@ -11,7 +11,6 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.vishalgaur.shoppingapp.OTPStatus
-import com.vishalgaur.shoppingapp.database.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.repository.AuthRepository
 import kotlinx.coroutines.launch
@@ -26,8 +25,6 @@ class OtpViewModel(application: Application, private val uData: UserData) :
     val otpStatus: LiveData<OTPStatus> get() = _otpStatus
 
     val authRepository = AuthRepository(application)
-
-    private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 
     var storedVerificationId: String? = ""
     private var verificationInProgress = false

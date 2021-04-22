@@ -101,8 +101,7 @@ class LoginFragment : LoginSignupBaseFragment<FragmentLoginBinding>() {
     private fun onLogin() {
         val mob = binding.loginMobileEditText.text.toString()
         val pwd = binding.loginPasswordEditText.text.toString()
-        val isRemOn = binding.loginRemSwitch.isChecked
 
-        viewModel.loginSubmitData(mob, pwd, isRemOn)
+        viewModel.loginSubmitData(mob, pwd)
     }
 }

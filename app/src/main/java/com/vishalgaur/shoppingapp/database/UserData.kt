@@ -3,6 +3,7 @@ package com.vishalgaur.shoppingapp.database
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.vishalgaur.shoppingapp.network.UserType
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -13,7 +14,8 @@ data class UserData(
 	var name: String = "",
 	var mobile: String = "",
 	var email: String = "",
-	var password: String = ""
+	var password: String = "",
+	var userType: String = UserType.CUSTOMER.name
 ) : Parcelable {
     fun toHashMap(): HashMap<String, String> {
         return hashMapOf(
@@ -21,7 +23,8 @@ data class UserData(
 			"name" to name,
 			"email" to email,
 			"mobile" to mobile,
-			"password" to password
+			"password" to password,
+			"userType" to userType
 		)
     }
 }

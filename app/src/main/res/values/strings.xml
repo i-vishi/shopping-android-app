@@ -40,4 +40,5 @@
     <string name="otp_message_2">O T P</string>
     <string name="login_error_text">Incorrect Mobile Number or Password</string>
     <string name="login_signup_text">New User? Sign Up</string>
+    <string name="signup_seller_text">Do you wish to sell any products?</string>
 </resources>

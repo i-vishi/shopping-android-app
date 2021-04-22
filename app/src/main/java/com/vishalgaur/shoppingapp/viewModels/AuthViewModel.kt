@@ -11,6 +11,7 @@ import com.vishalgaur.shoppingapp.database.UserData
 import com.vishalgaur.shoppingapp.isEmailValid
 import com.vishalgaur.shoppingapp.network.LogInErrors
 import com.vishalgaur.shoppingapp.network.SignUpErrors
+import com.vishalgaur.shoppingapp.network.UserType
 import com.vishalgaur.shoppingapp.repository.AuthRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -54,7 +55,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         email: String,
         pwd1: String,
         pwd2: String,
-        isAccepted: Boolean
+        isAccepted: Boolean,
+        isSeller: Boolean
     ) {
         if (name.isBlank() || mobile.isBlank() || email.isBlank() || pwd1.isBlank() || pwd2.isBlank()) {
             _errorStatus.value = ViewErrors.ERR_EMPTY
@@ -83,6 +85,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                                     "+91" + mobile.trim(),
                                     email.trim(),
                                     pwd1.trim(),
+                                    if(isSeller) UserType.SELLER.name else UserType.CUSTOMER.name
                                 )
                             _userData.value = newData
                             checkUniqueUser(newData)
@@ -105,7 +108,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun loginSubmitData(mobile: String, password: String, isRemOn: Boolean) {
+    fun loginSubmitData(mobile: String, password: String) {
         if (mobile.isBlank() || password.isBlank()) {
             _errorStatusLoginFragment.value = LoginViewErrors.ERR_EMPTY
         } else {
@@ -113,12 +116,12 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 _errorStatusLoginFragment.value = LoginViewErrors.ERR_MOBILE
             } else {
                 _errorStatusLoginFragment.value = LoginViewErrors.NONE
-                logIn("+91" + mobile.trim(), password, isRemOn)
+                logIn("+91" + mobile.trim(), password)
             }
         }
     }
 
-    private fun logIn(phoneNumber: String, pwd: String, rememberMe: Boolean) {
+    private fun logIn(phoneNumber: String, pwd: String) {
         viewModelScope.launch {
             val res = async { authRepository.checkLogin(phoneNumber, pwd) }
             _userData.value = res.await()

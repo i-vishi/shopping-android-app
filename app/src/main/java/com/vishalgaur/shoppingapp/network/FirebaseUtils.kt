@@ -8,6 +8,8 @@ enum class SignUpErrors { NONE, SERR }
 
 enum class LogInErrors { NONE, LERR }
 
+enum class UserType { CUSTOMER, SELLER }
+
 data class EmailMobileData(
     val emails: ArrayList<String> = ArrayList(),
     val mobiles: ArrayList<String> = ArrayList()
