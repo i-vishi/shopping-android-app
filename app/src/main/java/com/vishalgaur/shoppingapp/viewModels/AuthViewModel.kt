@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.vishalgaur.shoppingapp.*
-import com.vishalgaur.shoppingapp.database.UserData
+import com.vishalgaur.shoppingapp.database.user.UserData
 import com.vishalgaur.shoppingapp.isEmailValid
 import com.vishalgaur.shoppingapp.network.LogInErrors
 import com.vishalgaur.shoppingapp.network.SignUpErrors

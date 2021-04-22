@@ -3,9 +3,9 @@ package com.vishalgaur.shoppingapp
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.vishalgaur.shoppingapp.database.UserDao
-import com.vishalgaur.shoppingapp.database.UserData
-import com.vishalgaur.shoppingapp.database.UserDatabase
+import com.vishalgaur.shoppingapp.database.ShoppingAppDb
+import com.vishalgaur.shoppingapp.database.user.UserDao
+import com.vishalgaur.shoppingapp.database.user.UserData
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.nullValue
 import org.junit.After
@@ -18,14 +18,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class UserDatabaseTest {
     private lateinit var userDao: UserDao
-    private lateinit var userDb: UserDatabase
+    private lateinit var userDb: ShoppingAppDb
 
     @Before
     fun createDb() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
 
         userDb =
-            Room.inMemoryDatabaseBuilder(context, UserDatabase::class.java).allowMainThreadQueries()
+            Room.inMemoryDatabaseBuilder(context, ShoppingAppDb::class.java).allowMainThreadQueries()
                 .build()
 
         userDao = userDb.userDao()

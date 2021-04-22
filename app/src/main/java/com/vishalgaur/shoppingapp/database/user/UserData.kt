@@ -1,4 +1,4 @@
-package com.vishalgaur.shoppingapp.database
+package com.vishalgaur.shoppingapp.database.user
 
 import android.os.Parcelable
 import androidx.room.Entity

@@ -41,11 +41,13 @@ class FirebaseDbUtils {
 
     fun getEmailsAndMobiles() = allEmailsMobilesRef().get()
 
-    fun getAllProductsByOwner(ownerId: String) =
+    fun getProductsByOwner(ownerId: String) =
         productsCollectionRef().whereEqualTo(PRODUCT_OWNER_FIELD, ownerId).get()
 
     fun getProductById(productId: String) =
         productsCollectionRef().whereEqualTo(PRODUCT_ID_FIELD, productId).get()
+
+    fun getAllProducts() = productsCollectionRef().get()
 
 
     companion object {

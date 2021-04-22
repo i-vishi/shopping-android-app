@@ -7,9 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.vishalgaur.shoppingapp.database.ShoppingAppDb
 import com.vishalgaur.shoppingapp.database.ShoppingAppSessionManager
-import com.vishalgaur.shoppingapp.database.UserData
-import com.vishalgaur.shoppingapp.database.UserDatabase
+import com.vishalgaur.shoppingapp.database.user.UserData
 import com.vishalgaur.shoppingapp.network.*
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
@@ -18,7 +18,7 @@ private const val TAG = "AuthRepository"
 
 class AuthRepository(private val application: Application) {
 
-    private var userDatabase: UserDatabase = UserDatabase.getInstance(application)
+    private var userDatabase: ShoppingAppDb = ShoppingAppDb.getInstance(application)
 
     private var firebaseAuth: FirebaseAuth = Firebase.auth
 
