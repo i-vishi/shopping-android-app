@@ -50,5 +50,7 @@ class ProductsRepository(application: Application) {
 
 	fun getAllProducts() = appDb.productsDao().getAllProducts()
 
+	fun getProductById(productId: String) = appDb.productsDao().getProductById(productId)
+
 	fun getAllProductsByOwner(owner: String) = appDb.productsDao().getProductsByOwnerId(owner)
 }

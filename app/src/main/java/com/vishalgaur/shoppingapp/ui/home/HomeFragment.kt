@@ -8,9 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.database.products.Product
 import com.vishalgaur.shoppingapp.databinding.FragmentHomeBinding
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModel
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModelFactory
@@ -41,8 +44,11 @@ class HomeFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		val adapter = ProductAdapter(viewModel.products.value ?: ArrayList())
-		adapter.setOnItemClickListener {
-			Log.d(TAG, "product clicked: $it")
+		adapter.onClickListener = object : ProductAdapter.OnClickListener {
+			override fun onClick(productData: Product) {
+				Log.d(TAG, "product clicked: ${productData.productId}")
+				findNavController().navigate(R.id.action_seeProduct, bundleOf("productId" to productData.productId))
+			}
 		}
 		binding.productsRecyclerView.adapter = adapter
 	}

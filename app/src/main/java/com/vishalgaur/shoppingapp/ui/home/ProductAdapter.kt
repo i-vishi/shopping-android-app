@@ -4,14 +4,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.database.products.Product
 import com.vishalgaur.shoppingapp.databinding.ProductsListItemBinding
 
 class ProductAdapter(private val data: List<Product>) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+
+	lateinit var onClickListener: OnClickListener
+
 	class ViewHolder(binding: ProductsListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 		val proName = binding.productNameTv
 		val proPrice = binding.productPriceTv
+		val productCard = binding.productCard
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,16 +26,18 @@ class ProductAdapter(private val data: List<Product>) : RecyclerView.Adapter<Pro
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 		val proData = data[position]
 		holder.apply {
+			productCard.setOnClickListener {
+				onClickListener.onClick(proData)
+			}
 			proName.text = proData.name
 			proPrice.text = "Price: $${proData.price}"
+
 		}
 	}
 
 	override fun getItemCount(): Int = data.size
 
-	private var onItemClickListener: ((Product) -> Unit)? = null
-
-	fun setOnItemClickListener(listener: ((Product) -> Unit)) {
-		onItemClickListener = listener
+	interface OnClickListener {
+		fun onClick(productData: Product)
 	}
 }

@@ -46,6 +46,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	private val _addProductErrors = MutableLiveData<AddProductErrors?>()
 	val addProductErrors: LiveData<AddProductErrors?> get() = _addProductErrors
 
+	private val _selectedProduct = MutableLiveData<String>()
+	val selectedProduct : LiveData<String> get() = _selectedProduct
+
 	private val _productData = MutableLiveData<Product>()
 	val productData: LiveData<Product> get() = _productData
 
