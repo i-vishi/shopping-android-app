@@ -46,14 +46,6 @@
     <string name="add_pro_price_label_text">Price</string>
     <string name="add_pro_desc_label_text">Description</string>
     <string name="add_pro_sizes_label_text">Sizes Available</string>
-    <string name="chip_size_5">5</string>
-    <string name="chip_size_6">6</string>
-    <string name="chip_size_7">7</string>
-    <string name="chip_size_8">8</string>
-    <string name="chip_size_9">9</string>
-    <string name="chip_size_10">10</string>
-    <string name="chip_size_11">11</string>
-    <string name="chip_size_12">12</string>
     <string name="app_pro_btn_text">Add Product</string>
     <string name="pro_cat_dialog_title">Select Product Category</string>
     <string name="pro_cat_dialog_cancel_btn">Cancel</string>
@@ -63,6 +55,10 @@
     <string name="add_product_error_string">Fill all the details!</string>
     <string name="add_pro_error_price_string">Price can not be 0.</string>
     <string name="pro_item_price">Price: $%d</string>
-    <string name="some_string">dome</string>
+    <string name="product_detail_image_desc">Product Image</string>
+    <string name="pro_details_like_btn_desc">Like Button</string>
+    <string name="pro_details_select_size_lable_text">Select Size</string>
+    <string name="pro_details_select_color_label_text">Select Color</string>
+    <string name="pro_details_specif_label_text">Specifications</string>
 
 </resources>
