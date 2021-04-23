@@ -18,5 +18,9 @@
         android:id="@+id/addProductFragment"
         android:name="com.vishalgaur.shoppingapp.ui.home.AddProductFragment"
         android:label="AddProductFragment"
-        tools:layout="@layout/fragment_add_product"/>
+        tools:layout="@layout/fragment_add_product">
+        <argument
+            android:name="categoryName"
+            app:argType="string" />
+    </fragment>
 </navigation>

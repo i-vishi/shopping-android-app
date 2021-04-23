@@ -46,7 +46,7 @@ class HomeFragment : Fragment() {
 
 
 	private fun showDialog() {
-		val categoryItems = arrayOf("Shoes", "item2", "item3")
+		val categoryItems = arrayOf("Shoes")
 		var checkedItem = -1
 		context?.let {
 			MaterialAlertDialogBuilder(it)
@@ -68,6 +68,6 @@ class HomeFragment : Fragment() {
 
 	private fun navigateToAddProductFragment(catName: String) {
 		viewModel.setCategory(catName)
-		findNavController().navigate(R.id.action_goto_addProduct)
+		findNavController().navigate(R.id.action_goto_addProduct, bundleOf("categoryName" to catName))
 	}
 }

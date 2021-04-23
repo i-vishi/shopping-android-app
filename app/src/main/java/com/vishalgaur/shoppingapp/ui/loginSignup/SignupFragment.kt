@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.EMAIL_ERROR_TEXT
 import com.vishalgaur.shoppingapp.MOB_ERROR_TEXT
 import com.vishalgaur.shoppingapp.R
-import com.vishalgaur.shoppingapp.ViewErrors
+import com.vishalgaur.shoppingapp.ui.SignUpViewErrors
 import com.vishalgaur.shoppingapp.databinding.FragmentSignupBinding
 import com.vishalgaur.shoppingapp.network.SignUpErrors
 
@@ -40,7 +40,7 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
         binding.signupSignupBtn.setOnClickListener(object : OnClickListener {
             override fun onClick(v: View?) {
                 onSignUp()
-                if (viewModel.errorStatus.value == ViewErrors.NONE) {
+                if (viewModel.errorStatus.value == SignUpViewErrors.NONE) {
                     viewModel.signErrorStatus.observe(viewLifecycleOwner) {
                         if (it == SignUpErrors.NONE) {
                             val bundle = bundleOf("uData" to viewModel.userData.value)
@@ -84,15 +84,15 @@ class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
         viewModel.signUpSubmitData(name, mobile, email, password1, password2, isAccepted, isSeller)
     }
 
-    private fun modifyErrors(err: ViewErrors) {
+    private fun modifyErrors(err: SignUpViewErrors) {
         when (err) {
-            ViewErrors.NONE -> setEditTextsError()
-            ViewErrors.ERR_EMAIL -> setEditTextsError(emailError = EMAIL_ERROR_TEXT)
-            ViewErrors.ERR_MOBILE -> setEditTextsError(mobError = MOB_ERROR_TEXT)
-            ViewErrors.ERR_EMAIL_MOBILE -> setEditTextsError(EMAIL_ERROR_TEXT, MOB_ERROR_TEXT)
-            ViewErrors.ERR_EMPTY -> setErrorText("Fill all details.")
-            ViewErrors.ERR_NOT_ACC -> setErrorText("Accept the Terms.")
-            ViewErrors.ERR_PWD12NS -> setErrorText("Both passwords are not same!")
+            SignUpViewErrors.NONE -> setEditTextsError()
+            SignUpViewErrors.ERR_EMAIL -> setEditTextsError(emailError = EMAIL_ERROR_TEXT)
+            SignUpViewErrors.ERR_MOBILE -> setEditTextsError(mobError = MOB_ERROR_TEXT)
+            SignUpViewErrors.ERR_EMAIL_MOBILE -> setEditTextsError(EMAIL_ERROR_TEXT, MOB_ERROR_TEXT)
+            SignUpViewErrors.ERR_EMPTY -> setErrorText("Fill all details.")
+            SignUpViewErrors.ERR_NOT_ACC -> setErrorText("Accept the Terms.")
+            SignUpViewErrors.ERR_PWD12NS -> setErrorText("Both passwords are not same!")
         }
     }
 

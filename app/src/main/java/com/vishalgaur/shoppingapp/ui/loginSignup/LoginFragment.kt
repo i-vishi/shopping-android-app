@@ -7,7 +7,7 @@ import android.text.style.ClickableSpan
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
-import com.vishalgaur.shoppingapp.LoginViewErrors
+import com.vishalgaur.shoppingapp.ui.LoginViewErrors
 import com.vishalgaur.shoppingapp.MOB_ERROR_TEXT
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.databinding.FragmentLoginBinding

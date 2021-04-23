@@ -6,6 +6,14 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.vishalgaur.shoppingapp.ui.home.MainActivity
 
+enum class SignUpViewErrors { NONE, ERR_EMAIL, ERR_MOBILE, ERR_EMAIL_MOBILE, ERR_EMPTY, ERR_NOT_ACC, ERR_PWD12NS }
+
+enum class LoginViewErrors { NONE, ERR_EMPTY, ERR_MOBILE }
+
+enum class OTPStatus { NONE, CORRECT, WRONG }
+
+enum class AddProductErrors {NONE, EMPTY, ERR_PRICE_0}
+
 class MyOnFocusChangeListener : View.OnFocusChangeListener {
     override fun onFocusChange(v: View?, hasFocus: Boolean) {
         if (v != null) {

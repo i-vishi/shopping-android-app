@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.vishalgaur.shoppingapp.OTPStatus
+import com.vishalgaur.shoppingapp.ui.OTPStatus
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.database.user.UserData
 import com.vishalgaur.shoppingapp.databinding.ActivityOtpBinding

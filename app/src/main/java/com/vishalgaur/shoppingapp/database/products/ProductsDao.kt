@@ -5,14 +5,17 @@ import androidx.room.*
 
 @Dao
 interface ProductsDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(product: Product)
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	fun insert(product: Product)
 
-    @Query("SELECT * FROM products")
-    fun getAllProducts(): LiveData<List<Product>>
+	@Query("SELECT * FROM products")
+	fun getAllProducts(): LiveData<List<Product>>
 
-    @Query("SELECT * FROM products WHERE productId = :proId")
-    fun getProductById(proId: String): Product?
+	@Query("SELECT * FROM products WHERE productId = :proId")
+	fun getProductById(proId: String): Product?
+
+	@Query("SELECT * FROM products WHERE owner = :ownerId")
+	fun getProductsByOwnerId(ownerId: String): LiveData<List<Product>>
 }
 
 //@Database(entities = [Product::class], version = 1)

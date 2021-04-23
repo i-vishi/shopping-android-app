@@ -52,7 +52,7 @@
                     android:id="@+id/pro_name_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
+                    android:inputType="text"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:textColor="@color/dark_gray" />
@@ -90,7 +90,7 @@
                     android:id="@+id/pro_price_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
+                    android:inputType="numberDecimal"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp" />
 
@@ -127,14 +127,14 @@
                     android:id="@+id/pro_desc_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
+                    android:inputType="textMultiLine"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/add_sizes_desc_label"
+                android:id="@+id/add_pro_sizes_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -158,66 +158,64 @@
                 app:chipSpacingHorizontal="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_sizes_desc_label"
-                app:selectionRequired="true"
-                app:singleLine="true">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/size5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chip_size_5" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/size6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chip_size_6" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/size7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chip_size_7" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/size8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chip_size_8" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/size9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chip_size_9" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/size10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chip_size_10" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/size11"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chip_size_11" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/size12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chip_size_12" />
+                app:layout_constraintTop_toBottomOf="@id/add_pro_sizes_label"
+                app:selectionRequired="true">
 
             </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/add_pro_color_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/add_pro_color_label_text"
+                android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_pro_size_chip_group" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/add_pro_color_chip_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:chipSpacingHorizontal="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_pro_color_label"
+                app:selectionRequired="true">
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/add_pro_error_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="8dp"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.MyTheme.Subtitle2"
+                android:textColor="?attr/colorError"
+                app:drawableStartCompat="@android:drawable/stat_notify_error"
+                app:drawableTint="?attr/colorError"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_pro_color_chip_group"
+                android:text="@string/add_pro_error_empty" />
 
             <Button
                 android:id="@+id/add_pro_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="@color/blue_accent_300"
                 android:text="@string/app_pro_btn_text"
@@ -226,7 +224,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_pro_size_chip_group" />
+                app:layout_constraintTop_toBottomOf="@+id/add_pro_error_text_view" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

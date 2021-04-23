@@ -34,4 +34,6 @@ class ProductsRepository(private val application: Application) {
 	}
 
 	fun getAllProducts() = appDb.productsDao().getAllProducts()
+
+	fun getAllProductsByOwner(owner: String) = appDb.productsDao().getProductsByOwnerId(owner)
 }

@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
-import com.vishalgaur.shoppingapp.OTPStatus
+import com.vishalgaur.shoppingapp.ui.OTPStatus
 import com.vishalgaur.shoppingapp.database.user.UserData
 import com.vishalgaur.shoppingapp.repository.AuthRepository
 import kotlinx.coroutines.launch

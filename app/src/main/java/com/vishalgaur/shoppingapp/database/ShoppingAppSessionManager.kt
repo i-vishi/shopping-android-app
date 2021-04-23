@@ -41,6 +41,8 @@ class ShoppingAppSessionManager(context: Context) {
         )
     }
 
+    fun getUserIdFromSession(): String?  = userSession.getString(KEY_ID, null)
+
     fun isLoggedIn(): Boolean = userSession.getBoolean(IS_LOGIN, false)
 
     fun logoutFromSession() {
