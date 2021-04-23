@@ -10,11 +10,13 @@ import com.vishalgaur.shoppingapp.database.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.database.products.Product
 import com.vishalgaur.shoppingapp.getProductId
 import com.vishalgaur.shoppingapp.network.AddProductErrors
+import com.vishalgaur.shoppingapp.network.StoreDataStatus
 import com.vishalgaur.shoppingapp.repository.AuthRepository
 import com.vishalgaur.shoppingapp.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.ui.AddProductViewErrors
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 private const val TAG = "HomeViewModel"
 
@@ -25,7 +27,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 
-	lateinit var products: LiveData<List<Product>>
+	private val _products = MutableLiveData<List<Product>>()
+	val products: LiveData<List<Product>> get() = _products
 
 	private val currentUser = sessionManager.getUserIdFromSession()
 
@@ -34,19 +37,35 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	private val _selectedCategory = MutableLiveData<String>()
 	val selectedCategory: LiveData<String> get() = _selectedCategory
 
+	private val _storeDataStatus = MutableLiveData<StoreDataStatus>()
+	val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
+
 	private val _errorStatus = MutableLiveData<AddProductViewErrors>()
 	val errorStatus: LiveData<AddProductViewErrors> get() = _errorStatus
 
 	private val _addProductErrors = MutableLiveData<AddProductErrors?>()
-	val addProductErrors :LiveData<AddProductErrors?> get() = _addProductErrors
+	val addProductErrors: LiveData<AddProductErrors?> get() = _addProductErrors
 
 	private val _productData = MutableLiveData<Product>()
 	val productData: LiveData<Product> get() = _productData
 
 	init {
 		_errorStatus.value = AddProductViewErrors.NONE
+		getProducts()
+	}
+
+	private fun getProducts() {
 		viewModelScope.launch {
-			refreshData()
+			_storeDataStatus.value = StoreDataStatus.LOADING
+			try {
+				val res = productsRepository.getAllProducts()
+				Log.d(TAG, "list = $res")
+				_products.value = res
+				_storeDataStatus.value = StoreDataStatus.DONE
+			} catch (e: Exception) {
+				_storeDataStatus.value = StoreDataStatus.ERROR
+				_products.value = ArrayList()
+			}
 		}
 	}
 
@@ -54,15 +73,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 		_selectedCategory.value = catName
 	}
 
-	private suspend fun refreshData() {
-		authRepository.refreshData()
-		getAllProducts()
-		getProductsByOwner()
-	}
-
-	private fun getAllProducts() {
-		products = productsRepository.getAllProducts()
-	}
 
 	private fun getProductsByOwner() {
 		userProducts = productsRepository.getAllProductsByOwner(currentUser!!)
@@ -89,7 +99,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	private fun insertProduct() {
 		viewModelScope.launch {
 			if (productData.value != null) {
-				val res = async{productsRepository.insertProduct(productData.value!!)}
+				val res = async { productsRepository.insertProduct(productData.value!!) }
 				_addProductErrors.value = res.await()
 			} else {
 				Log.d(TAG, "Product is Null, Cannot Add Product")

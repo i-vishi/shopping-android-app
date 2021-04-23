@@ -62,5 +62,7 @@
     <string name="add_pro_color_label_text">Colors Available</string>
     <string name="add_product_error_string">Fill all the details!</string>
     <string name="add_pro_error_price_string">Price can not be 0.</string>
+    <string name="pro_item_price">Price: $%d</string>
+    <string name="some_string">dome</string>
 
 </resources>

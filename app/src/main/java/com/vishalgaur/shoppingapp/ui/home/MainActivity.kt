@@ -1,9 +1,6 @@
 package com.vishalgaur.shoppingapp.ui.home
 
-import android.app.Service
-import android.content.Intent
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider

@@ -13,6 +13,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.vishalgaur.shoppingapp.ui.OTPStatus
 import com.vishalgaur.shoppingapp.database.user.UserData
 import com.vishalgaur.shoppingapp.repository.AuthRepository
+import com.vishalgaur.shoppingapp.repository.ProductsRepository
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -25,6 +26,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
     val otpStatus: LiveData<OTPStatus> get() = _otpStatus
 
     val authRepository = AuthRepository(application)
+    private val productsRepository = ProductsRepository(application)
 
     var storedVerificationId: String? = ""
     private var verificationInProgress = false
@@ -40,12 +42,14 @@ class OtpViewModel(application: Application, private val uData: UserData) :
     fun signUp() {
         viewModelScope.launch {
             authRepository.signUp(uData)
+            productsRepository.insertAllProductsToRoom()
         }
     }
 
     fun login(rememberMe : Boolean) {
         viewModelScope.launch {
             authRepository.login(uData, rememberMe)
+            productsRepository.insertAllProductsToRoom()
         }
     }
 

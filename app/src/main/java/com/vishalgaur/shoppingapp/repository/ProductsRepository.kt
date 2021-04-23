@@ -18,7 +18,16 @@ class ProductsRepository(application: Application) {
 	private var firebaseDb = FirebaseDbUtils()
 
 	suspend fun refreshData() {
+		Log.d(TAG, "refreshing products")
+		insertAllProductsToRoom()
+	}
 
+	suspend fun insertAllProductsToRoom() {
+		withContext(Dispatchers.IO) {
+			val res = firebaseDb.getAllProducts().await().toObjects(Product::class.java)
+			Log.d(TAG, "Adding all products to Room")
+			appDb.productsDao().insertListOfProducts(res)
+		}
 	}
 
 	suspend fun insertProduct(newProduct: Product): AddProductErrors {

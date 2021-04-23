@@ -38,6 +38,15 @@ class HomeFragment : Fragment() {
 		return binding.root
 	}
 
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		val adapter = ProductAdapter(viewModel.products.value ?: ArrayList())
+		adapter.setOnItemClickListener {
+			Log.d(TAG, "product clicked: $it")
+		}
+		binding.productsRecyclerView.adapter = adapter
+	}
+
 	private fun setViews() {
 		binding.homeFabAddProduct.setOnClickListener {
 			showDialog()

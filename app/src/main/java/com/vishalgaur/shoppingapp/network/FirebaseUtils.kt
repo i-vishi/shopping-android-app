@@ -12,6 +12,8 @@ enum class AddProductErrors {NONE, ERR_ADD}
 
 enum class UserType { CUSTOMER, SELLER }
 
+enum class StoreDataStatus {LOADING, ERROR, DONE}
+
 data class EmailMobileData(
     val emails: ArrayList<String> = ArrayList(),
     val mobiles: ArrayList<String> = ArrayList()
