@@ -60,5 +60,7 @@
     <string name="pro_cat_dialog_ok_btn">OK</string>
     <string name="add_pro_error_empty">Fill all the details!</string>
     <string name="add_pro_color_label_text">Colors Available</string>
+    <string name="add_product_error_string">Fill all the details!</string>
+    <string name="add_pro_error_price_string">Price can not be 0.</string>
 
 </resources>

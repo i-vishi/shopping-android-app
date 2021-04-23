@@ -4,13 +4,15 @@ import android.app.Application
 import android.util.Log
 import com.vishalgaur.shoppingapp.database.ShoppingAppDb
 import com.vishalgaur.shoppingapp.database.products.Product
+import com.vishalgaur.shoppingapp.network.AddProductErrors
 import com.vishalgaur.shoppingapp.network.FirebaseDbUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 private const val TAG = "ProductsRepository"
 
-class ProductsRepository(private val application: Application) {
+class ProductsRepository(application: Application) {
 	private var appDb: ShoppingAppDb = ShoppingAppDb.getInstance(application)
 
 	private var firebaseDb = FirebaseDbUtils()
@@ -19,17 +21,21 @@ class ProductsRepository(private val application: Application) {
 
 	}
 
-	suspend fun insertProduct(newProduct: Product) {
+	suspend fun insertProduct(newProduct: Product): AddProductErrors {
 		withContext(Dispatchers.IO) {
 			Log.d(TAG, "adding product with id: ${newProduct.productId} in Room")
 			appDb.productsDao().insert(newProduct)
-			Log.d(TAG, "adding product with id: ${newProduct.productId} on firebase")
-			firebaseDb.addProduct(newProduct.toHashMap())
-					.addOnSuccessListener {
-						Log.d(TAG, "Product Added")
-					}.addOnFailureListener { e ->
-						Log.d(TAG, "error adding product: $e")
-					}
+		}
+		Log.d(TAG, "adding product with id: ${newProduct.productId} on firebase")
+		val res = firebaseDb.addProduct(newProduct.toHashMap()).await()
+
+		return if (res != null) {
+			Log.d(TAG, "Product Added to firestore")
+			AddProductErrors.NONE
+		} else {
+			Log.d(TAG, "error adding product to firebase ")
+			AddProductErrors.ERR_ADD
+
 		}
 	}
 

@@ -12,7 +12,7 @@ enum class LoginViewErrors { NONE, ERR_EMPTY, ERR_MOBILE }
 
 enum class OTPStatus { NONE, CORRECT, WRONG }
 
-enum class AddProductErrors {NONE, EMPTY, ERR_PRICE_0}
+enum class AddProductViewErrors {NONE, EMPTY, ERR_PRICE_0}
 
 class MyOnFocusChangeListener : View.OnFocusChangeListener {
     override fun onFocusChange(v: View?, hasFocus: Boolean) {

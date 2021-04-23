@@ -13,7 +13,7 @@ data class Product(
     var name: String = "",
     var owner: String = "",
     var description: String = "",
-    var price: Long = 0L,
+    var price: Double = 0.0,
     var availableSizes: List<Int>,
     var availableColors: List<String>,
     var rating: Double = 0.0

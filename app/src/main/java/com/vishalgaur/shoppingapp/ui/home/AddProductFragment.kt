@@ -10,13 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.database.products.ShoeColors
 import com.vishalgaur.shoppingapp.database.products.ShoeSizes
 import com.vishalgaur.shoppingapp.databinding.FragmentAddProductBinding
-import com.vishalgaur.shoppingapp.ui.AddProductErrors
+import com.vishalgaur.shoppingapp.network.AddProductErrors
+import com.vishalgaur.shoppingapp.ui.AddProductViewErrors
 import com.vishalgaur.shoppingapp.ui.MyOnFocusChangeListener
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModel
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModelFactory
@@ -53,11 +54,8 @@ class AddProductFragment : Fragment() {
 	}
 
 	private fun setObservers() {
-		viewModel.errorStatus.observe(viewLifecycleOwner) {
-			when (it) {
-				AddProductErrors.NONE -> binding.addProErrorTextView.visibility = View.GONE
-				else -> binding.addProErrorTextView.visibility = View.VISIBLE
-			}
+		viewModel.errorStatus.observe(viewLifecycleOwner) { err ->
+			modifyErrors(err)
 		}
 	}
 
@@ -72,14 +70,24 @@ class AddProductFragment : Fragment() {
 		setShoeSizesChips()
 		setShoeColorsChips()
 
-		binding.addProBtn.setOnClickListener { onAddProduct() }
+		binding.addProBtn.setOnClickListener {
+			onAddProduct()
+			if (viewModel.errorStatus.value == AddProductViewErrors.NONE) {
+				viewModel.addProductErrors.observe(viewLifecycleOwner) { err ->
+					if (err == AddProductErrors.NONE) {
+						findNavController().navigateUp()
+					}
+				}
+			}
+		}
 	}
 
 	private fun onAddProduct() {
 		val name = binding.proNameEditText.text.toString()
 		val price = binding.proPriceEditText.text.toString().toDoubleOrNull()
 		val desc = binding.proDescEditText.text.toString()
-		viewModel.submitProduct(name, price, desc, sizeList.toList())
+		Log.d(TAG, "$name, $price, $desc, $sizeList, $colorsList")
+		viewModel.submitProduct(name, price, desc, sizeList.toList(), colorsList.toList())
 	}
 
 	private fun setShoeSizesChips() {
@@ -131,6 +139,20 @@ class AddProductFragment : Fragment() {
 				ind++
 			}
 			invalidate()
+		}
+	}
+
+	private fun modifyErrors(err: AddProductViewErrors) {
+		when (err) {
+			AddProductViewErrors.NONE -> binding.addProErrorTextView.visibility = View.GONE
+			AddProductViewErrors.EMPTY -> {
+				binding.addProErrorTextView.visibility = View.VISIBLE
+				binding.addProErrorTextView.text = getString(R.string.add_product_error_string)
+			}
+			AddProductViewErrors.ERR_PRICE_0 -> {
+				binding.addProErrorTextView.visibility = View.VISIBLE
+				binding.addProErrorTextView.text = getString(R.string.add_pro_error_price_string)
+			}
 		}
 	}
 }

@@ -8,6 +8,8 @@ enum class SignUpErrors { NONE, SERR }
 
 enum class LogInErrors { NONE, LERR }
 
+enum class AddProductErrors {NONE, ERR_ADD}
+
 enum class UserType { CUSTOMER, SELLER }
 
 data class EmailMobileData(
