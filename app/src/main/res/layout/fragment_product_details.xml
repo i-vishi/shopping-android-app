@@ -101,7 +101,8 @@
                 android:id="@+id/pro_size_chip_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pro_details_select_size_label">
@@ -110,7 +111,7 @@
                     android:id="@+id/pro_details_sizes_chip_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     app:chipSpacingHorizontal="8dp"
                     app:singleLine="true"
                     app:singleSelection="true"></com.google.android.material.chip.ChipGroup>
@@ -132,7 +133,8 @@
                 android:id="@+id/pro_color_chip_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pro_details_select_color_label">
@@ -141,7 +143,7 @@
                     android:id="@+id/pro_details_colors_chip_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     app:chipSpacingHorizontal="8dp"
                     app:singleSelection="true">
 
