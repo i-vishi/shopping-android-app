@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginStart
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -47,15 +49,34 @@ class ProductDetailsFragment : Fragment() {
 
 		setViews()
 
-//		setObservers()
+		setObservers()
 		return binding.root
 	}
 
 	private fun setViews() {
 		binding.proDetailsTitleTv.text = viewModel.productData.value?.name ?: ""
+		binding.proDetailsLikeBtn.apply {
+			setOnClickListener {
+				changeImage()
+			}
+		}
 		setShoeSizeChips()
 		setShoeColorsChips()
 		binding.proDetailsSpecificsText.text = viewModel.productData.value?.description ?: ""
+	}
+
+	private fun setObservers() {
+		viewModel.isLiked.observe(viewLifecycleOwner) {
+			if (it == true) {
+				binding.proDetailsLikeBtn.setImageResource(R.drawable.liked_heart_drawable)
+			} else {
+				binding.proDetailsLikeBtn.setImageResource(R.drawable.heart_icon_drawable)
+			}
+		}
+	}
+
+	private fun changeImage() {
+		viewModel.toggleLikeProduct()
 	}
 
 	@SuppressLint("ResourceAsColor")
@@ -67,9 +88,29 @@ class ProductDetailsFragment : Fragment() {
 				chip.tag = v
 				chip.text = "$v"
 
-				chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue_accent_300))
-
-				chip.isCheckable = viewModel.productData.value?.availableSizes?.contains(v) == true
+				chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
+//				chip.chipCornerRadius = 100F
+//				chip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16F)
+//				chip.setPadding(60)
+				chip.checkedIcon = null
+				chip.chipStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1F, context.resources.displayMetrics)
+				if (viewModel.productData.value?.availableSizes?.contains(v) == true) {
+					chip.isCheckable = true
+					chip.isEnabled = true
+					chip.setTextColor(Color.BLACK)
+					chip.chipBackgroundColor = ColorStateList.valueOf(Color.TRANSPARENT)
+					chip.setOnCheckedChangeListener { _, isChecked ->
+						if (isChecked) {
+							chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue_accent_300))
+						} else {
+							chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
+						}
+					}
+				} else {
+					chip.isCheckable = false
+					chip.isEnabled = false
+					chip.chipBackgroundColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
+				}
 
 				addView(chip)
 			}
@@ -90,7 +131,14 @@ class ProductDetailsFragment : Fragment() {
 				chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue_accent_300))
 				chip.chipStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1F, context.resources.displayMetrics)
 				chip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor(v))
-				chip.isCheckable = viewModel.productData.value?.availableSizes?.contains(v) == true
+				chip.isEnabled = viewModel.productData.value?.availableColors?.contains(k) == true
+
+				chip.isCheckable = viewModel.productData.value?.availableColors?.contains(k) == true
+
+				if (viewModel.productData.value?.availableColors?.contains(k) == false) {
+					chip.chipStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4F, context.resources.displayMetrics)
+					chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
+				}
 
 				addView(chip)
 				ind++
@@ -99,7 +147,4 @@ class ProductDetailsFragment : Fragment() {
 		}
 	}
 
-//	private fun setObservers() {
-//		TODO("Not yet implemented")
-//	}
 }

@@ -83,19 +83,24 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pro_details_price_tv" />
 
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/pro_details_sizes_chip_group"
+            <HorizontalScrollView
+                android:id="@+id/pro_size_chip_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                app:chipSpacingHorizontal="10dp"
+                android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/pro_details_select_size_label"
-                app:selectionRequired="true">
-
-            </com.google.android.material.chip.ChipGroup>
+                app:layout_constraintTop_toBottomOf="@id/pro_details_select_size_label">
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/pro_details_sizes_chip_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:chipSpacingHorizontal="10dp"
+                    app:singleLine="true"
+                    app:singleSelection="true">
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
 
             <TextView
                 android:id="@+id/pro_details_select_color_label"
@@ -107,20 +112,26 @@
                 android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pro_details_sizes_chip_group" />
+                app:layout_constraintTop_toBottomOf="@+id/pro_size_chip_scroll" />
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/pro_details_colors_chip_group"
+            <HorizontalScrollView
+                android:id="@+id/pro_color_chip_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                app:chipSpacingHorizontal="10dp"
+                android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/pro_details_select_color_label"
-                app:selectionRequired="true">
+                app:layout_constraintTop_toBottomOf="@id/pro_details_select_color_label">
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/pro_details_colors_chip_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:chipSpacingHorizontal="10dp"
+                    app:singleSelection="true">
 
-            </com.google.android.material.chip.ChipGroup>
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
 
             <TextView
                 android:id="@+id/pro_details_specifications_label"
@@ -132,7 +143,7 @@
                 android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pro_details_colors_chip_group" />
+                app:layout_constraintTop_toBottomOf="@+id/pro_color_chip_scroll" />
 
             <TextView
                 android:id="@+id/pro_details_specifics_text"
@@ -141,6 +152,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="64dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pro_details_specifications_label"

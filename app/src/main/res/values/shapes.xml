@@ -18,4 +18,18 @@
         <!--Your custom shape here-->
         <item name="cornerSize">8dp</item>
     </style>
+
+    <style name="Widget.App.Chip" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="checkedIconVisible">false</item>
+        <item name="chipStrokeColor">@color/gray</item>
+        <item name="chipStrokeWidth">4dp</item>
+        <item name="chipEndPadding">0dp</item>
+        <item name="chipStartPadding">0dp</item>
+        <item name="textEndPadding">4dp</item>
+        <item name="chipIcon">@drawable/test</item>
+        <item name="chipIconSize">48dp</item>
+        <item name="chipMinHeight">48dp</item>
+        <item name="closeIconVisible">false</item>
+        <item name="chipBackgroundColor">@color/gray</item>
+    </style>
 </resources>

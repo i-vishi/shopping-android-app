@@ -23,6 +23,10 @@
 <!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
 
+
+<!--        <item name="chipStyle">@style/Widget.App.Chip</item>-->
+
+
         <item name="fontFamily">@font/nunito_sans</item>
 
         <!--Material type attributes-->

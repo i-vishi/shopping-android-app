@@ -19,10 +19,14 @@ class ProductViewModel(private val productId: String, application: Application) 
 	private val _dataStatus = MutableLiveData<StoreDataStatus>()
 	val dataStatus: LiveData<StoreDataStatus> get() = _dataStatus
 
+	private val _isLiked = MutableLiveData<Boolean>()
+	val isLiked: LiveData<Boolean> get() = _isLiked
+
 	private val productsRepository = ProductsRepository(application)
 
 	init {
 		getProductDetails()
+		_isLiked.value = false
 	}
 
 	private fun getProductDetails() {
@@ -37,5 +41,9 @@ class ProductViewModel(private val productId: String, application: Application) 
 				_dataStatus.value = StoreDataStatus.ERROR
 			}
 		}
+	}
+
+	fun toggleLikeProduct() {
+		_isLiked.value = !_isLiked.value!!
 	}
 }
