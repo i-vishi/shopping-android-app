@@ -54,6 +54,10 @@ class ProductDetailsFragment : Fragment() {
 	}
 
 	private fun setViews() {
+		if(context != null){
+			val adapter = ProductImagesAdapter(requireContext(), viewModel.productData.value?.images?: emptyList() )
+			binding.proDetailsImagesRecyclerview.adapter = adapter
+		}
 		binding.proDetailsTitleTv.text = viewModel.productData.value?.name ?: ""
 		binding.proDetailsLikeBtn.apply {
 			setOnClickListener {

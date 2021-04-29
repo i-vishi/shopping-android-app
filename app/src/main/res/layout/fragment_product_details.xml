@@ -21,16 +21,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/pro_details_image_view"
-                android:layout_width="0dp"
-                android:layout_height="250dp"
-                android:contentDescription="@string/product_detail_image_desc"
-                android:scaleType="centerInside"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pro_details_images_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                tools:itemCount="3"
+                tools:listitem="@layout/images_item"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/pro_details_title_tv"
@@ -44,7 +45,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/pro_details_like_btn"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pro_details_image_view"
+                app:layout_constraintTop_toBottomOf="@+id/pro_details_images_recyclerview"
                 tools:text="Some Title of The Product van be multiline" />
 
             <ImageButton
@@ -91,6 +92,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pro_details_select_size_label">
+
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/pro_details_sizes_chip_group"
                     android:layout_width="wrap_content"
@@ -98,8 +100,7 @@
                     android:layout_marginStart="16dp"
                     app:chipSpacingHorizontal="10dp"
                     app:singleLine="true"
-                    app:singleSelection="true">
-                </com.google.android.material.chip.ChipGroup>
+                    app:singleSelection="true"></com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
             <TextView
@@ -122,6 +123,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pro_details_select_color_label">
+
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/pro_details_colors_chip_group"
                     android:layout_width="wrap_content"

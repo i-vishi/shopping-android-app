@@ -3,7 +3,8 @@ buildscript {
     ext {
         kotlin_version = "1.4.32"
         lifecycle_version = "2.3.1"
-        room_version = "2.2.6"
+        room_version = "2.3.0"
+        glide_version = "4.11.0"
     }
     repositories {
         google()

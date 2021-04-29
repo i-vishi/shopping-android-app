@@ -21,92 +21,100 @@ import java.lang.Exception
 private const val TAG = "HomeViewModel"
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
-	private val authRepository = AuthRepository(application)
+    private val authRepository = AuthRepository(application)
 
-	private val productsRepository = ProductsRepository(application)
+    private val productsRepository = ProductsRepository(application)
 
-	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
+    private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 
-	private val _products = MutableLiveData<List<Product>>()
-	val products: LiveData<List<Product>> get() = _products
+    private val _products = MutableLiveData<List<Product>>()
+    val products: LiveData<List<Product>> get() = _products
 
-	private val currentUser = sessionManager.getUserIdFromSession()
+    private val currentUser = sessionManager.getUserIdFromSession()
 
-	lateinit var userProducts: LiveData<List<Product>>
+    lateinit var userProducts: LiveData<List<Product>>
 
-	private val _selectedCategory = MutableLiveData<String>()
-	val selectedCategory: LiveData<String> get() = _selectedCategory
+    private val _selectedCategory = MutableLiveData<String>()
+    val selectedCategory: LiveData<String> get() = _selectedCategory
 
-	private val _storeDataStatus = MutableLiveData<StoreDataStatus>()
-	val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
+    private val _storeDataStatus = MutableLiveData<StoreDataStatus>()
+    val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
 
-	private val _errorStatus = MutableLiveData<AddProductViewErrors>()
-	val errorStatus: LiveData<AddProductViewErrors> get() = _errorStatus
+    private val _errorStatus = MutableLiveData<AddProductViewErrors>()
+    val errorStatus: LiveData<AddProductViewErrors> get() = _errorStatus
 
-	private val _addProductErrors = MutableLiveData<AddProductErrors?>()
-	val addProductErrors: LiveData<AddProductErrors?> get() = _addProductErrors
+    private val _addProductErrors = MutableLiveData<AddProductErrors?>()
+    val addProductErrors: LiveData<AddProductErrors?> get() = _addProductErrors
 
-	private val _selectedProduct = MutableLiveData<String>()
-	val selectedProduct : LiveData<String> get() = _selectedProduct
+    private val _selectedProduct = MutableLiveData<String>()
+    val selectedProduct: LiveData<String> get() = _selectedProduct
 
-	private val _productData = MutableLiveData<Product>()
-	val productData: LiveData<Product> get() = _productData
+    private val _productData = MutableLiveData<Product>()
+    val productData: LiveData<Product> get() = _productData
 
-	init {
-		_errorStatus.value = AddProductViewErrors.NONE
-		getProducts()
-	}
+    init {
+        _errorStatus.value = AddProductViewErrors.NONE
+        getProducts()
+    }
 
-	private fun getProducts() {
-		viewModelScope.launch {
-			_storeDataStatus.value = StoreDataStatus.LOADING
-			try {
-				val res = productsRepository.getAllProducts()
-				Log.d(TAG, "list = $res")
-				_products.value = res
-				_storeDataStatus.value = StoreDataStatus.DONE
-			} catch (e: Exception) {
-				_storeDataStatus.value = StoreDataStatus.ERROR
-				_products.value = ArrayList()
-			}
-		}
-	}
+    private fun getProducts() {
+        viewModelScope.launch {
+            _storeDataStatus.value = StoreDataStatus.LOADING
+            try {
+                val res = productsRepository.getAllProducts()
+                Log.d(TAG, "list = $res")
+                _products.value = res
+                _storeDataStatus.value = StoreDataStatus.DONE
+            } catch (e: Exception) {
+                _storeDataStatus.value = StoreDataStatus.ERROR
+                _products.value = ArrayList()
+            }
+        }
+    }
 
-	fun setCategory(catName: String) {
-		_selectedCategory.value = catName
-	}
+    fun setCategory(catName: String) {
+        _selectedCategory.value = catName
+    }
 
 
-	private fun getProductsByOwner() {
-		userProducts = productsRepository.getAllProductsByOwner(currentUser!!)
-	}
+    private fun getProductsByOwner() {
+        userProducts = productsRepository.getAllProductsByOwner(currentUser!!)
+    }
 
-	fun submitProduct(name: String, price: Double?, desc: String, sizes: List<Int>, colors: List<String>) {
-		if (name.isBlank() || price == null || desc.isBlank() || sizes.isNullOrEmpty() || colors.isNullOrEmpty()) {
-			_errorStatus.value = AddProductViewErrors.EMPTY
-		} else {
-			if (price == 0.0) {
-				_errorStatus.value = AddProductViewErrors.ERR_PRICE_0
-			} else {
-				_errorStatus.value = AddProductViewErrors.NONE
-				val proNum = userProducts.value?.size?.plus(1) ?: 1
-				val proId = getProductId(currentUser!!, selectedCategory.value!!, name, proNum.toLong())
-				val newProduct = Product(proId, name, currentUser, desc, price, sizes, colors, 0.0)
-				_productData.value = newProduct
-				Log.d(TAG, "pro = $newProduct")
-				insertProduct()
-			}
-		}
-	}
+    fun submitProduct(
+		name: String,
+		price: Double?,
+		desc: String,
+		sizes: List<Int>,
+		colors: List<String>
+	) {
+        if (name.isBlank() || price == null || desc.isBlank() || sizes.isNullOrEmpty() || colors.isNullOrEmpty()) {
+            _errorStatus.value = AddProductViewErrors.EMPTY
+        } else {
+            if (price == 0.0) {
+                _errorStatus.value = AddProductViewErrors.ERR_PRICE_0
+            } else {
+                _errorStatus.value = AddProductViewErrors.NONE
+                val proNum = userProducts.value?.size?.plus(1) ?: 1
+                val proId =
+                    getProductId(currentUser!!, selectedCategory.value!!, name, proNum.toLong())
+                val newProduct =
+                    Product(proId, name, currentUser, desc, price, sizes, colors, emptyList(), 0.0)
+                _productData.value = newProduct
+                Log.d(TAG, "pro = $newProduct")
+                insertProduct()
+            }
+        }
+    }
 
-	private fun insertProduct() {
-		viewModelScope.launch {
-			if (productData.value != null) {
-				val res = async { productsRepository.insertProduct(productData.value!!) }
-				_addProductErrors.value = res.await()
-			} else {
-				Log.d(TAG, "Product is Null, Cannot Add Product")
-			}
-		}
-	}
+    private fun insertProduct() {
+        viewModelScope.launch {
+            if (productData.value != null) {
+                val res = async { productsRepository.insertProduct(productData.value!!) }
+                _addProductErrors.value = res.await()
+            } else {
+                Log.d(TAG, "Product is Null, Cannot Add Product")
+            }
+        }
+    }
 }
