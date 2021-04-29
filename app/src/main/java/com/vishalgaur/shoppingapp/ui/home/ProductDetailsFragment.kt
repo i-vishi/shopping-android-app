@@ -15,6 +15,8 @@ import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.PagerSnapHelper
 import com.google.android.material.chip.Chip
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.database.products.ShoeColors
@@ -25,130 +27,174 @@ import java.lang.IllegalArgumentException
 
 class ProductDetailsFragment : Fragment() {
 
-	inner class ProductViewModelFactory(private val productId: String, private val application: Application) : ViewModelProvider.Factory {
-		@Suppress("UNCHECKED_CAST")
-		override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-			if (modelClass.isAssignableFrom(ProductViewModel::class.java)) {
-				return ProductViewModel(productId, application) as T
-			}
-			throw IllegalArgumentException("Unknown ViewModel Class")
+    inner class ProductViewModelFactory(
+		private val productId: String,
+		private val application: Application
+	) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(ProductViewModel::class.java)) {
+                return ProductViewModel(productId, application) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel Class")
+        }
+    }
+
+    private lateinit var binding: FragmentProductDetailsBinding
+    private lateinit var viewModel: ProductViewModel
+
+    override fun onCreateView(
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View? {
+        binding = FragmentProductDetailsBinding.inflate(layoutInflater)
+        val productId = arguments?.getString("productId")
+
+        if (activity != null && productId != null) {
+            val viewModelFactory = ProductViewModelFactory(productId, requireActivity().application)
+            viewModel = ViewModelProvider(this, viewModelFactory).get(ProductViewModel::class.java)
+        }
+
+        setViews()
+
+        setObservers()
+        return binding.root
+    }
+
+    private fun setViews() {
+		binding.addProAppBar.topAppBar.setNavigationOnClickListener {
+			findNavController().navigateUp()
 		}
-	}
+        if (context != null) {
+            val adapter = ProductImagesAdapter(
+				requireContext(),
+				viewModel.productData.value?.images ?: emptyList()
+			)
+            binding.proDetailsImagesRecyclerview.adapter = adapter
+            PagerSnapHelper().attachToRecyclerView(binding.proDetailsImagesRecyclerview)
+        }
+        binding.proDetailsTitleTv.text = viewModel.productData.value?.name ?: ""
+        binding.proDetailsLikeBtn.apply {
+            setOnClickListener {
+                changeImage()
+            }
+        }
+        setShoeSizeChips()
+        setShoeColorsChips()
+        binding.proDetailsSpecificsText.text = viewModel.productData.value?.description ?: ""
+    }
 
-	private lateinit var binding: FragmentProductDetailsBinding
-	private lateinit var viewModel: ProductViewModel
+    private fun setObservers() {
+        viewModel.isLiked.observe(viewLifecycleOwner) {
+            if (it == true) {
+                binding.proDetailsLikeBtn.setImageResource(R.drawable.liked_heart_drawable)
+            } else {
+                binding.proDetailsLikeBtn.setImageResource(R.drawable.heart_icon_drawable)
+            }
+        }
+    }
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		binding = FragmentProductDetailsBinding.inflate(layoutInflater)
-		val productId = arguments?.getString("productId")
+    private fun changeImage() {
+        viewModel.toggleLikeProduct()
+    }
 
-		if (activity != null && productId != null) {
-			val viewModelFactory = ProductViewModelFactory(productId, requireActivity().application)
-			viewModel = ViewModelProvider(this, viewModelFactory).get(ProductViewModel::class.java)
-		}
+    @SuppressLint("ResourceAsColor")
+    private fun setShoeSizeChips() {
+        binding.proDetailsSizesChipGroup.apply {
+            for ((k, v) in ShoeSizes) {
+                val chip = Chip(context)
+                chip.id = v
+                chip.tag = v
+                chip.text = "$v"
 
-		setViews()
-
-		setObservers()
-		return binding.root
-	}
-
-	private fun setViews() {
-		if(context != null){
-			val adapter = ProductImagesAdapter(requireContext(), viewModel.productData.value?.images?: emptyList() )
-			binding.proDetailsImagesRecyclerview.adapter = adapter
-		}
-		binding.proDetailsTitleTv.text = viewModel.productData.value?.name ?: ""
-		binding.proDetailsLikeBtn.apply {
-			setOnClickListener {
-				changeImage()
-			}
-		}
-		setShoeSizeChips()
-		setShoeColorsChips()
-		binding.proDetailsSpecificsText.text = viewModel.productData.value?.description ?: ""
-	}
-
-	private fun setObservers() {
-		viewModel.isLiked.observe(viewLifecycleOwner) {
-			if (it == true) {
-				binding.proDetailsLikeBtn.setImageResource(R.drawable.liked_heart_drawable)
-			} else {
-				binding.proDetailsLikeBtn.setImageResource(R.drawable.heart_icon_drawable)
-			}
-		}
-	}
-
-	private fun changeImage() {
-		viewModel.toggleLikeProduct()
-	}
-
-	@SuppressLint("ResourceAsColor")
-	private fun setShoeSizeChips() {
-		binding.proDetailsSizesChipGroup.apply {
-			for ((k, v) in ShoeSizes) {
-				val chip = Chip(context)
-				chip.id = v
-				chip.tag = v
-				chip.text = "$v"
-
-				chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
+                chip.chipStrokeColor =
+                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
 //				chip.chipCornerRadius = 100F
 //				chip.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16F)
 //				chip.setPadding(60)
-				chip.checkedIcon = null
-				chip.chipStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1F, context.resources.displayMetrics)
-				if (viewModel.productData.value?.availableSizes?.contains(v) == true) {
-					chip.isCheckable = true
-					chip.isEnabled = true
-					chip.setTextColor(Color.BLACK)
-					chip.chipBackgroundColor = ColorStateList.valueOf(Color.TRANSPARENT)
-					chip.setOnCheckedChangeListener { _, isChecked ->
-						if (isChecked) {
-							chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue_accent_300))
-						} else {
-							chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
-						}
-					}
-				} else {
-					chip.isCheckable = false
-					chip.isEnabled = false
-					chip.chipBackgroundColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
-				}
+                chip.checkedIcon = null
+                chip.chipStrokeWidth = TypedValue.applyDimension(
+					TypedValue.COMPLEX_UNIT_DIP,
+					1F,
+					context.resources.displayMetrics
+				)
+                if (viewModel.productData.value?.availableSizes?.contains(v) == true) {
+                    chip.isCheckable = true
+                    chip.isEnabled = true
+                    chip.setTextColor(Color.BLACK)
+                    chip.chipBackgroundColor = ColorStateList.valueOf(Color.TRANSPARENT)
+                    chip.setOnCheckedChangeListener { _, isChecked ->
+                        if (isChecked) {
+                            chip.chipStrokeColor = ColorStateList.valueOf(
+								ContextCompat.getColor(
+									context,
+									R.color.blue_accent_300
+								)
+							)
+                        } else {
+                            chip.chipStrokeColor = ColorStateList.valueOf(
+								ContextCompat.getColor(
+									context,
+									R.color.gray
+								)
+							)
+                        }
+                    }
+                } else {
+                    chip.isCheckable = false
+                    chip.isEnabled = false
+                    chip.chipBackgroundColor =
+                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
+                }
 
-				addView(chip)
-			}
-			invalidate()
-		}
-	}
+                addView(chip)
+            }
+            invalidate()
+        }
+    }
 
-	private fun setShoeColorsChips() {
-		binding.proDetailsColorsChipGroup.apply {
-			var ind = 1
-			for ((k, v) in ShoeColors) {
-				val chip = Chip(context)
-				chip.id = ind
-				chip.tag = k
-				chip.text = ".."
-				chip.setTextColor(ColorStateList.valueOf(Color.parseColor(v)))
-				chip.chipCornerRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40F, context.resources.displayMetrics)
-				chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue_accent_300))
-				chip.chipStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1F, context.resources.displayMetrics)
-				chip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor(v))
-				chip.isEnabled = viewModel.productData.value?.availableColors?.contains(k) == true
+    private fun setShoeColorsChips() {
+        binding.proDetailsColorsChipGroup.apply {
+            var ind = 1
+            for ((k, v) in ShoeColors) {
+                val chip = Chip(context)
+                chip.id = ind
+                chip.tag = k
+                chip.text = ".."
+                chip.setTextColor(ColorStateList.valueOf(Color.parseColor(v)))
+                chip.chipCornerRadius = TypedValue.applyDimension(
+					TypedValue.COMPLEX_UNIT_DIP,
+					40F,
+					context.resources.displayMetrics
+				)
+                chip.chipStrokeColor =
+                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue_accent_300))
+                chip.chipStrokeWidth = TypedValue.applyDimension(
+					TypedValue.COMPLEX_UNIT_DIP,
+					1F,
+					context.resources.displayMetrics
+				)
+                chip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor(v))
+                chip.isEnabled = viewModel.productData.value?.availableColors?.contains(k) == true
 
-				chip.isCheckable = viewModel.productData.value?.availableColors?.contains(k) == true
+                chip.isCheckable = viewModel.productData.value?.availableColors?.contains(k) == true
 
-				if (viewModel.productData.value?.availableColors?.contains(k) == false) {
-					chip.chipStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4F, context.resources.displayMetrics)
-					chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
-				}
+                if (viewModel.productData.value?.availableColors?.contains(k) == false) {
+                    chip.chipStrokeWidth = TypedValue.applyDimension(
+						TypedValue.COMPLEX_UNIT_DIP,
+						4F,
+						context.resources.displayMetrics
+					)
+                    chip.chipStrokeColor =
+                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.gray))
+                }
 
-				addView(chip)
-				ind++
-			}
-			invalidate()
-		}
-	}
+                addView(chip)
+                ind++
+            }
+            invalidate()
+        }
+    }
 
 }

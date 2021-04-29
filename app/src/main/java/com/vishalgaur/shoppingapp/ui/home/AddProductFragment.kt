@@ -61,6 +61,9 @@ class AddProductFragment : Fragment() {
 
 	private fun setViews() {
 		binding.addProAppBar.topAppBar.title = "Add Product - ${viewModel.selectedCategory.value}"
+		binding.addProAppBar.topAppBar.setNavigationOnClickListener {
+			findNavController().navigateUp()
+		}
 
 		binding.addProErrorTextView.visibility = View.GONE
 		binding.proNameEditText.onFocusChangeListener = focusChangeListener
