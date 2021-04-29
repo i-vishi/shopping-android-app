@@ -3,6 +3,7 @@ package com.vishalgaur.shoppingapp.ui.home
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
@@ -22,6 +23,7 @@ import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.database.products.ShoeColors
 import com.vishalgaur.shoppingapp.database.products.ShoeSizes
 import com.vishalgaur.shoppingapp.databinding.FragmentProductDetailsBinding
+import com.vishalgaur.shoppingapp.ui.DotsIndicatorDecoration
 import com.vishalgaur.shoppingapp.viewModels.ProductViewModel
 import java.lang.IllegalArgumentException
 
@@ -63,15 +65,23 @@ class ProductDetailsFragment : Fragment() {
     }
 
     private fun setViews() {
-		binding.addProAppBar.topAppBar.setNavigationOnClickListener {
-			findNavController().navigateUp()
-		}
+        binding.addProAppBar.topAppBar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
         if (context != null) {
+        	binding.proDetailsImagesRecyclerview.isNestedScrollingEnabled = false
             val adapter = ProductImagesAdapter(
 				requireContext(),
 				viewModel.productData.value?.images ?: emptyList()
 			)
             binding.proDetailsImagesRecyclerview.adapter = adapter
+            val rad = resources.getDimension(R.dimen.radius)
+            val dotsHeight = resources.getDimensionPixelSize(R.dimen.dots_height)
+            val inactiveColor = ContextCompat.getColor(requireContext(), R.color.gray)
+            val activeColor = ContextCompat.getColor(requireContext(), R.color.blue_accent_300)
+            val itemDecoration =
+                DotsIndicatorDecoration(rad, rad * 4, dotsHeight, inactiveColor, activeColor)
+            binding.proDetailsImagesRecyclerview.addItemDecoration(itemDecoration)
             PagerSnapHelper().attachToRecyclerView(binding.proDetailsImagesRecyclerview)
         }
         binding.proDetailsTitleTv.text = viewModel.productData.value?.name ?: ""
