@@ -59,6 +59,19 @@
                 app:layout_constraintTop_toTopOf="@+id/pro_details_title_tv"
                 app:srcCompat="@drawable/heart_icon_drawable" />
 
+            <RatingBar
+                android:id="@+id/pro_details_rating_bar"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:progressTint="@color/gold"
+                android:rating="3.5"
+                android:secondaryProgressTint="#FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pro_details_title_tv" />
+
             <TextView
                 android:id="@+id/pro_details_price_tv"
                 android:layout_width="wrap_content"
@@ -69,7 +82,7 @@
                 android:textColor="@color/blue_accent_300"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pro_details_title_tv"
+                app:layout_constraintTop_toBottomOf="@+id/pro_details_rating_bar"
                 tools:text="$ 200.99" />
 
             <TextView
@@ -98,7 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    app:chipSpacingHorizontal="10dp"
+                    app:chipSpacingHorizontal="8dp"
                     app:singleLine="true"
                     app:singleSelection="true"></com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
@@ -108,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/pro_details_select_color_label_text"
                 android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                 android:textStyle="bold"
@@ -129,7 +142,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    app:chipSpacingHorizontal="10dp"
+                    app:chipSpacingHorizontal="8dp"
                     app:singleSelection="true">
 
                 </com.google.android.material.chip.ChipGroup>
@@ -140,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/pro_details_specif_label_text"
                 android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                 android:textStyle="bold"

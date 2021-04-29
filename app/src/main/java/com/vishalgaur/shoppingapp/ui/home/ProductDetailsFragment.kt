@@ -69,7 +69,7 @@ class ProductDetailsFragment : Fragment() {
             findNavController().navigateUp()
         }
         if (context != null) {
-        	binding.proDetailsImagesRecyclerview.isNestedScrollingEnabled = false
+            binding.proDetailsImagesRecyclerview.isNestedScrollingEnabled = false
             val adapter = ProductImagesAdapter(
 				requireContext(),
 				viewModel.productData.value?.images ?: emptyList()
@@ -90,6 +90,11 @@ class ProductDetailsFragment : Fragment() {
                 changeImage()
             }
         }
+        binding.proDetailsRatingBar.rating = (viewModel.productData.value?.rating ?: 0.0).toFloat()
+        binding.proDetailsPriceTv.text = resources.getString(
+			R.string.pro_details_price_value,
+			viewModel.productData.value?.price.toString()
+		)
         setShoeSizeChips()
         setShoeColorsChips()
         binding.proDetailsSpecificsText.text = viewModel.productData.value?.description ?: ""
