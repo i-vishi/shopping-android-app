@@ -12,7 +12,6 @@ import com.vishalgaur.shoppingapp.database.products.Product
 import com.vishalgaur.shoppingapp.getProductId
 import com.vishalgaur.shoppingapp.network.AddProductErrors
 import com.vishalgaur.shoppingapp.network.StoreDataStatus
-import com.vishalgaur.shoppingapp.repository.AuthRepository
 import com.vishalgaur.shoppingapp.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.ui.AddProductViewErrors
 import kotlinx.coroutines.async
@@ -22,7 +21,6 @@ import java.lang.Exception
 private const val TAG = "HomeViewModel"
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    private val authRepository = AuthRepository(application)
 
     private val productsRepository = ProductsRepository(application)
 
@@ -32,8 +30,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val products: LiveData<List<Product>> get() = _products
 
     private val currentUser = sessionManager.getUserIdFromSession()
+    val isUserASeller = sessionManager.isUserSeller()
 
-    lateinit var userProducts: LiveData<List<Product>>
+    private lateinit var userProducts: LiveData<List<Product>>
 
     private val _selectedCategory = MutableLiveData<String>()
     val selectedCategory: LiveData<String> get() = _selectedCategory

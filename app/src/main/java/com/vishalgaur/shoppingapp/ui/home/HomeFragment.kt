@@ -46,6 +46,7 @@ class HomeFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+
 		val adapter = ProductAdapter(viewModel.products.value ?: ArrayList())
 		adapter.onClickListener = object : ProductAdapter.OnClickListener {
 			override fun onClick(productData: Product) {
@@ -57,6 +58,9 @@ class HomeFragment : Fragment() {
 	}
 
 	private fun setViews() {
+		if(!viewModel.isUserASeller) {
+			binding.homeFabAddProduct.visibility = View.GONE
+		}
 		binding.homeFabAddProduct.setOnClickListener {
 			showDialog()
 		}
