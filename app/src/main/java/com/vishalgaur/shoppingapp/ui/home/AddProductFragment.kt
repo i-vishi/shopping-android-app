@@ -68,8 +68,8 @@ class AddProductFragment : Fragment() {
             modifyErrors(err)
         }
 
-        viewModel.addProductErrors.observe(viewLifecycleOwner) { err ->
-            when (err) {
+        viewModel.addProductErrors.observe(viewLifecycleOwner) { status ->
+            when (status) {
                 AddProductErrors.ADDING -> {
                     binding.addProProgress.visibility = View.VISIBLE
                     binding.addProProgress.showAnimationBehavior
@@ -109,7 +109,8 @@ class AddProductFragment : Fragment() {
             if (viewModel.errorStatus.value == AddProductViewErrors.NONE) {
                 viewModel.addProductErrors.observe(viewLifecycleOwner) { err ->
                     if (err == AddProductErrors.NONE) {
-                        findNavController().navigateUp()
+                        viewModel.refreshProducts()
+                        findNavController().navigate(R.id.action_addProductFragment_to_homeFragment)
                     }
                 }
             }

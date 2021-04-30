@@ -47,11 +47,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _addProductErrors = MutableLiveData<AddProductErrors?>()
     val addProductErrors: LiveData<AddProductErrors?> get() = _addProductErrors
 
-    private val _selectedProduct = MutableLiveData<String>()
-    val selectedProduct: LiveData<String> get() = _selectedProduct
-
     private val _productData = MutableLiveData<Product>()
-    val productData: LiveData<Product> get() = _productData
+    private val productData: LiveData<Product> get() = _productData
 
     init {
         _errorStatus.value = AddProductViewErrors.NONE
@@ -109,13 +106,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun uploadImages(imgList: List<Uri>) {
-        viewModelScope.launch {
-            val res = async { productsRepository.insertImages(imgList) }
-            val imagesPaths = res.await()
-            Log.d(TAG, "images urls = $imagesPaths")
-            _productData.value?.images = imagesPaths
-        }
+    fun refreshProducts() {
+        getProducts()
     }
 
     private fun insertProduct(imgList: List<Uri>) {

@@ -15,6 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.database.products.Product
 import com.vishalgaur.shoppingapp.databinding.FragmentHomeBinding
+import com.vishalgaur.shoppingapp.network.StoreDataStatus
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModel
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModelFactory
 
@@ -38,6 +39,8 @@ class HomeFragment : Fragment() {
 
 		setViews()
 
+		setObservers()
+
 		return binding.root
 	}
 
@@ -56,6 +59,22 @@ class HomeFragment : Fragment() {
 	private fun setViews() {
 		binding.homeFabAddProduct.setOnClickListener {
 			showDialog()
+		}
+		binding.homeLoadProgress.visibility = View.GONE
+	}
+
+	private fun setObservers() {
+		viewModel.storeDataStatus.observe(viewLifecycleOwner) { status ->
+			when(status) {
+				StoreDataStatus.LOADING -> {
+					binding.homeLoadProgress.visibility = View.VISIBLE
+					binding.homeLoadProgress.showAnimationBehavior
+				}
+				else -> {
+					binding.homeLoadProgress.hideAnimationBehavior
+					binding.homeLoadProgress.visibility = View.GONE
+				}
+			}
 		}
 	}
 
