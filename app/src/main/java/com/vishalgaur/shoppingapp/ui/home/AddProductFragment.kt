@@ -67,6 +67,19 @@ class AddProductFragment : Fragment() {
         viewModel.errorStatus.observe(viewLifecycleOwner) { err ->
             modifyErrors(err)
         }
+
+        viewModel.addProductErrors.observe(viewLifecycleOwner) { err ->
+            when (err) {
+                AddProductErrors.ADDING -> {
+                    binding.addProProgress.visibility = View.VISIBLE
+                    binding.addProProgress.showAnimationBehavior
+                }
+                else -> {
+                    binding.addProProgress.visibility = View.GONE
+                    binding.addProProgress.hideAnimationBehavior
+                }
+            }
+        }
     }
 
     private fun setViews() {
@@ -74,6 +87,7 @@ class AddProductFragment : Fragment() {
         binding.addProAppBar.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+        binding.addProProgress.visibility = View.GONE
 
         val adapter = AddProductImagesAdapter(imgList)
         binding.addProImagesRv.adapter = adapter

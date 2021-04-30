@@ -11,7 +11,7 @@ enum class SignUpErrors { NONE, SERR }
 
 enum class LogInErrors { NONE, LERR }
 
-enum class AddProductErrors { NONE, ERR_ADD }
+enum class AddProductErrors { NONE, ERR_ADD, ADDING }
 
 enum class UserType { CUSTOMER, SELLER }
 
