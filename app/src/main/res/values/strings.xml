@@ -61,5 +61,6 @@
     <string name="pro_details_select_color_label_text">Select Color</string>
     <string name="pro_details_specif_label_text">Specifications</string>
     <string name="pro_details_price_value">$%s</string>
+    <string name="add_pro_images_label_text">Product Images</string>
 
 </resources>

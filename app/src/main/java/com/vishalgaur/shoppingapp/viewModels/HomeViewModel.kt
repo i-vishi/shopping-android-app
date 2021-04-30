@@ -1,6 +1,7 @@
 package com.vishalgaur.shoppingapp.viewModels
 
 import android.app.Application
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -55,6 +56,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     init {
         _errorStatus.value = AddProductViewErrors.NONE
         getProducts()
+        getProductsByOwner()
     }
 
     private fun getProducts() {
@@ -76,19 +78,19 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _selectedCategory.value = catName
     }
 
-
     private fun getProductsByOwner() {
         userProducts = productsRepository.getAllProductsByOwner(currentUser!!)
     }
 
     fun submitProduct(
-		name: String,
-		price: Double?,
-		desc: String,
-		sizes: List<Int>,
-		colors: List<String>
-	) {
-        if (name.isBlank() || price == null || desc.isBlank() || sizes.isNullOrEmpty() || colors.isNullOrEmpty()) {
+        name: String,
+        price: Double?,
+        desc: String,
+        sizes: List<Int>,
+        colors: List<String>,
+        imgList: List<Uri>
+    ) {
+        if (name.isBlank() || price == null || desc.isBlank() || sizes.isNullOrEmpty() || colors.isNullOrEmpty() || imgList.isNullOrEmpty()) {
             _errorStatus.value = AddProductViewErrors.EMPTY
         } else {
             if (price == 0.0) {
@@ -102,16 +104,33 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     Product(proId, name, currentUser, desc, price, sizes, colors, emptyList(), 0.0)
                 _productData.value = newProduct
                 Log.d(TAG, "pro = $newProduct")
-                insertProduct()
+                insertProduct(imgList)
             }
         }
     }
 
-    private fun insertProduct() {
+    private fun uploadImages(imgList: List<Uri>) {
         viewModelScope.launch {
-            if (productData.value != null) {
-                val res = async { productsRepository.insertProduct(productData.value!!) }
-                _addProductErrors.value = res.await()
+            val res = async { productsRepository.insertImages(imgList) }
+            val imagesPaths = res.await()
+            Log.d(TAG, "images urls = $imagesPaths")
+            _productData.value?.images = imagesPaths
+        }
+    }
+
+    private fun insertProduct(imgList: List<Uri>) {
+        viewModelScope.launch {
+            if (_productData.value != null) {
+                val res = async { productsRepository.insertImages(imgList) }
+                val imagesPaths = res.await()
+                Log.d(TAG, "images urls = $imagesPaths")
+                _productData.value?.images = imagesPaths
+                if (_productData.value?.images?.isNotEmpty() == true) {
+                    val res = async { productsRepository.insertProduct(productData.value!!) }
+                    _addProductErrors.value = res.await()
+                } else {
+                    Log.d(TAG, "Product images empty, Cannot Add Product")
+                }
             } else {
                 Log.d(TAG, "Product is Null, Cannot Add Product")
             }
