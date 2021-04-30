@@ -64,19 +64,19 @@ class HomeFragment : Fragment() {
 		binding.homeFabAddProduct.setOnClickListener {
 			showDialog()
 		}
-		binding.homeLoadProgress.visibility = View.GONE
+		binding.loaderLayout.circularLoader.visibility = View.GONE
 	}
 
 	private fun setObservers() {
 		viewModel.storeDataStatus.observe(viewLifecycleOwner) { status ->
 			when(status) {
 				StoreDataStatus.LOADING -> {
-					binding.homeLoadProgress.visibility = View.VISIBLE
-					binding.homeLoadProgress.showAnimationBehavior
+					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.circularLoader.showAnimationBehavior
 				}
 				else -> {
-					binding.homeLoadProgress.hideAnimationBehavior
-					binding.homeLoadProgress.visibility = View.GONE
+					binding.loaderLayout.circularLoader.hideAnimationBehavior
+					binding.loaderLayout.circularLoader.visibility = View.GONE
 				}
 			}
 		}

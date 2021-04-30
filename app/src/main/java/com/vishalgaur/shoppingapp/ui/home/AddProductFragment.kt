@@ -71,12 +71,12 @@ class AddProductFragment : Fragment() {
         viewModel.addProductErrors.observe(viewLifecycleOwner) { status ->
             when (status) {
                 AddProductErrors.ADDING -> {
-                    binding.addProProgress.visibility = View.VISIBLE
-                    binding.addProProgress.showAnimationBehavior
+                    binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+                    binding.loaderLayout.circularLoader.showAnimationBehavior
                 }
                 else -> {
-                    binding.addProProgress.visibility = View.GONE
-                    binding.addProProgress.hideAnimationBehavior
+                    binding.loaderLayout.circularLoader.visibility = View.GONE
+                    binding.loaderLayout.circularLoader.hideAnimationBehavior
                 }
             }
         }
@@ -87,7 +87,7 @@ class AddProductFragment : Fragment() {
         binding.addProAppBar.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
-        binding.addProProgress.visibility = View.GONE
+        binding.loaderLayout.circularLoader.visibility = View.GONE
 
         val adapter = AddProductImagesAdapter(imgList)
         binding.addProImagesRv.adapter = adapter

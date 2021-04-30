@@ -59,9 +59,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _storeDataStatus.value = StoreDataStatus.LOADING
             try {
-                val res = productsRepository.getAllProducts()
+                val res = async {  productsRepository.getAllProducts()}
                 Log.d(TAG, "list = $res")
-                _products.value = res
+                _products.value = res.await()
                 _storeDataStatus.value = StoreDataStatus.DONE
             } catch (e: Exception) {
                 _storeDataStatus.value = StoreDataStatus.ERROR
