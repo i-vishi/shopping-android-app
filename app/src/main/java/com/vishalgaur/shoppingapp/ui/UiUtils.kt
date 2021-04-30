@@ -88,10 +88,8 @@ class DotsIndicatorDecoration(
         val activePos: Int =
             (parent.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
         if (activePos == RecyclerView.NO_POSITION) {
-            Log.d("TAGTAGTAG", "no position")
             return
         }
-        Log.d("TAGTAGTAG", "positoin = $activePos")
 
         val activeChild =
             (parent.layoutManager as LinearLayoutManager).findViewByPosition(activePos)

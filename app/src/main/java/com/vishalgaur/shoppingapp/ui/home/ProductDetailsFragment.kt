@@ -65,6 +65,7 @@ class ProductDetailsFragment : Fragment() {
     }
 
     private fun setViews() {
+        binding.addProAppBar.topAppBar.title = viewModel.productData.value?.name
         binding.addProAppBar.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }

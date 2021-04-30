@@ -103,6 +103,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
+                android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pro_details_select_size_label">
@@ -114,7 +115,8 @@
                     android:layout_marginStart="8dp"
                     app:chipSpacingHorizontal="8dp"
                     app:singleLine="true"
-                    app:singleSelection="true"></com.google.android.material.chip.ChipGroup>
+                    app:singleSelection="true">
+                </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
             <TextView
@@ -134,6 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
+                android:scrollbars="none"
                 android:paddingBottom="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

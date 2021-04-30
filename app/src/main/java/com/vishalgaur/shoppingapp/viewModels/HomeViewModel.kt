@@ -121,13 +121,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private fun insertProduct(imgList: List<Uri>) {
         viewModelScope.launch {
             if (_productData.value != null) {
-                val res = async { productsRepository.insertImages(imgList) }
-                val imagesPaths = res.await()
+                val resImg = async { productsRepository.insertImages(imgList) }
+                val imagesPaths = resImg.await()
                 Log.d(TAG, "images urls = $imagesPaths")
                 _productData.value?.images = imagesPaths
                 if (_productData.value?.images?.isNotEmpty() == true) {
                     val res = async { productsRepository.insertProduct(productData.value!!) }
                     _addProductErrors.value = res.await()
+                    getProducts()
                 } else {
                     Log.d(TAG, "Product images empty, Cannot Add Product")
                 }
