@@ -25,9 +25,6 @@
         <!-- Customize your theme here. -->
 
 
-<!--        <item name="chipStyle">@style/Widget.App.Chip</item>-->
-
-
         <item name="fontFamily">@font/nunito_sans</item>
 
         <!--Material type attributes-->

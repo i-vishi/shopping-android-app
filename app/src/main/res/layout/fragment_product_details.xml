@@ -11,34 +11,32 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_pro_app_bar">
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="72dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/pro_details_images_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                tools:itemCount="3"
-                tools:listitem="@layout/images_item"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:itemCount="3"
+                tools:listitem="@layout/images_item" />
 
             <TextView
                 android:id="@+id/pro_details_title_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
@@ -53,8 +51,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
+                android:background="@null"
                 android:backgroundTint="#FFFFFF"
                 android:contentDescription="@string/pro_details_like_btn_desc"
+                android:padding="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/pro_details_title_tv"
                 app:srcCompat="@drawable/heart_icon_drawable" />
@@ -77,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
                 android:textColor="@color/blue_accent_300"
                 android:textStyle="bold"
@@ -90,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/pro_details_select_size_lable_text"
                 android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                 android:textStyle="bold"
@@ -115,8 +115,7 @@
                     android:layout_marginStart="8dp"
                     app:chipSpacingHorizontal="8dp"
                     app:singleLine="true"
-                    app:singleSelection="true">
-                </com.google.android.material.chip.ChipGroup>
+                    app:singleSelection="true"></com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
             <TextView
@@ -124,7 +123,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/pro_details_select_color_label_text"
                 android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                 android:textStyle="bold"
@@ -136,8 +135,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
-                android:scrollbars="none"
                 android:paddingBottom="8dp"
+                android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pro_details_select_color_label">
@@ -158,7 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/pro_details_specif_label_text"
                 android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                 android:textStyle="bold"
