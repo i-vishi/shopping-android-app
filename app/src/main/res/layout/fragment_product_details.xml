@@ -146,6 +146,26 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
+<!--                    <RadioButton-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="8dp"-->
+<!--                        android:background="@drawable/color_radio_selector"-->
+<!--                        android:backgroundTint="#CA2E2E"-->
+<!--                        android:backgroundTintMode="add"-->
+<!--                        android:button="@android:color/transparent"-->
+<!--                        android:buttonTintMode="src_atop" />-->
+
+<!--                    <RadioButton-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="8dp"-->
+<!--                        android:background="@drawable/color_radio_selector"-->
+<!--                        android:backgroundTint="#7E0707"-->
+<!--                        android:backgroundTintMode="add"-->
+<!--                        android:button="@android:color/transparent"-->
+<!--                        android:checked="true" />-->
+
                 </RadioGroup>
             </HorizontalScrollView>
 
