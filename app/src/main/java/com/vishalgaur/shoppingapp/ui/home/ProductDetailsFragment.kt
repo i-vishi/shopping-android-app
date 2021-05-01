@@ -3,6 +3,7 @@ package com.vishalgaur.shoppingapp.ui.home
 import android.app.Application
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.os.Bundle
@@ -69,6 +70,8 @@ class ProductDetailsFragment : Fragment() {
 		binding.addProAppBar.topAppBar.setNavigationOnClickListener {
 			findNavController().navigateUp()
 		}
+		binding.addProAppBar.topAppBar.inflateMenu(R.menu.app_bar_menu)
+		binding.addProAppBar.topAppBar.overflowIcon?.setTint(ContextCompat.getColor(requireContext(), R.color.gray))
 
 		setImagesView()
 
