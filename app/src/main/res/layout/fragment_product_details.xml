@@ -98,7 +98,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/pro_details_price_tv" />
 
             <HorizontalScrollView
-                android:id="@+id/pro_size_chip_scroll"
+                android:id="@+id/pro_size_radio_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
@@ -108,14 +108,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pro_details_select_size_label">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/pro_details_sizes_chip_group"
+                <RadioGroup
+                    android:id="@+id/pro_details_sizes_radio_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    app:chipSpacingHorizontal="8dp"
-                    app:singleLine="true"
-                    app:singleSelection="true"></com.google.android.material.chip.ChipGroup>
+                    android:orientation="horizontal">
+
+                </RadioGroup>
             </HorizontalScrollView>
 
             <TextView
@@ -128,10 +127,10 @@
                 android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pro_size_chip_scroll" />
+                app:layout_constraintTop_toBottomOf="@+id/pro_size_radio_scroll" />
 
             <HorizontalScrollView
-                android:id="@+id/pro_color_chip_scroll"
+                android:id="@+id/pro_color_radio_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
@@ -141,15 +140,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pro_details_select_color_label">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/pro_details_colors_chip_group"
+                <RadioGroup
+                    android:id="@+id/pro_details_colors_radio_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    app:chipSpacingHorizontal="8dp"
-                    app:singleSelection="true">
+                    android:orientation="horizontal">
 
-                </com.google.android.material.chip.ChipGroup>
+                </RadioGroup>
             </HorizontalScrollView>
 
             <TextView
@@ -162,7 +159,7 @@
                 android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pro_color_chip_scroll" />
+                app:layout_constraintTop_toBottomOf="@+id/pro_color_radio_scroll" />
 
             <TextView
                 android:id="@+id/pro_details_specifics_text"

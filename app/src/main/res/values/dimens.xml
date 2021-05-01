@@ -2,4 +2,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="radius">3dp</dimen>
     <dimen name="dots_height">32dp</dimen>
+    <dimen name="radio_padding_size">16dp</dimen>
+    <dimen name="radio_margin_size">8dp</dimen>
 </resources>
