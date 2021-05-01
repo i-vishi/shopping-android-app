@@ -1,6 +1,5 @@
 package com.vishalgaur.shoppingapp.ui.home
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -125,7 +124,6 @@ class ProductDetailsFragment : Fragment() {
 					val radioButton = RadioButton(context)
 					radioButton.id = v
 					radioButton.tag = v
-					radioButton.setPadding(resources.getDimensionPixelSize(R.dimen.radio_padding_size))
 					val param = binding.proDetailsSizesRadioGroup.layoutParams as ViewGroup.MarginLayoutParams
 					param.setMargins(resources.getDimensionPixelSize(R.dimen.radio_margin_size))
 					param.width = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -153,7 +151,7 @@ class ProductDetailsFragment : Fragment() {
 					val radioButton = RadioButton(context)
 					radioButton.id = ind
 					radioButton.tag = k
-					val param = binding.proDetailsSizesRadioGroup.layoutParams as ViewGroup.MarginLayoutParams
+					val param = binding.proDetailsColorsRadioGroup.layoutParams as ViewGroup.MarginLayoutParams
 					param.setMargins(resources.getDimensionPixelSize(R.dimen.radio_margin_size))
 					param.width = ViewGroup.LayoutParams.WRAP_CONTENT
 					param.height = ViewGroup.LayoutParams.WRAP_CONTENT

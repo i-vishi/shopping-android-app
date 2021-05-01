@@ -16,7 +16,7 @@
             <!-- transparent stroke = larger_circle_size - smaller_circle_size -->
             <stroke android:color="@android:color/transparent"
                 android:width="32dp"/>
-            <solid android:color="@color/white"/>
+            <solid android:color="#EEEEEE"/>
             <size
                 android:width="16dp"
                 android:height="16dp"/>

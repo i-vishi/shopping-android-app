@@ -101,12 +101,10 @@
                 android:id="@+id/pro_size_radio_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/pro_details_select_size_label">
+                app:layout_constraintTop_toBottomOf="@+id/pro_details_select_size_label">
 
                 <RadioGroup
                     android:id="@+id/pro_details_sizes_radio_group"
@@ -122,7 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/pro_details_select_color_label_text"
                 android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                 android:textStyle="bold"
@@ -133,8 +131,6 @@
                 android:id="@+id/pro_color_radio_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -146,26 +142,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-<!--                    <RadioButton-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="8dp"-->
-<!--                        android:background="@drawable/color_radio_selector"-->
-<!--                        android:backgroundTint="#CA2E2E"-->
-<!--                        android:backgroundTintMode="add"-->
-<!--                        android:button="@android:color/transparent"-->
-<!--                        android:buttonTintMode="src_atop" />-->
-
-<!--                    <RadioButton-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="8dp"-->
-<!--                        android:background="@drawable/color_radio_selector"-->
-<!--                        android:backgroundTint="#7E0707"-->
-<!--                        android:backgroundTintMode="add"-->
-<!--                        android:button="@android:color/transparent"-->
-<!--                        android:checked="true" />-->
-
                 </RadioGroup>
             </HorizontalScrollView>
 
@@ -174,7 +150,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/pro_details_specif_label_text"
                 android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                 android:textStyle="bold"
@@ -186,9 +162,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="14dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="64dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pro_details_specifications_label"
