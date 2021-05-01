@@ -15,4 +15,5 @@
     <color name="blue_200">#4284ed</color>
     <color name="blue_accent_300">#02d5ee</color>
     <color name="gold">#FFD770</color>
+    <color name="mtrl_textinput_default_box_stroke_color">#cccccc</color>
 </resources>
