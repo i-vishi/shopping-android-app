@@ -6,27 +6,40 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vishalgaur.shoppingapp.databinding.AddImagesItemBinding
 
-class AddProductImagesAdapter(private val images: List<Uri>) :
-    RecyclerView.Adapter<AddProductImagesAdapter.ViewHolder>() {
+class AddProductImagesAdapter(images: List<Uri>) :
+		RecyclerView.Adapter<AddProductImagesAdapter.ViewHolder>() {
 
-    class ViewHolder(binding: AddImagesItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        val imgView = binding.addImagesImageView
-    }
+    private var data: MutableList<Uri> = images as MutableList<Uri>
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            AddImagesItemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+	inner class ViewHolder(private var binding: AddImagesItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(imgUrl: Uri, pos: Int) {
+            binding.addImagesImageView.setImageURI(imgUrl)
+            binding.addImgCloseBtn.setOnClickListener {
+                deleteItem(pos)
+            }
+        }
+	}
+
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+		return ViewHolder(
+                AddImagesItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                )
         )
+	}
+
+	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+		val imageUrl = data[position]
+		holder.bind(imageUrl, position)
+	}
+
+	override fun getItemCount(): Int = data.size
+
+    fun deleteItem(index: Int) {
+        data.removeAt(index)
+        notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val imageUrl = images[position]
-        holder.imgView.setImageURI(imageUrl)
-    }
-
-    override fun getItemCount(): Int = images.size
 }

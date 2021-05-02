@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -38,7 +39,11 @@ class AddProductFragment : Fragment() {
 
     private val getImages =
         registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { result ->
-            imgList = result
+            imgList.addAll(result)
+            if(imgList.size > 3) {
+                imgList = imgList.subList(0, 3)
+                makeToast("Maximum 3 images are allowed!")
+            }
             val adapter = AddProductImagesAdapter(imgList)
             binding.addProImagesRv.adapter = adapter
         }
@@ -193,5 +198,9 @@ class AddProductFragment : Fragment() {
                 binding.addProErrorTextView.text = getString(R.string.add_pro_error_price_string)
             }
         }
+    }
+
+    private fun makeToast(text: String) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show()
     }
 }

@@ -61,10 +61,12 @@
     <string name="pro_details_select_color_label_text">Select Color</string>
     <string name="pro_details_specif_label_text">Specification</string>
     <string name="pro_details_price_value">$%s</string>
-    <string name="add_pro_images_label_text">Product Images</string>
+    <string name="add_pro_images_label_text">Product Images (Max: 3)</string>
     <string name="search_app_bar_title">Search</string>
     <string name="content_description_search">Search Icon</string>
     <string name="more_app_bar_title">More</string>
     <string name="content_description_more">More Icon</string>
+    <string name="add_img_item_desc">Image Item</string>
+    <string name="add_img_close_btn_desc">Image Remove Button</string>
 
 </resources>
