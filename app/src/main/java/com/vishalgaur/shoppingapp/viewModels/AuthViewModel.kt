@@ -13,6 +13,7 @@ import com.vishalgaur.shoppingapp.network.LogInErrors
 import com.vishalgaur.shoppingapp.network.SignUpErrors
 import com.vishalgaur.shoppingapp.network.UserType
 import com.vishalgaur.shoppingapp.repository.AuthRepository
+import com.vishalgaur.shoppingapp.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.ui.LoginViewErrors
 import com.vishalgaur.shoppingapp.ui.SignUpViewErrors
 import kotlinx.coroutines.async
@@ -23,6 +24,7 @@ private const val TAG = "AuthViewModel"
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val authRepository = AuthRepository(application)
+    private val productsRepository = ProductsRepository(application)
 
     private val _userData = MutableLiveData<UserData>()
     val userData: LiveData<UserData> get() = _userData
@@ -48,6 +50,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private fun refreshStatus() {
         viewModelScope.launch {
             getCurrUser()
+            productsRepository.insertAllProductsToRoom()
         }
     }
 

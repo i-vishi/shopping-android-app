@@ -13,82 +13,78 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.vishalgaur.shoppingapp.ui.OTPStatus
 import com.vishalgaur.shoppingapp.database.user.UserData
 import com.vishalgaur.shoppingapp.repository.AuthRepository
-import com.vishalgaur.shoppingapp.repository.ProductsRepository
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 private const val TAG = "OtpViewModel"
 
 class OtpViewModel(application: Application, private val uData: UserData) :
-    AndroidViewModel(application) {
+		AndroidViewModel(application) {
 
-    private val _otpStatus = MutableLiveData<OTPStatus>()
-    val otpStatus: LiveData<OTPStatus> get() = _otpStatus
+	private val _otpStatus = MutableLiveData<OTPStatus>()
+	val otpStatus: LiveData<OTPStatus> get() = _otpStatus
 
-    val authRepository = AuthRepository(application)
-    private val productsRepository = ProductsRepository(application)
+	val authRepository = AuthRepository(application)
 
-    var storedVerificationId: String? = ""
-    private var verificationInProgress = false
-    private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
+	var storedVerificationId: String? = ""
+	private var verificationInProgress = false
+	private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
 
-    fun verifyOTP(otp: String) {
-        viewModelScope.launch {
-            authRepository.verifyPhoneWithCode(storedVerificationId!!, otp)
-        }
-    }
+	fun verifyOTP(otp: String) {
+		viewModelScope.launch {
+			authRepository.verifyPhoneWithCode(storedVerificationId!!, otp)
+		}
+	}
 
-    fun signUp() {
-        viewModelScope.launch {
-            authRepository.signUp(uData)
-            productsRepository.insertAllProductsToRoom()
-        }
-    }
+	fun signUp() {
+		viewModelScope.launch {
+			authRepository.signUp(uData)
+		}
+	}
 
-    fun login(rememberMe : Boolean) {
-        viewModelScope.launch {
-            authRepository.login(uData, rememberMe)
-            productsRepository.insertAllProductsToRoom()
-        }
-    }
+	fun login(rememberMe: Boolean) {
+		viewModelScope.launch {
+			authRepository.login(uData, rememberMe)
+		}
+	}
 
-    fun verifyPhoneOTPStart(phoneNumber: String, activity: FragmentActivity) {
-        val options = PhoneAuthOptions.newBuilder(authRepository.getFirebaseAuth())
-            .setPhoneNumber(phoneNumber)       // Phone number to verify
-            .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-            .setActivity(activity)                 // Activity (for callback binding)
-            .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
-            .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
+	fun verifyPhoneOTPStart(phoneNumber: String, activity: FragmentActivity) {
+		val options = PhoneAuthOptions.newBuilder(authRepository.getFirebaseAuth())
+				.setPhoneNumber(phoneNumber)       // Phone number to verify
+				.setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+				.setActivity(activity)                 // Activity (for callback binding)
+				.setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
+				.build()
+		PhoneAuthProvider.verifyPhoneNumber(options)
 
-        verificationInProgress = true
-    }
+		verificationInProgress = true
+	}
 
-    private val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+	private val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
-        override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-            Log.d(TAG, "onVerificationCompleted:$credential")
-            authRepository.signInWithPhoneAuthCredential(credential)
-        }
+		override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+			Log.d(TAG, "onVerificationCompleted:$credential")
+			authRepository.signInWithPhoneAuthCredential(credential)
+		}
 
-        override fun onVerificationFailed(e: FirebaseException) {
-            Log.w(TAG, "onVerificationFailed", e)
+		override fun onVerificationFailed(e: FirebaseException) {
+			Log.w(TAG, "onVerificationFailed", e)
 
-            if (e is FirebaseAuthInvalidCredentialsException) {
-                Log.w(TAG, "onVerificationFailed, invalid request, ", e)
-            } else if (e is FirebaseTooManyRequestsException) {
-                Log.w(TAG, "onVerificationFailed, sms quota exceeded, ", e)
-            }
-        }
+			if (e is FirebaseAuthInvalidCredentialsException) {
+				Log.w(TAG, "onVerificationFailed, invalid request, ", e)
+			} else if (e is FirebaseTooManyRequestsException) {
+				Log.w(TAG, "onVerificationFailed, sms quota exceeded, ", e)
+			}
+		}
 
-        override fun onCodeSent(
-            verificationId: String,
-            token: PhoneAuthProvider.ForceResendingToken
+		override fun onCodeSent(
+                verificationId: String,
+                token: PhoneAuthProvider.ForceResendingToken
         ) {
-            // Save verification ID and resending token so we can use them later
-            storedVerificationId = verificationId
-            resendToken = token
-        }
-    }
+			// Save verification ID and resending token so we can use them later
+			storedVerificationId = verificationId
+			resendToken = token
+		}
+	}
 }
