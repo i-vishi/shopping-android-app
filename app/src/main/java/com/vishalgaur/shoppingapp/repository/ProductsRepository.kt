@@ -3,6 +3,7 @@ package com.vishalgaur.shoppingapp.repository
 import android.app.Application
 import android.net.Uri
 import android.util.Log
+import com.vishalgaur.shoppingapp.ERR_UPLOAD
 import com.vishalgaur.shoppingapp.database.ShoppingAppDb
 import com.vishalgaur.shoppingapp.database.products.Product
 import com.vishalgaur.shoppingapp.network.AddProductErrors
@@ -51,12 +52,20 @@ class ProductsRepository(application: Application) {
 	}
 
 	suspend fun insertImages(imgList: List<Uri>): List<String> {
-		val urlList = mutableListOf<String>()
-		imgList.forEach { uri ->
+		var urlList = mutableListOf<String>()
+		imgList.forEach label@{ uri ->
 			val uniId = UUID.randomUUID().toString()
 			val fileName = uniId + uri.lastPathSegment?.split("/")?.last()
-			val downloadUrl = firebaseDb.uploadImage(uri, fileName)
-			urlList.add(downloadUrl.toString())
+			try {
+				val downloadUrl = firebaseDb.uploadImage(uri, fileName)
+				urlList.add(downloadUrl.toString())
+			} catch (e: Exception) {
+				firebaseDb.revertUpload(fileName)
+				Log.d(TAG, "exception: message = $e")
+				urlList = mutableListOf()
+				urlList.add(ERR_UPLOAD)
+				return@label
+			}
 		}
 		return urlList
 	}

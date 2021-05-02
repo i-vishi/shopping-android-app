@@ -79,7 +79,13 @@ class AddProductFragment : Fragment() {
                     binding.loaderLayout.circularLoader.visibility = View.VISIBLE
                     binding.loaderLayout.circularLoader.showAnimationBehavior
                 }
-                else -> {
+                AddProductErrors.ERR_ADD -> {
+                    binding.loaderLayout.circularLoader.visibility = View.GONE
+                    binding.loaderLayout.circularLoader.hideAnimationBehavior
+                    binding.addProErrorTextView.visibility = View.VISIBLE
+                    binding.addProErrorTextView.text = getString(R.string.add_product_error_img_upload)
+                }
+                AddProductErrors.NONE -> {
                     binding.loaderLayout.circularLoader.visibility = View.GONE
                     binding.loaderLayout.circularLoader.hideAnimationBehavior
                 }
@@ -126,7 +132,6 @@ class AddProductFragment : Fragment() {
         val name = binding.proNameEditText.text.toString()
         val price = binding.proPriceEditText.text.toString().toDoubleOrNull()
         val desc = binding.proDescEditText.text.toString()
-        Log.d(TAG, "$name, $price, $desc, $sizeList, $colorsList")
         viewModel.submitProduct(name, price, desc, sizeList.toList(), colorsList.toList(), imgList)
     }
 

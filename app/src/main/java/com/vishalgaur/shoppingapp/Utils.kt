@@ -7,6 +7,7 @@ const val EMAIL_ERROR_TEXT = "Enter valid email address!"
 const val ERR_INIT = "ERROR"
 const val ERR_EMAIL = "_EMAIL"
 const val ERR_MOBILE = "_MOBILE"
+const val ERR_UPLOAD = "UploadErrorException"
 
 internal fun isEmailValid(email: String): Boolean {
 	val EMAIL_PATTERN = Pattern.compile(
@@ -40,7 +41,7 @@ internal fun getRandomString(length: Int, uNum: String, endLength: Int): String 
 	return getStr(length) + uNum + getStr(endLength)
 }
 
-internal fun getProductId(ownerId: String, proCategory: String, proName: String, proNum: Long): String {
-	return "pro-$proCategory-$proName-$ownerId-$proNum"
+internal fun getProductId(ownerId: String, proCategory: String, proNum: Long): String {
+	return "pro-$proCategory-$ownerId-$proNum"
 }
 

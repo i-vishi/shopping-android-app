@@ -68,5 +68,6 @@
     <string name="content_description_more">More Icon</string>
     <string name="add_img_item_desc">Image Item</string>
     <string name="add_img_close_btn_desc">Image Remove Button</string>
+    <string name="add_product_error_img_upload">Error uploading Images, Try Again!</string>
 
 </resources>

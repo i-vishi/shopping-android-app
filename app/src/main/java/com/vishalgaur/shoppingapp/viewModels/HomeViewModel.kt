@@ -3,10 +3,12 @@ package com.vishalgaur.shoppingapp.viewModels
 import android.app.Application
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.vishalgaur.shoppingapp.ERR_UPLOAD
 import com.vishalgaur.shoppingapp.database.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.database.products.Product
 import com.vishalgaur.shoppingapp.getProductId
@@ -96,7 +98,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 				_errorStatus.value = AddProductViewErrors.NONE
 				val proNum = userProducts.value?.size?.plus(1) ?: 1
 				val proId =
-						getProductId(currentUser!!, selectedCategory.value!!, name, proNum.toLong())
+						getProductId(currentUser!!, selectedCategory.value!!, proNum.toLong())
 				val newProduct =
 						Product(proId, name, currentUser, desc, price, sizes, colors, emptyList(), 0.0)
 				_productData.value = newProduct
@@ -116,11 +118,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 				_addProductErrors.value = AddProductErrors.ADDING
 				val resImg = async { productsRepository.insertImages(imgList) }
 				val imagesPaths = resImg.await()
-				Log.d(TAG, "images urls = $imagesPaths")
 				_productData.value?.images = imagesPaths
 				if (_productData.value?.images?.isNotEmpty() == true) {
-					val res = async { productsRepository.insertProduct(productData.value!!) }
-					_addProductErrors.value = res.await()
+					if(imagesPaths[0] == ERR_UPLOAD) {
+						Log.d(TAG, "error uploading images")
+						_addProductErrors.value = AddProductErrors.ERR_ADD
+					}else {
+						val res = async { productsRepository.insertProduct(productData.value!!) }
+						_addProductErrors.value = res.await()
+					}
+
 				} else {
 					Log.d(TAG, "Product images empty, Cannot Add Product")
 				}
