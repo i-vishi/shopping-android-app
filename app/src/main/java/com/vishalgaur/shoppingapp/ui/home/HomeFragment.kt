@@ -8,9 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.database.products.Product
@@ -50,7 +48,7 @@ class HomeFragment : Fragment() {
 		val adapter = ProductAdapter(viewModel.products.value ?: ArrayList())
 		adapter.onClickListener = object : ProductAdapter.OnClickListener {
 			override fun onClick(productData: Product) {
-				Log.d(TAG, "product clicked: ${productData.productId}")
+				Log.d(TAG, "Product: ${productData.productId} clicked")
 				findNavController().navigate(R.id.action_seeProduct, bundleOf("productId" to productData.productId))
 			}
 		}
@@ -89,7 +87,7 @@ class HomeFragment : Fragment() {
 		context?.let {
 			MaterialAlertDialogBuilder(it)
 					.setTitle(getString(R.string.pro_cat_dialog_title))
-					.setSingleChoiceItems(categoryItems, checkedItem) { dialog, which ->
+					.setSingleChoiceItems(categoryItems, checkedItem) { _, which ->
 						checkedItem = which
 					}
 					.setNegativeButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->

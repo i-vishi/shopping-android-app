@@ -1,11 +1,8 @@
 package com.vishalgaur.shoppingapp.ui.home
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
-import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.database.products.Product
 import com.vishalgaur.shoppingapp.databinding.ProductsListItemBinding
 
