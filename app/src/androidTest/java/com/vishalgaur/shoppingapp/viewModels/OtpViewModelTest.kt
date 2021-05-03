@@ -2,7 +2,7 @@ package com.vishalgaur.shoppingapp.viewModels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.vishalgaur.shoppingapp.database.user.UserData
+import com.vishalgaur.shoppingapp.data.UserData
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule

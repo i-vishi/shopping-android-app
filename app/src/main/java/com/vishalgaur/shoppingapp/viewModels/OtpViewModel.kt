@@ -24,7 +24,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 	private val _otpStatus = MutableLiveData<OTPStatus>()
 	val otpStatus: LiveData<OTPStatus> get() = _otpStatus
 
-	val authRepository = AuthRepository(application)
+	val authRepository = AuthRepository.getRepository(application)
 
 	var storedVerificationId: String? = ""
 	private var verificationInProgress = false

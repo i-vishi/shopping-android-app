@@ -1,13 +1,11 @@
 package com.vishalgaur.shoppingapp.viewModels
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.vishalgaur.shoppingapp.data.Product
+import com.vishalgaur.shoppingapp.data.Result
+import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
-import com.vishalgaur.shoppingapp.database.products.Product
-import com.vishalgaur.shoppingapp.repository.ProductsRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -34,8 +32,12 @@ class ProductViewModel(private val productId: String, application: Application) 
 			_dataStatus.value = StoreDataStatus.LOADING
 			try {
 				val res = productsRepository.getProductById(productId)
-				_productData.value = res
-				_dataStatus.value = StoreDataStatus.DONE
+				if(res is Result.Success) {
+					_productData.value = res.data
+					_dataStatus.value = StoreDataStatus.DONE
+				} else if(res is Result.Error){
+					throw Exception("Error getting product")
+				}
 			} catch (e: Exception) {
 				_productData.value = Product()
 				_dataStatus.value = StoreDataStatus.ERROR

@@ -3,7 +3,7 @@ package com.vishalgaur.shoppingapp.ui.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.vishalgaur.shoppingapp.database.products.Product
+import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.databinding.ProductsListItemBinding
 
 class ProductAdapter(private val data: List<Product>) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {

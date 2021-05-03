@@ -16,10 +16,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.vishalgaur.shoppingapp.R
-import com.vishalgaur.shoppingapp.database.products.ShoeColors
-import com.vishalgaur.shoppingapp.database.products.ShoeSizes
+import com.vishalgaur.shoppingapp.data.utils.AddProductErrors
+import com.vishalgaur.shoppingapp.data.utils.ShoeColors
+import com.vishalgaur.shoppingapp.data.utils.ShoeSizes
 import com.vishalgaur.shoppingapp.databinding.FragmentAddProductBinding
-import com.vishalgaur.shoppingapp.network.AddProductErrors
 import com.vishalgaur.shoppingapp.ui.AddProductViewErrors
 import com.vishalgaur.shoppingapp.ui.MyOnFocusChangeListener
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModel

@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity(tableName = "products")
-data class Product(
+data class Product @JvmOverloads constructor(
     @PrimaryKey
     var productId: String = "",
     var name: String = "",

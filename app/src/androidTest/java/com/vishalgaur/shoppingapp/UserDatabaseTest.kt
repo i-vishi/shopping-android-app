@@ -3,9 +3,9 @@ package com.vishalgaur.shoppingapp
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.vishalgaur.shoppingapp.database.ShoppingAppDb
-import com.vishalgaur.shoppingapp.database.user.UserDao
-import com.vishalgaur.shoppingapp.database.user.UserData
+import com.vishalgaur.shoppingapp.data.UserData
+import com.vishalgaur.shoppingapp.data.source.local.ShoppingAppDatabase
+import com.vishalgaur.shoppingapp.data.source.local.UserDao
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.nullValue
 import org.junit.After
@@ -18,14 +18,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class UserDatabaseTest {
     private lateinit var userDao: UserDao
-    private lateinit var userDb: ShoppingAppDb
+    private lateinit var userDb: ShoppingAppDatabase
 
     @Before
     fun createDb() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
 
         userDb =
-            Room.inMemoryDatabaseBuilder(context, ShoppingAppDb::class.java).allowMainThreadQueries()
+            Room.inMemoryDatabaseBuilder(context, ShoppingAppDatabase::class.java).allowMainThreadQueries()
                 .build()
 
         userDao = userDb.userDao()
@@ -38,7 +38,7 @@ class UserDatabaseTest {
     }
 
     @Test
-    fun insertAndGetUser() {
+    suspend fun insertAndGetUser() {
         val user = UserData(
             "sdjm43892yfh948ehod",
             "Vishal",
@@ -52,13 +52,13 @@ class UserDatabaseTest {
     }
 
     @Test
-    fun noData_returnsNull() {
+    suspend fun noData_returnsNull() {
         val result = userDao.getById("1232")
         assertThat(result, `is`(nullValue()))
     }
 
     @Test
-    fun insertClear_returnsNull() {
+    suspend fun insertClear_returnsNull() {
         val user = UserData(
             "sdjm43892yfh948ehod",
             "Vishal",

@@ -19,8 +19,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.vishalgaur.shoppingapp.R
-import com.vishalgaur.shoppingapp.database.products.ShoeColors
-import com.vishalgaur.shoppingapp.database.products.ShoeSizes
+import com.vishalgaur.shoppingapp.data.utils.ShoeColors
+import com.vishalgaur.shoppingapp.data.utils.ShoeSizes
 import com.vishalgaur.shoppingapp.databinding.FragmentProductDetailsBinding
 import com.vishalgaur.shoppingapp.ui.DotsIndicatorDecoration
 import com.vishalgaur.shoppingapp.viewModels.ProductViewModel

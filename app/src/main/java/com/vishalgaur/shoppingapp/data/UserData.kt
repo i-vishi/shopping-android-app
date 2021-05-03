@@ -3,7 +3,7 @@ package com.vishalgaur.shoppingapp.data
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.vishalgaur.shoppingapp.network.UserType
+import com.vishalgaur.shoppingapp.data.utils.UserType
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
