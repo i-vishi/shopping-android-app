@@ -4,7 +4,7 @@ import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert.*
 import org.junit.Test
 
-class UtilsKtTest {
+class UtilsTest {
     @Test
     fun checkEmail_empty_returnsFalse() {
         val email = ""
@@ -83,5 +83,13 @@ class UtilsKtTest {
         val result2 = getRandomString(10, "", 5)
         assertThat(result1.length, `is`(27))
         assertThat(result2.length, `is`(15))
+    }
+
+    @Test
+    fun getProductId_hasExpectedSubStrings() {
+        val result = getProductId("soewifnc9we48yf0", "shoes", 12)
+        val subs = result.split("-")
+        assertThat(result, `is`("pro-shoes-soewifnc9we48yf0-12"))
+        assertThat(subs.size, `is`(4))
     }
 }

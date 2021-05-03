@@ -48,7 +48,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	val addProductErrors: LiveData<AddProductErrors?> get() = _addProductErrors
 
 	private val _productData = MutableLiveData<Product>()
-	private val productData: LiveData<Product> get() = _productData
+	val productData: LiveData<Product> get() = _productData
 
 	init {
 		_errorStatus.value = AddProductViewErrors.NONE
@@ -99,7 +99,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 				val proId =
 						getProductId(currentUser!!, selectedCategory.value!!, proNum.toLong())
 				val newProduct =
-						Product(proId, name, currentUser, desc, price, sizes, colors, emptyList(), 0.0)
+						Product(proId, name.trim(), currentUser, desc.trim(), price, sizes, colors, emptyList(), 0.0)
 				_productData.value = newProduct
 				Log.d(TAG, "pro = $newProduct")
 				insertProduct(imgList)

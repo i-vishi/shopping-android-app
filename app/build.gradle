@@ -74,7 +74,24 @@ dependencies {
     // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation "androidx.test.ext:junit-ktx:1.1.2"
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
+
+    // espresso for intents
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0'
+
+    // AndroidX Test - JVM testing
+    testImplementation "androidx.test.ext:junit-ktx:1.1.2"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "androidx.test:core-ktx:1.3.0"
+
+    testImplementation "org.robolectric:robolectric:4.3.1"
+
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
 
     //fragment testing
     debugImplementation "androidx.fragment:fragment-testing:1.3.3"
