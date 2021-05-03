@@ -18,6 +18,8 @@ import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.EmailMobileData
 import com.vishalgaur.shoppingapp.data.utils.SignUpErrors
 import com.vishalgaur.shoppingapp.data.utils.UserType
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
@@ -56,6 +58,7 @@ class AuthRepository(private val application: Application) {
     fun isRememberMeOn() = sessionManager.isRememberMeOn()
 
     suspend fun refreshData() {
+        Log.d(TAG, "refreshing userdata")
         if (sessionManager.isLoggedIn()) {
             isLoggedIn.value = true
             updateUserInLocalSource(sessionManager.getPhoneNumber())
@@ -171,15 +174,20 @@ class AuthRepository(private val application: Application) {
     }
 
     private suspend fun updateUserInLocalSource(phoneNumber: String?) {
-        userLocalDataSource.clearUser()
-        if (phoneNumber != null) {
-            val uData = authRemoteDataSource.getUserByMobile(phoneNumber)
-                .await()
-                .documents[0]
-                .toObject(UserData::class.java)
-            if (uData != null) {
-                userLocalDataSource.addUser(uData)
+        coroutineScope {
+            launch {
+                userLocalDataSource.clearUser()
+                if (phoneNumber != null) {
+                    val uData = authRemoteDataSource.getUserByMobile(phoneNumber)
+                        .await()
+                        .documents[0]
+                        .toObject(UserData::class.java)
+                    if (uData != null) {
+                        userLocalDataSource.addUser(uData)
+                    }
+                }
             }
         }
+
     }
 }

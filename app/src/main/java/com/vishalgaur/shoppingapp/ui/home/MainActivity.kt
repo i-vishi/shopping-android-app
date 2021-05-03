@@ -17,8 +17,6 @@ class MainActivity : AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		Log.d(TAG, "onCreate starts")
 		super.onCreate(savedInstanceState)
-		val viewModelFactory = HomeViewModelFactory(application)
-		viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 		setContentView(R.layout.activity_main)
 	}
 

@@ -25,6 +25,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 
+    private val _forceUpdate = MutableLiveData<Boolean>(false)
+
     private var _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> get() = _products
 
@@ -57,10 +59,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private fun getProducts() {
         viewModelScope.launch {
             _storeDataStatus.value = StoreDataStatus.LOADING
-            productsRepository.refreshProducts()
+            launch {
+                productsRepository.refreshProducts()
+            }
             _products = Transformations.switchMap(productsRepository.observeProducts()) {
-                getProductsLiveData(it)
-            } as MutableLiveData<List<Product>>
+                    getProductsLiveData(it)
+                } as MutableLiveData<List<Product>>
         }
     }
 

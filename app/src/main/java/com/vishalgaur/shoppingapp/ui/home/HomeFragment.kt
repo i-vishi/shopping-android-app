@@ -45,14 +45,16 @@ class HomeFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		val adapter = ProductAdapter(viewModel.products.value ?: ArrayList())
-		adapter.onClickListener = object : ProductAdapter.OnClickListener {
-			override fun onClick(productData: Product) {
-				Log.d(TAG, "Product: ${productData.productId} clicked")
-				findNavController().navigate(R.id.action_seeProduct, bundleOf("productId" to productData.productId))
+		viewModel.products.observe(viewLifecycleOwner) { productsList ->
+			val adapter = ProductAdapter(productsList)
+			adapter.onClickListener = object : ProductAdapter.OnClickListener {
+				override fun onClick(productData: Product) {
+					Log.d(TAG, "Product: ${productData.productId} clicked")
+					findNavController().navigate(R.id.action_seeProduct, bundleOf("productId" to productData.productId))
+				}
 			}
+			binding.productsRecyclerView.adapter = adapter
 		}
-		binding.productsRecyclerView.adapter = adapter
 	}
 
 	private fun setViews() {
