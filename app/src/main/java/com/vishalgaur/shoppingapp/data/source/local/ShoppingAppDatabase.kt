@@ -1,28 +1,25 @@
-package com.vishalgaur.shoppingapp.database
+package com.vishalgaur.shoppingapp.data.source.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.vishalgaur.shoppingapp.data.Product
+import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.ListTypeConverter
-import com.vishalgaur.shoppingapp.database.products.Product
-import com.vishalgaur.shoppingapp.database.products.ProductsDao
-import com.vishalgaur.shoppingapp.database.user.UserDao
-import com.vishalgaur.shoppingapp.database.user.UserData
-
 
 @Database(entities = [UserData::class, Product::class], version = 1)
 @TypeConverters(ListTypeConverter::class)
-abstract class ShoppingAppDb : RoomDatabase() {
+abstract class ShoppingAppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun productsDao(): ProductsDao
 
     companion object {
         @Volatile
-        private var INSTANCE: ShoppingAppDb? = null
+        private var INSTANCE: ShoppingAppDatabase? = null
 
-        fun getInstance(context: Context): ShoppingAppDb =
+        fun getInstance(context: Context): ShoppingAppDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
@@ -30,7 +27,7 @@ abstract class ShoppingAppDb : RoomDatabase() {
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(
                 context.applicationContext,
-                ShoppingAppDb::class.java, "ShoppingAppDb"
+                ShoppingAppDatabase::class.java, "ShoppingAppDb"
             )
                 .fallbackToDestructiveMigration()
                 .allowMainThreadQueries()

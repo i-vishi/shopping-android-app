@@ -10,9 +10,9 @@ import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.EMAIL_ERROR_TEXT
 import com.vishalgaur.shoppingapp.MOB_ERROR_TEXT
 import com.vishalgaur.shoppingapp.R
-import com.vishalgaur.shoppingapp.ui.SignUpViewErrors
+import com.vishalgaur.shoppingapp.data.utils.SignUpErrors
 import com.vishalgaur.shoppingapp.databinding.FragmentSignupBinding
-import com.vishalgaur.shoppingapp.network.SignUpErrors
+import com.vishalgaur.shoppingapp.ui.SignUpViewErrors
 
 class SignupFragment : LoginSignupBaseFragment<FragmentSignupBinding>() {
 

@@ -10,8 +10,8 @@ import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.ui.LoginViewErrors
 import com.vishalgaur.shoppingapp.MOB_ERROR_TEXT
 import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.data.utils.LogInErrors
 import com.vishalgaur.shoppingapp.databinding.FragmentLoginBinding
-import com.vishalgaur.shoppingapp.network.LogInErrors
 
 class LoginFragment : LoginSignupBaseFragment<FragmentLoginBinding>() {
     override fun setViewBinding(): FragmentLoginBinding {

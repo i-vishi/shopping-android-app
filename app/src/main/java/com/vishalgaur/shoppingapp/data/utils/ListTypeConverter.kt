@@ -1,4 +1,4 @@
-package com.vishalgaur.shoppingapp.database
+package com.vishalgaur.shoppingapp.data.utils
 
 import androidx.room.TypeConverter
 

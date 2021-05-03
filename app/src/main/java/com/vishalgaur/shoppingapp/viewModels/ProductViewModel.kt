@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.database.products.Product
-import com.vishalgaur.shoppingapp.network.StoreDataStatus
 import com.vishalgaur.shoppingapp.repository.ProductsRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception

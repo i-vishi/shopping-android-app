@@ -8,11 +8,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.vishalgaur.shoppingapp.ERR_UPLOAD
-import com.vishalgaur.shoppingapp.database.ShoppingAppSessionManager
+import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
+import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.database.products.Product
 import com.vishalgaur.shoppingapp.getProductId
 import com.vishalgaur.shoppingapp.network.AddProductErrors
-import com.vishalgaur.shoppingapp.network.StoreDataStatus
 import com.vishalgaur.shoppingapp.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.ui.AddProductViewErrors
 import kotlinx.coroutines.async
