@@ -49,7 +49,7 @@ class ProductsRepository(application: Application) {
         return productsLocalSource.observeProducts()
     }
 
-    suspend fun getAllProductsByOwner(ownerId: String): LiveData<Result<List<Product>>> {
+    suspend fun getAllProductsByOwner(ownerId: String): Result<List<Product>> {
         return productsLocalSource.getAllProductsByOwner(ownerId)
     }
 

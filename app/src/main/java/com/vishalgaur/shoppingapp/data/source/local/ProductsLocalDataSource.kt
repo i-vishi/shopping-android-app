@@ -33,9 +33,11 @@ class ProductsLocalDataSource internal constructor(
         // refresh products
     }
 
-    suspend fun getAllProductsByOwner(ownerId: String): LiveData<Result<List<Product>>> {
-        return Transformations.map(productsDao.getProductsByOwnerId(ownerId)) {
-            Success(it)
+    suspend fun getAllProductsByOwner(ownerId: String): Result<List<Product>> = withContext(ioDispatcher) {
+        return@withContext try {
+            Success(productsDao.getProductsByOwnerId(ownerId))
+        } catch (e: Exception) {
+            Error(e)
         }
     }
 

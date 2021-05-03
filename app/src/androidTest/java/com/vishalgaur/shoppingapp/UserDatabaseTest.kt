@@ -6,6 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.source.local.ShoppingAppDatabase
 import com.vishalgaur.shoppingapp.data.source.local.UserDao
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.nullValue
 import org.junit.After
@@ -25,7 +26,8 @@ class UserDatabaseTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
 
         userDb =
-            Room.inMemoryDatabaseBuilder(context, ShoppingAppDatabase::class.java).allowMainThreadQueries()
+            Room.inMemoryDatabaseBuilder(context, ShoppingAppDatabase::class.java)
+                .allowMainThreadQueries()
                 .build()
 
         userDao = userDb.userDao()
@@ -38,7 +40,7 @@ class UserDatabaseTest {
     }
 
     @Test
-    suspend fun insertAndGetUser() {
+    fun insertAndGetUser() {
         val user = UserData(
             "sdjm43892yfh948ehod",
             "Vishal",
@@ -46,19 +48,24 @@ class UserDatabaseTest {
             "vishal@somemail.com",
             "dh94328hd"
         )
-        userDao.insert(user)
-        val result = userDao.getById("sdjm43892yfh948ehod")
-        assertEquals(user, result)
+        runBlocking {
+            userDao.insert(user)
+            val result = userDao.getById("sdjm43892yfh948ehod")
+            assertEquals(user, result)
+        }
+
     }
 
     @Test
-    suspend fun noData_returnsNull() {
-        val result = userDao.getById("1232")
-        assertThat(result, `is`(nullValue()))
+    fun noData_returnsNull() {
+        runBlocking {
+            val result = userDao.getById("1232")
+            assertThat(result, `is`(nullValue()))
+        }
     }
 
     @Test
-    suspend fun insertClear_returnsNull() {
+    fun insertClear_returnsNull() {
         val user = UserData(
             "sdjm43892yfh948ehod",
             "Vishal",
@@ -66,9 +73,11 @@ class UserDatabaseTest {
             "vishal@somemail.com",
             "dh94328hd"
         )
-        userDao.insert(user)
-        userDao.clear()
-        val result = userDao.getById("sdjm43892yfh948ehod")
-        assertThat(result, `is`(nullValue()))
+        runBlocking {
+            userDao.insert(user)
+            userDao.clear()
+            val result = userDao.getById("sdjm43892yfh948ehod")
+            assertThat(result, `is`(nullValue()))
+        }
     }
 }

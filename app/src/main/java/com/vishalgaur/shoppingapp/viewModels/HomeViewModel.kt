@@ -81,10 +81,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun getProductsByOwner() {
         viewModelScope.launch {
-            _userProducts =
-                Transformations.switchMap(productsRepository.getAllProductsByOwner(currentUser!!)) {
-                    getProductsLiveData(it)
-                } as MutableLiveData<List<Product>>
+            val res = productsRepository.getAllProductsByOwner(currentUser!!)
+            if(res is Success) {
+                _userProducts.value = res.data!!
+            } else {
+                _userProducts.value = emptyList()
+            }
         }
     }
 
