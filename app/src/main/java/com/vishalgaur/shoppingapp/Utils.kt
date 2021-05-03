@@ -1,5 +1,6 @@
 package com.vishalgaur.shoppingapp
 
+import java.util.*
 import java.util.regex.Pattern
 
 const val MOB_ERROR_TEXT = "Enter valid mobile number!"
@@ -41,7 +42,8 @@ internal fun getRandomString(length: Int, uNum: String, endLength: Int): String 
 	return getStr(length) + uNum + getStr(endLength)
 }
 
-internal fun getProductId(ownerId: String, proCategory: String, proNum: Long): String {
-	return "pro-$proCategory-$ownerId-$proNum"
+internal fun getProductId(ownerId: String, proCategory: String): String {
+	val uniqueId = UUID.randomUUID().toString()
+	return "pro-$proCategory-$ownerId-$uniqueId"
 }
 

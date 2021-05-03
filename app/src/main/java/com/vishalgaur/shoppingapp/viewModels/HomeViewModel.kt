@@ -57,6 +57,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private fun getProducts() {
         viewModelScope.launch {
             _storeDataStatus.value = StoreDataStatus.LOADING
+            productsRepository.refreshProducts()
             _products = Transformations.switchMap(productsRepository.observeProducts()) {
                 getProductsLiveData(it)
             } as MutableLiveData<List<Product>>
@@ -66,9 +67,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private fun getProductsLiveData(result: Result<List<Product>>?): LiveData<List<Product>> {
         val res = MutableLiveData<List<Product>>()
         if (result is Success) {
+            Log.d(TAG, "result is success")
             _storeDataStatus.value = StoreDataStatus.DONE
             res.value = result.data!!
-        } else {
+        } else if(result is Error){
+            Log.d(TAG, "result is not success")
             res.value = emptyList()
             _storeDataStatus.value = StoreDataStatus.ERROR
         }
@@ -105,9 +108,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 _errorStatus.value = AddProductViewErrors.ERR_PRICE_0
             } else {
                 _errorStatus.value = AddProductViewErrors.NONE
-                val proNum = userProducts.value?.size?.plus(1) ?: 1
                 val proId =
-                    getProductId(currentUser!!, selectedCategory.value!!, proNum.toLong())
+                    getProductId(currentUser!!, selectedCategory.value!!)
                 val newProduct =
                     Product(
 						proId,

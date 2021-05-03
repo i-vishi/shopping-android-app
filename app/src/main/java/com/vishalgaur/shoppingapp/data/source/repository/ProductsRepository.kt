@@ -95,6 +95,7 @@ class ProductsRepository(application: Application) {
     private suspend fun updateProductsFromRemoteSource() {
         val remoteProducts = productsRemoteSource.getAllProducts()
         if (remoteProducts is Success) {
+            Log.d(TAG, "pro list = ${remoteProducts.data}")
             productsLocalSource.deleteAllProducts()
             productsLocalSource.insertMultipleProducts(remoteProducts.data)
         } else if (remoteProducts is Error) {
