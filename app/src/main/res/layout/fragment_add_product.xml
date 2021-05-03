@@ -146,6 +146,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:gravity="start|top"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:textColor="@color/gray"
