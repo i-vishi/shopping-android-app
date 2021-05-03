@@ -1,6 +1,7 @@
 package com.vishalgaur.shoppingapp.viewModels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.Result
@@ -8,6 +9,8 @@ import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import kotlinx.coroutines.launch
 import java.lang.Exception
+
+private const val TAG = "ProductViewModel"
 
 class ProductViewModel(private val productId: String, application: Application) : AndroidViewModel(application) {
 
@@ -23,6 +26,7 @@ class ProductViewModel(private val productId: String, application: Application) 
 	private val productsRepository = ProductsRepository(application)
 
 	init {
+		Log.d(TAG, "init: productId: $productId")
 		getProductDetails()
 		_isLiked.value = false
 	}
@@ -31,6 +35,7 @@ class ProductViewModel(private val productId: String, application: Application) 
 		viewModelScope.launch {
 			_dataStatus.value = StoreDataStatus.LOADING
 			try {
+                Log.d(TAG, "getting product Data")
 				val res = productsRepository.getProductById(productId)
 				if(res is Result.Success) {
 					_productData.value = res.data

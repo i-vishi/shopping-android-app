@@ -20,6 +20,16 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="72dp">
 
+            <include
+                android:id="@+id/loader_layout"
+                layout="@layout/layout_circular_loader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/pro_details_images_recyclerview"
                 android:layout_width="match_parent"

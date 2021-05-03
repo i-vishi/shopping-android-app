@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.utils.ShoeColors
 import com.vishalgaur.shoppingapp.data.utils.ShoeSizes
+import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentProductDetailsBinding
 import com.vishalgaur.shoppingapp.ui.DotsIndicatorDecoration
 import com.vishalgaur.shoppingapp.viewModels.ProductViewModel
@@ -57,10 +58,29 @@ class ProductDetailsFragment : Fragment() {
 			viewModel = ViewModelProvider(this, viewModelFactory).get(ProductViewModel::class.java)
 		}
 
-		setViews()
-
 		setObservers()
 		return binding.root
+	}
+
+	private fun setObservers() {
+		viewModel.dataStatus.observe(viewLifecycleOwner) {
+			when(it) {
+				StoreDataStatus.DONE -> {
+					binding.loaderLayout.circularLoader.visibility = View.GONE
+					setViews()
+				}
+				else -> {
+					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+				}
+			}
+		}
+		viewModel.isLiked.observe(viewLifecycleOwner) {
+			if (it == true) {
+				binding.proDetailsLikeBtn.setImageResource(R.drawable.liked_heart_drawable)
+			} else {
+				binding.proDetailsLikeBtn.setImageResource(R.drawable.heart_icon_drawable)
+			}
+		}
 	}
 
 	private fun setViews() {
@@ -70,6 +90,8 @@ class ProductDetailsFragment : Fragment() {
 		}
 		binding.addProAppBar.topAppBar.inflateMenu(R.menu.app_bar_menu)
 		binding.addProAppBar.topAppBar.overflowIcon?.setTint(ContextCompat.getColor(requireContext(), R.color.gray))
+
+		binding.loaderLayout.circularLoader.visibility = View.GONE
 
 		setImagesView()
 
@@ -81,22 +103,12 @@ class ProductDetailsFragment : Fragment() {
 		}
 		binding.proDetailsRatingBar.rating = (viewModel.productData.value?.rating ?: 0.0).toFloat()
 		binding.proDetailsPriceTv.text = resources.getString(
-				R.string.pro_details_price_value,
-				viewModel.productData.value?.price.toString()
+			R.string.pro_details_price_value,
+			viewModel.productData.value?.price.toString()
 		)
 		setShoeSizeButtons()
 		setShoeColorsButtons()
 		binding.proDetailsSpecificsText.text = viewModel.productData.value?.description ?: ""
-	}
-
-	private fun setObservers() {
-		viewModel.isLiked.observe(viewLifecycleOwner) {
-			if (it == true) {
-				binding.proDetailsLikeBtn.setImageResource(R.drawable.liked_heart_drawable)
-			} else {
-				binding.proDetailsLikeBtn.setImageResource(R.drawable.heart_icon_drawable)
-			}
-		}
 	}
 
 	private fun setImagesView() {

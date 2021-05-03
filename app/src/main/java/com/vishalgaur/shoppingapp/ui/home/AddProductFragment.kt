@@ -120,7 +120,6 @@ class AddProductFragment : Fragment() {
             if (viewModel.errorStatus.value == AddProductViewErrors.NONE) {
                 viewModel.addProductErrors.observe(viewLifecycleOwner) { err ->
                     if (err == AddProductErrors.NONE) {
-                        viewModel.refreshProducts()
                         findNavController().navigate(R.id.action_addProductFragment_to_homeFragment)
                     }
                 }
