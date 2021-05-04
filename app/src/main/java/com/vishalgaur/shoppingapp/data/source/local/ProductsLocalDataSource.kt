@@ -21,6 +21,12 @@ class ProductsLocalDataSource internal constructor(
         }
     }
 
+    fun observeProductsByOwner(ownerId: String): LiveData<Result<List<Product>>?> {
+        return Transformations.map(productsDao.observeProductsByOwner(ownerId)) {
+            Success(it)
+        }
+    }
+
     override suspend fun getAllProducts(): Result<List<Product>> = withContext(ioDispatcher) {
         return@withContext try {
             Success(productsDao.getAllProducts())
@@ -33,26 +39,28 @@ class ProductsLocalDataSource internal constructor(
         // refresh products
     }
 
-    suspend fun getAllProductsByOwner(ownerId: String): Result<List<Product>> = withContext(ioDispatcher) {
-        return@withContext try {
-            Success(productsDao.getProductsByOwnerId(ownerId))
-        } catch (e: Exception) {
-            Error(e)
-        }
-    }
-
-    override suspend fun getProductById(productId: String): Result<Product> = withContext(ioDispatcher) {
-        try {
-            val product = productsDao.getProductById(productId)
-            if (product != null) {
-                return@withContext Success(product)
-            } else {
-                return@withContext Error(Exception("Product Not Found!"))
+    suspend fun getAllProductsByOwner(ownerId: String): Result<List<Product>> =
+        withContext(ioDispatcher) {
+            return@withContext try {
+                Success(productsDao.getProductsByOwnerId(ownerId))
+            } catch (e: Exception) {
+                Error(e)
             }
-        } catch (e: Exception) {
-            return@withContext Error(e)
         }
-    }
+
+    override suspend fun getProductById(productId: String): Result<Product> =
+        withContext(ioDispatcher) {
+            try {
+                val product = productsDao.getProductById(productId)
+                if (product != null) {
+                    return@withContext Success(product)
+                } else {
+                    return@withContext Error(Exception("Product Not Found!"))
+                }
+            } catch (e: Exception) {
+                return@withContext Error(e)
+            }
+        }
 
     override suspend fun insertProduct(newProduct: Product) = withContext(ioDispatcher) {
         productsDao.insert(newProduct)

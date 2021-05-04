@@ -21,6 +21,9 @@ interface ProductsDao {
     @Query("SELECT * FROM products")
     fun observeProducts(): LiveData<List<Product>>
 
+    @Query("SELECT * FROM products WHERE owner = :ownerId")
+    fun observeProductsByOwner(ownerId: String): LiveData<List<Product>>
+
     @Query("SELECT * FROM products WHERE productId = :proId")
     suspend fun getProductById(proId: String): Product?
 

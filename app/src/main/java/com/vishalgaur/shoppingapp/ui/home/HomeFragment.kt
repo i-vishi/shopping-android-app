@@ -88,7 +88,6 @@ class HomeFragment : Fragment() {
 		}
 	}
 
-
 	private fun showDialog() {
 		val categoryItems = ProductCategories
 		var checkedItem = -1

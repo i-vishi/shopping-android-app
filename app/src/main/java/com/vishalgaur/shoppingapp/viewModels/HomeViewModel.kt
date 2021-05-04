@@ -51,7 +51,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         _errorStatus.value = AddProductViewErrors.NONE
-        getProducts()
+        getProductsByOwner()
     }
 
     private fun getProducts() {
@@ -86,12 +86,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun getProductsByOwner() {
         viewModelScope.launch {
-            val res = productsRepository.getAllProductsByOwner(currentUser!!)
-            if (res is Success) {
-                _userProducts.value = res.data!!
-            } else {
-                _userProducts.value = emptyList()
+            _storeDataStatus.value = StoreDataStatus.LOADING
+            launch {
+                productsRepository.refreshProducts()
             }
+            _products = Transformations.switchMap(productsRepository.observeProductsByOwner(currentUser!!)) {
+                getProductsLiveData(it)
+            } as MutableLiveData<List<Product>>
         }
     }
 

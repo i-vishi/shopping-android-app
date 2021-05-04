@@ -50,6 +50,10 @@ class ProductsRepository(application: Application) {
         return productsLocalSource.observeProducts()
     }
 
+    fun observeProductsByOwner(ownerId: String): LiveData<Result<List<Product>>?> {
+        return productsLocalSource.observeProductsByOwner(ownerId)
+    }
+
     suspend fun getAllProductsByOwner(ownerId: String): Result<List<Product>> {
         return productsLocalSource.getAllProductsByOwner(ownerId)
     }
