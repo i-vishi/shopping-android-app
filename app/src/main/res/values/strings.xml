@@ -43,7 +43,8 @@
     <string name="signup_seller_text">Do you wish to sell any products?</string>
     <string name="home_add_fab_desc">Add Product FAB</string>
     <string name="add_pro_name_label_text">Product Name</string>
-    <string name="add_pro_price_label_text">Price</string>
+    <string name="add_pro_price_label_text">Selling Price</string>
+    <string name="add_pro_mrp_label_text">MRP</string>
     <string name="add_pro_desc_label_text">Description</string>
     <string name="add_pro_sizes_label_text">Sizes Available</string>
     <string name="app_pro_btn_text">Add Product</string>
@@ -61,6 +62,7 @@
     <string name="pro_details_select_color_label_text">Select Color</string>
     <string name="pro_details_specif_label_text">Specification</string>
     <string name="pro_details_price_value">$%s</string>
+    <string name="pro_details_actual_strike_value">$%s</string>
     <string name="add_pro_images_label_text">Product Images (Max: 3)</string>
     <string name="search_app_bar_title">Search</string>
     <string name="content_description_search">Search Icon</string>
@@ -69,7 +71,8 @@
     <string name="add_img_item_desc">Image Item</string>
     <string name="add_img_close_btn_desc">Image Remove Button</string>
     <string name="add_product_error_img_upload">Error uploading Images, Try Again!</string>
-    <string name="product_actual_price_text">$1000.00</string>
+    <string name="product_actual_price_text"><strike>$1000.00</strike></string>
     <string name="product_offer_percent_text">25% Off</string>
+    <string name="pro_offer_precent_text">%s%% Off</string>
 
 </resources>

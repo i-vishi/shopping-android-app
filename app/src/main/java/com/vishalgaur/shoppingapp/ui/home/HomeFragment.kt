@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.Product
+import com.vishalgaur.shoppingapp.data.utils.ProductCategories
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentHomeBinding
 import com.vishalgaur.shoppingapp.ui.RecyclerViewPaddingItemDecoration
@@ -89,7 +90,7 @@ class HomeFragment : Fragment() {
 
 
 	private fun showDialog() {
-		val categoryItems = arrayOf("Shoes")
+		val categoryItems = ProductCategories
 		var checkedItem = -1
 		context?.let {
 			MaterialAlertDialogBuilder(it)

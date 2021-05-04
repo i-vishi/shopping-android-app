@@ -9,7 +9,8 @@ val ShoeSizes = mapOf(
     "UK9" to 9,
     "UK10" to 10,
     "UK11" to 11,
-    "UK12" to 12)
+    "UK12" to 12
+)
 
 val ShoeColors = mapOf(
     "black" to "#000000",
@@ -19,4 +20,7 @@ val ShoeColors = mapOf(
     "blue" to "#0000FF",
     "yellow" to "#FFFF00",
     "cyan" to "#00FFFF",
-    "magenta" to "#FF00FF")
+    "magenta" to "#FF00FF"
+)
+
+val ProductCategories = arrayOf("Shoes")

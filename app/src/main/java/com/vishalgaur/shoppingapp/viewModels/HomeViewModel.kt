@@ -98,15 +98,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun submitProduct(
         name: String,
         price: Double?,
+        mrp: Double?,
         desc: String,
         sizes: List<Int>,
         colors: List<String>,
         imgList: List<Uri>
     ) {
-        if (name.isBlank() || price == null || desc.isBlank() || sizes.isNullOrEmpty() || colors.isNullOrEmpty() || imgList.isNullOrEmpty()) {
+        if (name.isBlank() || price == null || mrp == null || desc.isBlank() || sizes.isNullOrEmpty() || colors.isNullOrEmpty() || imgList.isNullOrEmpty()) {
             _errorStatus.value = AddProductViewErrors.EMPTY
         } else {
-            if (price == 0.0) {
+            if (price == 0.0 || mrp == 0.0) {
                 _errorStatus.value = AddProductViewErrors.ERR_PRICE_0
             } else {
                 _errorStatus.value = AddProductViewErrors.NONE
@@ -118,7 +119,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         name.trim(),
                         currentUser,
                         desc.trim(),
+                        _selectedCategory.value!!,
                         price,
+                        mrp,
                         sizes,
                         colors,
                         emptyList(),

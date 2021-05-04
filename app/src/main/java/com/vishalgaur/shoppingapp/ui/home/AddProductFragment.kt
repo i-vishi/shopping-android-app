@@ -40,7 +40,7 @@ class AddProductFragment : Fragment() {
     private val getImages =
         registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { result ->
             imgList.addAll(result)
-            if(imgList.size > 3) {
+            if (imgList.size > 3) {
                 imgList = imgList.subList(0, 3)
                 makeToast("Maximum 3 images are allowed!")
             }
@@ -83,7 +83,8 @@ class AddProductFragment : Fragment() {
                     binding.loaderLayout.circularLoader.visibility = View.GONE
                     binding.loaderLayout.circularLoader.hideAnimationBehavior
                     binding.addProErrorTextView.visibility = View.VISIBLE
-                    binding.addProErrorTextView.text = getString(R.string.add_product_error_img_upload)
+                    binding.addProErrorTextView.text =
+                        getString(R.string.add_product_error_img_upload)
                 }
                 AddProductErrors.NONE -> {
                     binding.loaderLayout.circularLoader.visibility = View.GONE
@@ -130,9 +131,12 @@ class AddProductFragment : Fragment() {
     private fun onAddProduct() {
         val name = binding.proNameEditText.text.toString()
         val price = binding.proPriceEditText.text.toString().toDoubleOrNull()
+        val mrp = binding.proMrpEditText.text.toString().toDoubleOrNull()
         val desc = binding.proDescEditText.text.toString()
         Log.d(TAG, "onAddProduct: Add product initiated")
-        viewModel.submitProduct(name, price, desc, sizeList.toList(), colorsList.toList(), imgList)
+        viewModel.submitProduct(
+            name, price, mrp, desc, sizeList.toList(), colorsList.toList(), imgList
+        )
     }
 
     private fun setShoeSizesChips() {

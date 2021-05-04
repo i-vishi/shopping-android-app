@@ -1,6 +1,7 @@
 package com.vishalgaur.shoppingapp.ui.home
 
 import android.content.Context
+import android.graphics.Paint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.databinding.ProductsListItemBinding
+import com.vishalgaur.shoppingapp.getOfferPercentage
 
 private const val TAG = "ProductAdapter"
 
@@ -38,6 +40,13 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
             proPrice.text =
                 context.getString(R.string.pro_details_price_value, productData.price.toString())
             proRatingBar.rating = productData.rating.toFloat()
+            proMrp.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+            proMrp.text =
+                context.getString(R.string.pro_details_actual_strike_value, productData.mrp.toString())
+            proOffer.text = context.getString(
+                R.string.pro_offer_precent_text,
+                getOfferPercentage(productData.mrp, productData.price).toString()
+            )
 
             val imgUrl = productData.images[0].toUri().buildUpon().scheme("https").build()
             Glide.with(context)
@@ -59,12 +68,12 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-			ProductsListItemBinding.inflate(
-				LayoutInflater.from(parent.context),
-				parent,
-				false
-			)
-		)
+            ProductsListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
