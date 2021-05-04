@@ -140,7 +140,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun deleteProduct(productId: String) {
-
+        viewModelScope.launch {
+            productsRepository.deleteProductById(productId)
+        }
     }
 
     private fun insertProduct(imgList: List<Uri>) {

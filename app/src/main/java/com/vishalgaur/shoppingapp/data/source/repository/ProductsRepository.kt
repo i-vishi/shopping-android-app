@@ -97,6 +97,17 @@ class ProductsRepository(application: Application) {
         return urlList
     }
 
+    suspend fun deleteProductById(productId: String) {
+        coroutineScope {
+            launch {
+                productsRemoteSource.deleteProduct(productId)
+            }
+            launch {
+                productsLocalSource.deleteProduct(productId)
+            }
+        }
+    }
+
     private suspend fun updateProductsFromRemoteSource() {
         val remoteProducts = productsRemoteSource.getAllProducts()
         if (remoteProducts is Success) {

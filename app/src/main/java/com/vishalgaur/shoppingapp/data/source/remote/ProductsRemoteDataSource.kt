@@ -15,8 +15,8 @@ import com.vishalgaur.shoppingapp.data.Result.*
 import com.vishalgaur.shoppingapp.data.source.ProductDataSource
 import kotlinx.coroutines.tasks.await
 
-class ProductsRemoteDataSource: ProductDataSource {
-    private val firebaseDb : FirebaseFirestore = Firebase.firestore
+class ProductsRemoteDataSource : ProductDataSource {
+    private val firebaseDb: FirebaseFirestore = Firebase.firestore
     private val firebaseStorage: FirebaseStorage = Firebase.storage
 
     private val observableProducts = MutableLiveData<Result<List<Product>>?>()
@@ -35,7 +35,7 @@ class ProductsRemoteDataSource: ProductDataSource {
 
     override suspend fun getAllProducts(): Result<List<Product>> {
         val resRef = productsCollectionRef().get().await()
-        return if(!resRef.isEmpty) {
+        return if (!resRef.isEmpty) {
             Success(resRef.toObjects(Product::class.java))
         } else {
             Error(Exception("Error getting Products!"))
@@ -48,7 +48,7 @@ class ProductsRemoteDataSource: ProductDataSource {
 
     override suspend fun getProductById(productId: String): Result<Product?> {
         val resRef = productsCollectionRef().whereEqualTo(PRODUCT_ID_FIELD, productId).get().await()
-        return if(!resRef.isEmpty) {
+        return if (!resRef.isEmpty) {
             Success(resRef.documents[0].toObject(Product::class.java))
         } else {
             Error(Exception("Product with id: $productId Not Found!"))
@@ -56,15 +56,39 @@ class ProductsRemoteDataSource: ProductDataSource {
     }
 
     suspend fun deleteProduct(productId: String) {
-        // delete a product
         Log.d(TAG, "onDeleteProduct: delete product with Id: $productId initiated")
+        val resRef = productsCollectionRef().whereEqualTo(PRODUCT_ID_FIELD, productId).get().await()
+        if (!resRef.isEmpty) {
+            val product = resRef.documents[0].toObject(Product::class.java)
+            val imgUrls = product?.images
+
+            //deleting images first
+            imgUrls?.forEach {
+                val ref = firebaseStorage.getReferenceFromUrl(it)
+                ref.delete().addOnSuccessListener {
+                    Log.d(TAG, "onDelete: image deleted successfully!")
+                }.addOnFailureListener { e ->
+                    Log.d(TAG, "onDelete: Error deleting image, error: $e")
+                }
+            }
+
+            //deleting doc containing product
+            val docId = resRef.documents[0].id
+            productsCollectionRef().document(docId).delete().addOnSuccessListener {
+                Log.d(TAG, "onDelete: DocumentSnapshot successfully deleted!")
+            }.addOnFailureListener { e ->
+                Log.w(TAG, "onDelete: Error deleting document", e)
+            }
+        } else {
+            Log.d(TAG, "onDeleteProduct: product with id: $productId not found!")
+        }
     }
 
     suspend fun uploadImage(uri: Uri, fileName: String): Uri {
         val imgRef = storageRef().child("$SHOES_STORAGE_PATH/$fileName")
         val uploadTask = imgRef.putFile(uri)
-        val uriRef = uploadTask.continueWithTask { task->
-            if(!task.isSuccessful){
+        val uriRef = uploadTask.continueWithTask { task ->
+            if (!task.isSuccessful) {
                 task.exception?.let { throw it }
             }
             imgRef.downloadUrl
