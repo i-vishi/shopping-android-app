@@ -14,6 +14,12 @@ class ProductAdapter(private val data: List<Product>) : RecyclerView.Adapter<Pro
 		val proName = binding.productNameTv
 		val proPrice = binding.productPriceTv
 		val productCard = binding.productCard
+		val productImage = binding.productImageView
+		val proDeleteButton = binding.productDeleteButton
+		val proEditBtn = binding.productEditButton
+		val proMrp = binding.productActualPriceTv
+		val proOffer = binding.productOfferValueTv
+		val proRatingBar = binding.productRatingBar
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
