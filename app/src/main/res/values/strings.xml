@@ -74,5 +74,8 @@
     <string name="product_actual_price_text"><strike>$1000.00</strike></string>
     <string name="product_offer_percent_text">25% Off</string>
     <string name="pro_offer_precent_text">%s%% Off</string>
+    <string name="delete_dialog_title_text">Are you sure?</string>
+    <string name="delete_dialog_message_text">On proceeding, Product : %s will be deleted.</string>
+    <string name="delete_dialog_delete_btn_text">Delete</string>
 
 </resources>

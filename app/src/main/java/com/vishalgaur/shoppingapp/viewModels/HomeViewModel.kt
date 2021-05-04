@@ -139,6 +139,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         getProducts()
     }
 
+    fun deleteProduct(productId: String) {
+
+    }
+
     private fun insertProduct(imgList: List<Uri>) {
         viewModelScope.launch {
             if (_productData.value != null) {

@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.Product
+import com.vishalgaur.shoppingapp.data.utils.ProductCategories
 import com.vishalgaur.shoppingapp.databinding.ProductsListItemBinding
 import com.vishalgaur.shoppingapp.getOfferPercentage
 
@@ -42,7 +44,10 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
             proRatingBar.rating = productData.rating.toFloat()
             proMrp.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             proMrp.text =
-                context.getString(R.string.pro_details_actual_strike_value, productData.mrp.toString())
+                context.getString(
+                    R.string.pro_details_actual_strike_value,
+                    productData.mrp.toString()
+                )
             proOffer.text = context.getString(
                 R.string.pro_offer_precent_text,
                 getOfferPercentage(productData.mrp, productData.price).toString()
@@ -57,11 +62,11 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
             productImage.clipToOutline = true
 
             proEditBtn.setOnClickListener {
-                onEditProduct(productData.productId)
+                onClickListener.onEditClick(productData.productId)
             }
 
             proDeleteButton.setOnClickListener {
-                onDeleteProduct(productData.productId)
+                onClickListener.onDeleteClick(productData)
             }
         }
     }
@@ -85,13 +90,7 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
 
     interface OnClickListener {
         fun onClick(productData: Product)
-    }
-
-    fun onDeleteProduct(productId: String) {
-        Log.d(TAG, "onDeleteProduct: deletion initiated for $productId")
-    }
-
-    fun onEditProduct(productId: String) {
-        Log.d(TAG, "onEditProduct: Edit Initiated for $productId")
+        fun onDeleteClick(productData: Product)
+        fun onEditClick(productId: String)
     }
 }

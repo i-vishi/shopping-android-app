@@ -55,6 +55,15 @@ class HomeFragment : Fragment() {
 						Log.d(TAG, "Product: ${productData.productId} clicked")
 						findNavController().navigate(R.id.action_seeProduct, bundleOf("productId" to productData.productId))
 					}
+
+					override fun onDeleteClick(productData: Product) {
+						Log.d(TAG, "onDeleteProduct: deletion initiated for ${productData.productId}")
+						showDeleteDialog(productData.name, productData.productId)
+					}
+
+					override fun onEditClick(productId: String) {
+						Log.d(TAG, "onEditProduct: Edit Initiated for $productId")
+					}
 				}
 				binding.productsRecyclerView.adapter = adapter
 				val itemDecoration = RecyclerViewPaddingItemDecoration(requireContext())
@@ -88,22 +97,37 @@ class HomeFragment : Fragment() {
 		}
 	}
 
+	private fun showDeleteDialog(productName: String, productId: String) {
+		context?.let {
+			MaterialAlertDialogBuilder(it)
+				.setTitle(getString(R.string.delete_dialog_title_text))
+				.setMessage(getString(R.string.delete_dialog_message_text, productName))
+				.setNeutralButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
+					dialog.cancel()
+				}
+				.setPositiveButton(getString(R.string.delete_dialog_delete_btn_text)) { dialog, _ ->
+					viewModel.deleteProduct(productId)
+					dialog.cancel()
+				}
+				.show()
+		}
+	}
+
 	private fun showDialog() {
 		val categoryItems = ProductCategories
-		var checkedItem = -1
+		var checkedItem = 0
 		context?.let {
 			MaterialAlertDialogBuilder(it)
 					.setTitle(getString(R.string.pro_cat_dialog_title))
 					.setSingleChoiceItems(categoryItems, checkedItem) { _, which ->
 						checkedItem = which
 					}
-					.setNegativeButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
+					.setNeutralButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
 						dialog.cancel()
 					}
 					.setPositiveButton(getString(R.string.pro_cat_dialog_ok_btn)) { dialog, _ ->
 						navigateToAddProductFragment(categoryItems[checkedItem])
 						dialog.cancel()
-
 					}
 					.show()
 		}
