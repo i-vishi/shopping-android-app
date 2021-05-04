@@ -139,21 +139,21 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             if (_productData.value != null) {
                 _addProductErrors.value = AddProductErrors.ADDING
-                val resImg = async { productsRepository.insertImages(imgList) }
-                val imagesPaths = resImg.await()
-                _productData.value?.images = imagesPaths
-                if (_productData.value?.images?.isNotEmpty() == true) {
-                    if (imagesPaths[0] == ERR_UPLOAD) {
-                        Log.d(TAG, "error uploading images")
-                        _addProductErrors.value = AddProductErrors.ERR_ADD
-                    } else {
-                        val res = async { productsRepository.insertProduct(productData.value!!) }
-                        res.await()
-                        _addProductErrors.value = AddProductErrors.NONE
-                    }
-                } else {
-                    Log.d(TAG, "Product images empty, Cannot Add Product")
-                }
+//                val resImg = async { productsRepository.insertImages(imgList) }
+//                val imagesPaths = resImg.await()
+//                _productData.value?.images = imagesPaths
+//                if (_productData.value?.images?.isNotEmpty() == true) {
+//                    if (imagesPaths[0] == ERR_UPLOAD) {
+//                        Log.d(TAG, "error uploading images")
+//                        _addProductErrors.value = AddProductErrors.ERR_ADD
+//                    } else {
+//                        val res = async { productsRepository.insertProduct(productData.value!!) }
+//                        res.await()
+//                        _addProductErrors.value = AddProductErrors.NONE
+//                    }
+//                } else {
+//                    Log.d(TAG, "Product images empty, Cannot Add Product")
+//                }
             } else {
                 Log.d(TAG, "Product is Null, Cannot Add Product")
             }

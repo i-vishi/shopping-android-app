@@ -131,6 +131,7 @@ class AddProductFragment : Fragment() {
         val name = binding.proNameEditText.text.toString()
         val price = binding.proPriceEditText.text.toString().toDoubleOrNull()
         val desc = binding.proDescEditText.text.toString()
+        Log.d(TAG, "onAddProduct: Add product initiated")
         viewModel.submitProduct(name, price, desc, sizeList.toList(), colorsList.toList(), imgList)
     }
 

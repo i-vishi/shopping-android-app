@@ -20,16 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="72dp">
 
-            <include
-                android:id="@+id/loader_layout"
-                layout="@layout/layout_circular_loader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <TextView
                 android:id="@+id/add_pro_name_label"
                 android:layout_width="0dp"
@@ -276,6 +266,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/add_pro_color_chip_group" />
+
+            <include
+                android:id="@+id/loader_layout"
+                layout="@layout/layout_circular_loader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
