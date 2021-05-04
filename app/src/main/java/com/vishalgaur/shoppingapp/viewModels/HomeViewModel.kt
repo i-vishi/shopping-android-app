@@ -25,8 +25,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 
-    private val _forceUpdate = MutableLiveData<Boolean>(false)
-
     private var _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> get() = _products
 

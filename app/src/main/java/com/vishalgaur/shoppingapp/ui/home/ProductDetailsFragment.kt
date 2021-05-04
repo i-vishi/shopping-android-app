@@ -67,10 +67,12 @@ class ProductDetailsFragment : Fragment() {
 			when(it) {
 				StoreDataStatus.DONE -> {
 					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.proDetailsScrollView.visibility = View.VISIBLE
 					setViews()
 				}
 				else -> {
 					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.proDetailsScrollView.visibility = View.GONE
 				}
 			}
 		}
@@ -90,8 +92,6 @@ class ProductDetailsFragment : Fragment() {
 		}
 		binding.addProAppBar.topAppBar.inflateMenu(R.menu.app_bar_menu)
 		binding.addProAppBar.topAppBar.overflowIcon?.setTint(ContextCompat.getColor(requireContext(), R.color.gray))
-
-		binding.loaderLayout.circularLoader.visibility = View.GONE
 
 		setImagesView()
 
