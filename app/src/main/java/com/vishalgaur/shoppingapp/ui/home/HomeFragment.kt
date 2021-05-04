@@ -14,6 +14,7 @@ import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentHomeBinding
+import com.vishalgaur.shoppingapp.ui.RecyclerViewPaddingItemDecoration
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModel
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModelFactory
 
@@ -46,14 +47,18 @@ class HomeFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 
 		viewModel.products.observe(viewLifecycleOwner) { productsList ->
-			val adapter = ProductAdapter(productsList)
-			adapter.onClickListener = object : ProductAdapter.OnClickListener {
-				override fun onClick(productData: Product) {
-					Log.d(TAG, "Product: ${productData.productId} clicked")
-					findNavController().navigate(R.id.action_seeProduct, bundleOf("productId" to productData.productId))
+			if(context != null) {
+				val adapter = ProductAdapter(productsList, requireContext())
+				adapter.onClickListener = object : ProductAdapter.OnClickListener {
+					override fun onClick(productData: Product) {
+						Log.d(TAG, "Product: ${productData.productId} clicked")
+						findNavController().navigate(R.id.action_seeProduct, bundleOf("productId" to productData.productId))
+					}
 				}
+				binding.productsRecyclerView.adapter = adapter
+				val itemDecoration = RecyclerViewPaddingItemDecoration(requireContext())
+				binding.productsRecyclerView.addItemDecoration(itemDecoration)
 			}
-			binding.productsRecyclerView.adapter = adapter
 		}
 	}
 

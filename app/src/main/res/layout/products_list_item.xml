@@ -21,6 +21,7 @@
             android:id="@+id/product_image_view"
             android:layout_width="0dp"
             android:layout_height="150dp"
+            android:background="@drawable/round_outline_rect"
             android:contentDescription="@string/add_img_item_desc"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
