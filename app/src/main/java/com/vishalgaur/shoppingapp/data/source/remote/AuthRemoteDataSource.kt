@@ -1,6 +1,7 @@
 package com.vishalgaur.shoppingapp.data.source.remote
 
 import android.util.Log
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -9,6 +10,8 @@ import com.vishalgaur.shoppingapp.data.Result
 import com.vishalgaur.shoppingapp.data.Result.*
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.source.UserDataSource
+import com.vishalgaur.shoppingapp.data.utils.EmailMobileData
+import kotlinx.coroutines.tasks.await
 
 class AuthRemoteDataSource : UserDataSource {
     private val firebaseDb: FirebaseFirestore = Firebase.firestore
@@ -38,19 +41,22 @@ class AuthRemoteDataSource : UserDataSource {
             }
     }
 
-    fun getUserByMobile(pNumber: String) =
-        usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, pNumber).get()
+     override suspend fun getUserByMobile(pNumber: String) =
+        usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, pNumber).get().await()
+            .documents[0]
+            .toObject(UserData::class.java)
 
-    fun getUserByMobileAndPassword(mobile: String, pwd: String) =
+     override suspend fun getUserByMobileAndPassword(mobile: String, pwd: String): MutableList<DocumentSnapshot> =
         usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, mobile)
-            .whereEqualTo(USERS_PWD_FIELD, pwd).get()
+            .whereEqualTo(USERS_PWD_FIELD, pwd).get().await().documents
 
-    fun updateEmailsAndMobiles(email: String, mobile: String) {
+     override fun updateEmailsAndMobiles(email: String, mobile: String) {
         allEmailsMobilesRef().update(EMAIL_MOBILE_EMAIL_FIELD, FieldValue.arrayUnion(email))
         allEmailsMobilesRef().update(EMAIL_MOBILE_MOB_FIELD, FieldValue.arrayUnion(mobile))
     }
 
-    fun getEmailsAndMobiles() = allEmailsMobilesRef().get()
+     override suspend fun getEmailsAndMobiles() = allEmailsMobilesRef().get().await().toObject(
+         EmailMobileData::class.java)
 
     companion object {
         private const val USERS_COLLECTION = "users"

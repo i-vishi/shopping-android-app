@@ -15,17 +15,18 @@ import com.vishalgaur.shoppingapp.data.source.local.UserLocalDataSource
 import com.vishalgaur.shoppingapp.data.source.remote.AuthRemoteDataSource
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.UserData
-import com.vishalgaur.shoppingapp.data.utils.EmailMobileData
+import com.vishalgaur.shoppingapp.data.source.UserDataSource
 import com.vishalgaur.shoppingapp.data.utils.SignUpErrors
 import com.vishalgaur.shoppingapp.data.utils.UserType
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
-class AuthRepository(private val application: Application) {
-    private val userLocalDataSource: UserLocalDataSource
-    private val authRemoteDataSource: AuthRemoteDataSource
+class AuthRepository(
+    private val userLocalDataSource: UserDataSource,
+    private val authRemoteDataSource: UserDataSource,
+    private val application: Application
+) {
 
     private var firebaseAuth: FirebaseAuth = Firebase.auth
     private var sessionManager = ShoppingAppSessionManager(application.applicationContext)
@@ -40,18 +41,23 @@ class AuthRepository(private val application: Application) {
 
         fun getRepository(app: Application): AuthRepository {
             return INSTANCE ?: synchronized(this) {
-                AuthRepository(app).also {
+                val database = ShoppingAppDatabase.getInstance(app)
+                AuthRepository(
+                    UserLocalDataSource(database.userDao()),
+                    AuthRemoteDataSource(),
+                    app
+                ).also {
                     INSTANCE = it
                 }
             }
         }
     }
 
-    init {
-        val database = ShoppingAppDatabase.getInstance(application)
-        userLocalDataSource = UserLocalDataSource(database.userDao())
-        authRemoteDataSource = AuthRemoteDataSource()
-    }
+//    init {
+//        val database = ShoppingAppDatabase.getInstance(application)
+//        userLocalDataSource = UserLocalDataSource(database.userDao())
+//        authRemoteDataSource = AuthRemoteDataSource()
+//    }
 
     fun getFirebaseAuth() = firebaseAuth
 
@@ -99,8 +105,7 @@ class AuthRepository(private val application: Application) {
     suspend fun checkEmailAndMobile(email: String, mobile: String): SignUpErrors? {
         Log.d(TAG, "on SignUp: Checking email and mobile")
         var sErr: SignUpErrors? = null
-        val queryResult =
-            authRemoteDataSource.getEmailsAndMobiles().await().toObject(EmailMobileData::class.java)
+        val queryResult = authRemoteDataSource.getEmailsAndMobiles()
         if (queryResult != null) {
             val mob = queryResult.mobiles.contains(mobile)
             val em = queryResult.emails.contains(email)
@@ -121,7 +126,7 @@ class AuthRepository(private val application: Application) {
     suspend fun checkLogin(mobile: String, password: String): UserData? {
         Log.d(TAG, "on Login: checking mobile and password")
         val queryResult =
-            authRemoteDataSource.getUserByMobileAndPassword(mobile, password).await().documents
+            authRemoteDataSource.getUserByMobileAndPassword(mobile, password)
         return if (queryResult.size > 0) {
             queryResult[0].toObject(UserData::class.java)
         } else {
@@ -179,9 +184,6 @@ class AuthRepository(private val application: Application) {
                 userLocalDataSource.clearUser()
                 if (phoneNumber != null) {
                     val uData = authRemoteDataSource.getUserByMobile(phoneNumber)
-                        .await()
-                        .documents[0]
-                        .toObject(UserData::class.java)
                     if (uData != null) {
                         userLocalDataSource.addUser(uData)
                     }

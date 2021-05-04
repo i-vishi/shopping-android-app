@@ -87,7 +87,7 @@ class UtilsTest {
 
     @Test
     fun getProductId_hasExpectedSubStrings() {
-        val result = getProductId("soewifnc9we48yf0", "shoes", 12)
+        val result = getProductId("soewifnc9we48yf0", "shoes")
         val subs = result.split("-")
         assertThat(result, `is`("pro-shoes-soewifnc9we48yf0-12"))
         assertThat(subs.size, `is`(4))

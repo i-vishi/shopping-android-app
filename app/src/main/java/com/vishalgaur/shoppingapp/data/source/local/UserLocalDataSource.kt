@@ -34,10 +34,10 @@ class UserLocalDataSource internal constructor(
         }
     }
 
-
-    suspend fun clearUser() {
+    override suspend fun clearUser() {
         withContext(ioDispatcher) {
             userDao.clear()
         }
     }
+
 }

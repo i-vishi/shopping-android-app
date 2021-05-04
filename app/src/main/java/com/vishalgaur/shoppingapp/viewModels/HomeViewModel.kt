@@ -61,8 +61,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 productsRepository.refreshProducts()
             }
             _products = Transformations.switchMap(productsRepository.observeProducts()) {
-                    getProductsLiveData(it)
-                } as MutableLiveData<List<Product>>
+                getProductsLiveData(it)
+            } as MutableLiveData<List<Product>>
         }
     }
 
@@ -72,7 +72,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             Log.d(TAG, "result is success")
             _storeDataStatus.value = StoreDataStatus.DONE
             res.value = result.data!!
-        } else if(result is Error){
+        } else if (result is Error) {
             Log.d(TAG, "result is not success")
             res.value = emptyList()
             _storeDataStatus.value = StoreDataStatus.ERROR
@@ -87,7 +87,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private fun getProductsByOwner() {
         viewModelScope.launch {
             val res = productsRepository.getAllProductsByOwner(currentUser!!)
-            if(res is Success) {
+            if (res is Success) {
                 _userProducts.value = res.data!!
             } else {
                 _userProducts.value = emptyList()
@@ -96,13 +96,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun submitProduct(
-		name: String,
-		price: Double?,
-		desc: String,
-		sizes: List<Int>,
-		colors: List<String>,
-		imgList: List<Uri>
-	) {
+        name: String,
+        price: Double?,
+        desc: String,
+        sizes: List<Int>,
+        colors: List<String>,
+        imgList: List<Uri>
+    ) {
         if (name.isBlank() || price == null || desc.isBlank() || sizes.isNullOrEmpty() || colors.isNullOrEmpty() || imgList.isNullOrEmpty()) {
             _errorStatus.value = AddProductViewErrors.EMPTY
         } else {
@@ -114,16 +114,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     getProductId(currentUser!!, selectedCategory.value!!)
                 val newProduct =
                     Product(
-						proId,
-						name.trim(),
-						currentUser,
-						desc.trim(),
-						price,
-						sizes,
-						colors,
-						emptyList(),
-						0.0
-					)
+                        proId,
+                        name.trim(),
+                        currentUser,
+                        desc.trim(),
+                        price,
+                        sizes,
+                        colors,
+                        emptyList(),
+                        0.0
+                    )
                 _productData.value = newProduct
                 Log.d(TAG, "pro = $newProduct")
                 insertProduct(imgList)
@@ -139,21 +139,21 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             if (_productData.value != null) {
                 _addProductErrors.value = AddProductErrors.ADDING
-//                val resImg = async { productsRepository.insertImages(imgList) }
-//                val imagesPaths = resImg.await()
-//                _productData.value?.images = imagesPaths
-//                if (_productData.value?.images?.isNotEmpty() == true) {
-//                    if (imagesPaths[0] == ERR_UPLOAD) {
-//                        Log.d(TAG, "error uploading images")
-//                        _addProductErrors.value = AddProductErrors.ERR_ADD
-//                    } else {
-//                        val res = async { productsRepository.insertProduct(productData.value!!) }
-//                        res.await()
-//                        _addProductErrors.value = AddProductErrors.NONE
-//                    }
-//                } else {
-//                    Log.d(TAG, "Product images empty, Cannot Add Product")
-//                }
+                val resImg = async { productsRepository.insertImages(imgList) }
+                val imagesPaths = resImg.await()
+                _productData.value?.images = imagesPaths
+                if (_productData.value?.images?.isNotEmpty() == true) {
+                    if (imagesPaths[0] == ERR_UPLOAD) {
+                        Log.d(TAG, "error uploading images")
+                        _addProductErrors.value = AddProductErrors.ERR_ADD
+                    } else {
+                        val res = async { productsRepository.insertProduct(productData.value!!) }
+                        res.await()
+                        _addProductErrors.value = AddProductErrors.NONE
+                    }
+                } else {
+                    Log.d(TAG, "Product images empty, Cannot Add Product")
+                }
             } else {
                 Log.d(TAG, "Product is Null, Cannot Add Product")
             }
