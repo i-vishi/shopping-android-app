@@ -105,6 +105,13 @@ class HomeFragment : Fragment() {
 				false
 			}
 		}
+		binding.homeTopAppBar.searchOutlinedTextLayout.setEndIconOnClickListener {
+			it.clearFocus()
+			binding.homeTopAppBar.homeSearchEditText.setText("")
+			val inputManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+			inputManager.hideSoftInputFromWindow(it.windowToken, 0)
+			viewModel.filterProducts("All")
+		}
 		binding.homeTopAppBar.topAppBar.setOnMenuItemClickListener { menuItem ->
 			setAppBarItemClicks(menuItem)
 		}
@@ -119,6 +126,7 @@ class HomeFragment : Fragment() {
 
 	private fun performSearch(query: String) {
 		Log.d(TAG, "query = $query")
+		viewModel.filterBySearch(query)
 	}
 
 	private fun setAppBarItemClicks(menuItem: MenuItem): Boolean {
