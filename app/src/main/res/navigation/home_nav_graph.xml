@@ -12,19 +12,28 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_goto_addProduct"
-            app:destination="@id/addProductFragment" />
+            app:destination="@id/addEditProductFragment" />
         <action
             android:id="@+id/action_seeProduct"
             app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/addProductFragment"
-        android:name="com.vishalgaur.shoppingapp.ui.home.AddProductFragment"
+        android:id="@+id/addEditProductFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.home.AddEditProductFragment"
         android:label="AddProductFragment"
-        tools:layout="@layout/fragment_add_product">
+        tools:layout="@layout/fragment_add_edit_product">
         <argument
             android:name="categoryName"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="isEdit"
+            app:argType="boolean"
+            app:nullable="false"/>
+        <argument
+            android:name="productId"
+            app:argType="string"
+            app:nullable="true" />
         <action
             android:id="@+id/action_addProductFragment_to_homeFragment"
             app:destination="@id/homeFragment"
