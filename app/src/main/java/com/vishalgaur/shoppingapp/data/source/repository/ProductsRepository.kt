@@ -3,6 +3,7 @@ package com.vishalgaur.shoppingapp.data.source.repository
 import android.app.Application
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import com.vishalgaur.shoppingapp.ERR_UPLOAD
 import com.vishalgaur.shoppingapp.data.Product
@@ -92,6 +93,47 @@ class ProductsRepository(application: Application) {
                 urlList = mutableListOf()
                 urlList.add(ERR_UPLOAD)
                 return@label
+            }
+        }
+        return urlList
+    }
+
+    suspend fun updateProduct(product: Product) {
+        coroutineScope {
+            launch {
+                Log.d(TAG, "onUpdate: updating product in remote source")
+                productsRemoteSource.updateProduct(product)
+            }
+            launch {
+                Log.d(TAG, "onUpdate: updating product in local source")
+                productsLocalSource.insertProduct(product)
+            }
+        }
+    }
+
+    suspend fun updateImages(newList: List<Uri>, oldList: List<String>): List<String> {
+        var urlList = mutableListOf<String>()
+        newList.forEach label@{ uri ->
+            if (!oldList.contains(uri.toString())) {
+                val uniId = UUID.randomUUID().toString()
+                val fileName = uniId + uri.lastPathSegment?.split("/")?.last()
+                try {
+                    val downloadUrl = productsRemoteSource.uploadImage(uri, fileName)
+                    urlList.add(downloadUrl.toString())
+                } catch (e: Exception) {
+                    productsRemoteSource.revertUpload(fileName)
+                    Log.d(TAG, "exception: message = $e")
+                    urlList = mutableListOf()
+                    urlList.add(ERR_UPLOAD)
+                    return@label
+                }
+            } else {
+                urlList.add(uri.toString())
+            }
+        }
+        oldList.forEach { imgUrl ->
+            if (!newList.contains(imgUrl.toUri())) {
+                productsRemoteSource.deleteImage(imgUrl)
             }
         }
         return urlList

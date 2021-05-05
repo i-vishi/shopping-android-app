@@ -46,6 +46,17 @@ class ProductsRemoteDataSource : ProductDataSource {
         productsCollectionRef().add(newProduct.toHashMap()).await()
     }
 
+    override suspend fun updateProduct(proData: Product) {
+        val resRef =
+            productsCollectionRef().whereEqualTo(PRODUCT_ID_FIELD, proData.productId).get().await()
+        if (!resRef.isEmpty) {
+            val docId = resRef.documents[0].id
+            productsCollectionRef().document(docId).set(proData.toHashMap()).await()
+        } else {
+            Log.d(TAG, "onUpdateProduct: product with id: $proData.productId not found!")
+        }
+    }
+
     override suspend fun getProductById(productId: String): Result<Product?> {
         val resRef = productsCollectionRef().whereEqualTo(PRODUCT_ID_FIELD, productId).get().await()
         return if (!resRef.isEmpty) {
@@ -63,13 +74,8 @@ class ProductsRemoteDataSource : ProductDataSource {
             val imgUrls = product?.images
 
             //deleting images first
-            imgUrls?.forEach {
-                val ref = firebaseStorage.getReferenceFromUrl(it)
-                ref.delete().addOnSuccessListener {
-                    Log.d(TAG, "onDelete: image deleted successfully!")
-                }.addOnFailureListener { e ->
-                    Log.d(TAG, "onDelete: Error deleting image, error: $e")
-                }
+            imgUrls?.forEach { imgUrl ->
+                deleteImage(imgUrl)
             }
 
             //deleting doc containing product
@@ -94,6 +100,15 @@ class ProductsRemoteDataSource : ProductDataSource {
             imgRef.downloadUrl
         }
         return uriRef.await()
+    }
+
+     fun deleteImage(imgUrl: String) {
+        val ref = firebaseStorage.getReferenceFromUrl(imgUrl)
+        ref.delete().addOnSuccessListener {
+            Log.d(TAG, "onDelete: image deleted successfully!")
+        }.addOnFailureListener { e ->
+            Log.d(TAG, "onDelete: Error deleting image, error: $e")
+        }
     }
 
     fun revertUpload(fileName: String) {

@@ -66,6 +66,10 @@ class ProductsLocalDataSource internal constructor(
         productsDao.insert(newProduct)
     }
 
+    override suspend fun updateProduct(proData: Product) = withContext(ioDispatcher) {
+        productsDao.insert(proData)
+    }
+
     suspend fun insertMultipleProducts(proList: List<Product>) =
         withContext(ioDispatcher) {
             productsDao.insertListOfProducts(proList)

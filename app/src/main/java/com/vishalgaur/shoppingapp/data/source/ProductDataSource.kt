@@ -15,4 +15,6 @@ interface ProductDataSource {
     suspend fun getProductById(productId: String): Result<Product?>
 
     suspend fun insertProduct(newProduct: Product)
+
+    suspend fun updateProduct(proData: Product)
 }

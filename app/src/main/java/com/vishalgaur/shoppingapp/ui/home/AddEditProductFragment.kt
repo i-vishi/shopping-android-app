@@ -141,12 +141,14 @@ class AddEditProductFragment : Fragment() {
 			binding.proMrpEditText.setText(product.mrp.toString())
 			binding.proDescEditText.setText(product.description)
 
-			imgList = product.images.map { it.toUri().buildUpon().scheme("https").build() } as MutableList<Uri>
+			imgList = product.images.map { it.toUri() } as MutableList<Uri>
 			val adapter = AddProductImagesAdapter(requireContext(), imgList)
 			binding.addProImagesRv.adapter = adapter
 
 			setShoeSizesChips(product.availableSizes)
 			setShoeColorsChips(product.availableColors)
+
+			binding.addProBtn.setText(R.string.edit_product_btn_text)
 		}
 
 	}
@@ -159,21 +161,9 @@ class AddEditProductFragment : Fragment() {
 
 			val adapter = AddProductImagesAdapter(requireContext(), imgList)
 			binding.addProImagesRv.adapter = adapter
-
-			binding.addProImagesBtn.setOnClickListener {
-				getImages.launch("image/*")
-			}
-
-			binding.addProBtn.setOnClickListener {
-				onAddProduct()
-				if (viewModel.errorStatus.value == AddProductViewErrors.NONE) {
-					viewModel.addProductErrors.observe(viewLifecycleOwner) { err ->
-						if (err == AddProductErrors.NONE) {
-							findNavController().navigate(R.id.action_addProductFragment_to_homeFragment)
-						}
-					}
-				}
-			}
+		}
+		binding.addProImagesBtn.setOnClickListener {
+			getImages.launch("image/*")
 		}
 
 		binding.addProAppBar.topAppBar.setNavigationOnClickListener {
@@ -190,6 +180,17 @@ class AddEditProductFragment : Fragment() {
 		binding.proPriceEditText.onFocusChangeListener = focusChangeListener
 		binding.proMrpEditText.onFocusChangeListener = focusChangeListener
 		binding.proDescEditText.onFocusChangeListener = focusChangeListener
+
+		binding.addProBtn.setOnClickListener {
+			onAddProduct()
+			if (viewModel.errorStatus.value == AddProductViewErrors.NONE) {
+				viewModel.addProductErrors.observe(viewLifecycleOwner) { err ->
+					if (err == AddProductErrors.NONE) {
+						findNavController().navigate(R.id.action_addProductFragment_to_homeFragment)
+					}
+				}
+			}
+		}
 	}
 
 	private fun onAddProduct() {
@@ -197,7 +198,7 @@ class AddEditProductFragment : Fragment() {
 		val price = binding.proPriceEditText.text.toString().toDoubleOrNull()
 		val mrp = binding.proMrpEditText.text.toString().toDoubleOrNull()
 		val desc = binding.proDescEditText.text.toString()
-		Log.d(TAG, "onAddProduct: Add product initiated")
+		Log.d(TAG, "onAddProduct: Add product initiated, $name, $price, $mrp, $desc, $sizeList, $colorsList, $imgList")
 		viewModel.submitProduct(
                 name, price, mrp, desc, sizeList.toList(), colorsList.toList(), imgList
         )
@@ -216,6 +217,7 @@ class AddEditProductFragment : Fragment() {
 
 				if (shoeList?.contains(v) == true) {
 					chip.isChecked = true
+					sizeList.add(chip.tag.toString().toInt())
 				}
 
 				chip.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -252,6 +254,7 @@ class AddEditProductFragment : Fragment() {
 
 				if (colorList?.contains(k) == true) {
 					chip.isChecked = true
+					colorsList.add(chip.tag.toString())
 				}
 
 				chip.setOnCheckedChangeListener { buttonView, isChecked ->

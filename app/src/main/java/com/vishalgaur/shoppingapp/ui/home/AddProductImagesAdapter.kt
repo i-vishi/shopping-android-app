@@ -23,7 +23,7 @@ class AddProductImagesAdapter(private val context: Context, images: List<Uri>) :
             if (imgUrl.toString().contains("https://")) {
                 Glide.with(context)
                     .asBitmap()
-                    .load(imgUrl)
+                    .load(imgUrl.buildUpon().scheme("https").build())
                     .into(binding.addImagesImageView)
             } else {
                 binding.addImagesImageView.setImageURI(imgUrl)

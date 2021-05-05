@@ -77,5 +77,6 @@
     <string name="delete_dialog_title_text">Are you sure?</string>
     <string name="delete_dialog_message_text">On proceeding, Product : %s will be deleted.</string>
     <string name="delete_dialog_delete_btn_text">Delete</string>
+    <string name="edit_product_btn_text">Save Changes</string>
 
 </resources>
