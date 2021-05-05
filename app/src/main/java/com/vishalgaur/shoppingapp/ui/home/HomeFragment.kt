@@ -47,8 +47,8 @@ class HomeFragment : Fragment() {
 
 		viewModel.products.observe(viewLifecycleOwner) { productsList ->
 			if (context != null) {
-				val adapter = ProductAdapter(productsList ?: emptyList(), requireContext())
-				adapter.onClickListener = object : ProductAdapter.OnClickListener {
+				val productAdapter = ProductAdapter(productsList ?: emptyList(), requireContext())
+				productAdapter.onClickListener = object : ProductAdapter.OnClickListener {
 					override fun onClick(productData: Product) {
 						Log.d(TAG, "Product: ${productData.productId} clicked")
 						findNavController().navigate(
@@ -70,9 +70,13 @@ class HomeFragment : Fragment() {
 						navigateToAddEditProductFragment(isEdit = true, productId = productId)
 					}
 				}
-				binding.productsRecyclerView.adapter = adapter
-				val itemDecoration = RecyclerViewPaddingItemDecoration(requireContext())
-				binding.productsRecyclerView.addItemDecoration(itemDecoration)
+				binding.productsRecyclerView.apply {
+					adapter = productAdapter
+					val itemDecoration = RecyclerViewPaddingItemDecoration(requireContext())
+					if(itemDecorationCount == 0) {
+						addItemDecoration(itemDecoration)
+					}
+				}
 			}
 		}
 	}
@@ -87,7 +91,7 @@ class HomeFragment : Fragment() {
 			binding.homeFabAddProduct.visibility = View.GONE
 		}
 		binding.homeFabAddProduct.setOnClickListener {
-			showDialogWithItems(ProductCategories, false)
+			showDialogWithItems(ProductCategories, 0, false)
 		}
 		binding.loaderLayout.circularLoader.visibility = View.GONE
 	}
@@ -96,7 +100,7 @@ class HomeFragment : Fragment() {
 		return when (menuItem.itemId) {
 			R.id.home_filter -> {
 				val extraFilters = arrayOf("All", "None")
-				showDialogWithItems(ProductCategories.plus(extraFilters), true)
+				showDialogWithItems(ProductCategories.plus(extraFilters), -1, true)
 				true
 			}
 			R.id.home_search -> {
@@ -120,7 +124,7 @@ class HomeFragment : Fragment() {
 			}
 		}
 		viewModel.allProducts.observe(viewLifecycleOwner) {
-			if(it != null) {
+			if (it != null) {
 				viewModel.filterProducts("All")
 			}
 		}
@@ -142,8 +146,12 @@ class HomeFragment : Fragment() {
 		}
 	}
 
-	private fun showDialogWithItems(categoryItems: Array<String>, isFilter: Boolean) {
-		var checkedItem = 0
+	private fun showDialogWithItems(
+		categoryItems: Array<String>,
+		checkedOption: Int = 0,
+		isFilter: Boolean
+	) {
+		var checkedItem = checkedOption
 		context?.let {
 			MaterialAlertDialogBuilder(it)
 				.setTitle(getString(R.string.pro_cat_dialog_title))

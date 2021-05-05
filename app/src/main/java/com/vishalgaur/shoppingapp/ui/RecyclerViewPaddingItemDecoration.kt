@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerViewPaddingItemDecoration(private val context: Context) :
     RecyclerView.ItemDecoration() {
-    private val paddingSpace = 8
+    private val paddingSpace = 16
 
     override fun getItemOffsets(
         outRect: Rect,
