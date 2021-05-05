@@ -7,8 +7,8 @@
     tools:context=".ui.home.HomeFragment">
 
     <include
-        android:id="@+id/add_pro_app_bar"
-        layout="@layout/layout_top_bar"
+        android:id="@+id/home_top_app_bar"
+        layout="@layout/layout_home_top_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
@@ -16,7 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/add_pro_app_bar">
+        android:layout_below="@id/home_top_app_bar">
 
         <include
             android:id="@+id/loader_layout"

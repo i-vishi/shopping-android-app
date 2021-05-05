@@ -1,10 +1,17 @@
 package com.vishalgaur.shoppingapp.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.*
-import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -13,9 +20,11 @@ import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.utils.ProductCategories
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentHomeBinding
+import com.vishalgaur.shoppingapp.ui.MyOnFocusChangeListener
 import com.vishalgaur.shoppingapp.ui.RecyclerViewPaddingItemDecoration
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModel
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModelFactory
+
 
 private const val TAG = "HomeFragment"
 
@@ -23,6 +32,7 @@ class HomeFragment : Fragment() {
 
 	private lateinit var binding: FragmentHomeBinding
 	private lateinit var viewModel: HomeViewModel
+	private val focusChangeListener = MyOnFocusChangeListener()
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +83,7 @@ class HomeFragment : Fragment() {
 				binding.productsRecyclerView.apply {
 					adapter = productAdapter
 					val itemDecoration = RecyclerViewPaddingItemDecoration(requireContext())
-					if(itemDecorationCount == 0) {
+					if (itemDecorationCount == 0) {
 						addItemDecoration(itemDecoration)
 					}
 				}
@@ -82,9 +92,20 @@ class HomeFragment : Fragment() {
 	}
 
 	private fun setViews() {
-		binding.addProAppBar.topAppBar.setNavigationIcon(R.drawable.ic_menu_24)
-		binding.addProAppBar.topAppBar.inflateMenu(R.menu.home_app_bar_menu)
-		binding.addProAppBar.topAppBar.setOnMenuItemClickListener { menuItem ->
+		binding.homeTopAppBar.topAppBar.inflateMenu(R.menu.home_app_bar_menu)
+		binding.homeTopAppBar.homeSearchEditText.onFocusChangeListener = focusChangeListener
+		binding.homeTopAppBar.homeSearchEditText.setOnEditorActionListener { textView, actionId, event ->
+			if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+				textView.clearFocus()
+				val inputManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+				inputManager.hideSoftInputFromWindow(textView.windowToken, 0)
+				performSearch(textView.text.toString())
+				true
+			} else {
+				false
+			}
+		}
+		binding.homeTopAppBar.topAppBar.setOnMenuItemClickListener { menuItem ->
 			setAppBarItemClicks(menuItem)
 		}
 		if (!viewModel.isUserASeller) {
@@ -96,14 +117,15 @@ class HomeFragment : Fragment() {
 		binding.loaderLayout.circularLoader.visibility = View.GONE
 	}
 
+	private fun performSearch(query: String) {
+		Log.d(TAG, "query = $query")
+	}
+
 	private fun setAppBarItemClicks(menuItem: MenuItem): Boolean {
 		return when (menuItem.itemId) {
 			R.id.home_filter -> {
 				val extraFilters = arrayOf("All", "None")
 				showDialogWithItems(ProductCategories.plus(extraFilters), -1, true)
-				true
-			}
-			R.id.home_search -> {
 				true
 			}
 			else -> false
@@ -162,13 +184,17 @@ class HomeFragment : Fragment() {
 					dialog.cancel()
 				}
 				.setPositiveButton(getString(R.string.pro_cat_dialog_ok_btn)) { dialog, _ ->
-					if (isFilter) {
-						viewModel.filterProducts(categoryItems[checkedItem])
+					if (checkedItem == -1) {
+						dialog.cancel()
 					} else {
-						navigateToAddEditProductFragment(
-							isEdit = false,
-							catName = categoryItems[checkedItem]
-						)
+						if (isFilter) {
+							viewModel.filterProducts(categoryItems[checkedItem])
+						} else {
+							navigateToAddEditProductFragment(
+								isEdit = false,
+								catName = categoryItems[checkedItem]
+							)
+						}
 					}
 					dialog.cancel()
 				}
