@@ -78,5 +78,7 @@
     <string name="delete_dialog_message_text">On proceeding, Product : %s will be deleted.</string>
     <string name="delete_dialog_delete_btn_text">Delete</string>
     <string name="edit_product_btn_text">Save Changes</string>
+    <string name="home_app_bar_search_label">Search</string>
+    <string name="home_app_bar_filter_label">Filter</string>
 
 </resources>

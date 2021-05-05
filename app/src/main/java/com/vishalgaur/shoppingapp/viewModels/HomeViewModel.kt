@@ -15,71 +15,86 @@ private const val TAG = "HomeViewModel"
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val productsRepository = ProductsRepository.getRepository(application)
+	private val productsRepository = ProductsRepository.getRepository(application)
 
-    private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
+	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 
-    private var _products = MutableLiveData<List<Product>>()
-    val products: LiveData<List<Product>> get() = _products
+	private var _products = MutableLiveData<List<Product>>()
+	val products: LiveData<List<Product>> get() = _products
 
-    private val currentUser = sessionManager.getUserIdFromSession()
-    val isUserASeller = sessionManager.isUserSeller()
+	private var _allProducts = MutableLiveData<List<Product>>()
+	val allProducts: LiveData<List<Product>> get() = _allProducts
 
-    private var _userProducts = MutableLiveData<List<Product>>()
-    val userProducts: LiveData<List<Product>> get() = _userProducts
+	private val currentUser = sessionManager.getUserIdFromSession()
+	val isUserASeller = sessionManager.isUserSeller()
 
-    private val _storeDataStatus = MutableLiveData<StoreDataStatus>()
-    val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
+	private var _userProducts = MutableLiveData<List<Product>>()
+	val userProducts: LiveData<List<Product>> get() = _userProducts
 
-    init {
-        getProductsByOwner()
-    }
+	private val _storeDataStatus = MutableLiveData<StoreDataStatus>()
+	val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
 
-    private fun getProducts() {
-        viewModelScope.launch {
-            _storeDataStatus.value = StoreDataStatus.LOADING
-            launch {
-                productsRepository.refreshProducts()
-            }
-            _products = Transformations.switchMap(productsRepository.observeProducts()) {
-                getProductsLiveData(it)
-            } as MutableLiveData<List<Product>>
-        }
-    }
+	init {
+		getProductsByOwner()
+	}
 
-    private fun getProductsLiveData(result: Result<List<Product>>?): LiveData<List<Product>> {
-        val res = MutableLiveData<List<Product>>()
-        if (result is Success) {
-            Log.d(TAG, "result is success")
-            _storeDataStatus.value = StoreDataStatus.DONE
-            res.value = result.data!!
-        } else if (result is Error) {
-            Log.d(TAG, "result is not success")
-            res.value = emptyList()
-            _storeDataStatus.value = StoreDataStatus.ERROR
-        }
-        return res
-    }
+	private fun getProducts() {
+		viewModelScope.launch {
+			_storeDataStatus.value = StoreDataStatus.LOADING
+			launch {
+				productsRepository.refreshProducts()
+			}
+			_allProducts = Transformations.switchMap(productsRepository.observeProducts()) {
+				getProductsLiveData(it)
+			} as MutableLiveData<List<Product>>
+		}
+	}
 
-    private fun getProductsByOwner() {
-        viewModelScope.launch {
-            _storeDataStatus.value = StoreDataStatus.LOADING
-            launch {
-                productsRepository.refreshProducts()
-            }
-            _products = Transformations.switchMap(productsRepository.observeProductsByOwner(currentUser!!)) {
-                getProductsLiveData(it)
-            } as MutableLiveData<List<Product>>
-        }
-    }
+	private fun getProductsLiveData(result: Result<List<Product>>?): LiveData<List<Product>> {
+		val res = MutableLiveData<List<Product>>()
+		if (result is Success) {
+			Log.d(TAG, "result is success")
+			_storeDataStatus.value = StoreDataStatus.DONE
+			res.value = result.data!!
+		} else if (result is Error) {
+			Log.d(TAG, "result is not success")
+			res.value = emptyList()
+			_storeDataStatus.value = StoreDataStatus.ERROR
+		}
+		return res
+	}
 
-    fun refreshProducts() {
-        getProducts()
-    }
+	private fun getProductsByOwner() {
+		viewModelScope.launch {
+			_storeDataStatus.value = StoreDataStatus.LOADING
+			launch {
+				productsRepository.refreshProducts()
+			}
+			_allProducts =
+				Transformations.switchMap(productsRepository.observeProductsByOwner(currentUser!!)) {
+					getProductsLiveData(it)
+				} as MutableLiveData<List<Product>>
+		}
+	}
 
-    fun deleteProduct(productId: String) {
-        viewModelScope.launch {
-            productsRepository.deleteProductById(productId)
-        }
-    }
+	fun refreshProducts() {
+		getProducts()
+	}
+
+	fun filterProducts(filterType: String) {
+		Log.d(TAG, "filterType is $filterType")
+		_products.value = when (filterType) {
+			"None" -> emptyList()
+			"All" -> _allProducts.value
+			else -> _allProducts.value?.filter { product ->
+				product.category == filterType
+			}
+		}
+	}
+
+	fun deleteProduct(productId: String) {
+		viewModelScope.launch {
+			productsRepository.deleteProductById(productId)
+		}
+	}
 }
