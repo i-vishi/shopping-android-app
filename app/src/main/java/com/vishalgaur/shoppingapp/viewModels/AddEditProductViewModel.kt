@@ -52,7 +52,6 @@ class AddEditProductViewModel(application: Application) : AndroidViewModel(appli
 	val productData: LiveData<Product> get() = _productData
 
 	private val _newProductData = MutableLiveData<Product>()
-	val newProductData: LiveData<Product> get() = _newProductData
 
 	init {
 		_errorStatus.value = AddProductViewErrors.NONE
@@ -140,12 +139,20 @@ class AddEditProductViewModel(application: Application) : AndroidViewModel(appli
 				if (_newProductData.value?.images?.isNotEmpty() == true) {
 					if (imagesPaths[0] == ERR_UPLOAD) {
 						Log.d(TAG, "error uploading images")
-						_addProductErrors.value = AddProductErrors.ERR_ADD
+						_addProductErrors.value = AddProductErrors.ERR_ADD_IMG
 					} else {
-						val res =
+						val updateRes =
 							async { productsRepository.updateProduct(_newProductData.value!!) }
-						res.await()
-						_addProductErrors.value = AddProductErrors.NONE
+						val res = updateRes.await()
+						if (res is Success) {
+							Log.d(TAG, "onUpdate: Success")
+							_addProductErrors.value = AddProductErrors.NONE
+						} else {
+							Log.d(TAG, "onUpdate: Some error occurred!")
+							_addProductErrors.value = AddProductErrors.ERR_ADD
+							if (res is Error)
+								Log.d(TAG, "onUpdate: Error, ${res.exception}")
+						}
 					}
 				} else {
 					Log.d(TAG, "Product images empty, Cannot Add Product")
@@ -166,13 +173,14 @@ class AddEditProductViewModel(application: Application) : AndroidViewModel(appli
 				if (_newProductData.value?.images?.isNotEmpty() == true) {
 					if (imagesPaths[0] == ERR_UPLOAD) {
 						Log.d(TAG, "error uploading images")
-						_addProductErrors.value = AddProductErrors.ERR_ADD
+						_addProductErrors.value = AddProductErrors.ERR_ADD_IMG
 					} else {
 						val deferredRes = async {
 							productsRepository.insertProduct(_newProductData.value!!)
 						}
 						val res = deferredRes.await()
 						if (res is Success) {
+							Log.d(TAG, "onInsertProduct: Success")
 							_addProductErrors.value = AddProductErrors.NONE
 						} else {
 							_addProductErrors.value = AddProductErrors.ERR_ADD

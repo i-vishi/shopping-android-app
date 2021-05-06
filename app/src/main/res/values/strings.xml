@@ -82,5 +82,6 @@
     <string name="home_app_bar_filter_label">Filter</string>
     <string name="search_hint">Search Product...</string>
     <string name="search_placeholder_text">Search Product</string>
+    <string name="add_product_insert_error">Error Saving Product!</string>
 
 </resources>

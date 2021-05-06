@@ -117,12 +117,11 @@ class AddEditProductFragment : Fragment() {
 					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 				}
+				AddProductErrors.ERR_ADD_IMG -> {
+					setAddProductErrors(getString(R.string.add_product_error_img_upload))
+				}
 				AddProductErrors.ERR_ADD -> {
-					binding.loaderLayout.circularLoader.visibility = View.GONE
-					binding.loaderLayout.circularLoader.hideAnimationBehavior
-					binding.addProErrorTextView.visibility = View.VISIBLE
-					binding.addProErrorTextView.text =
-						getString(R.string.add_product_error_img_upload)
+					setAddProductErrors(getString(R.string.add_product_insert_error))
 				}
 				AddProductErrors.NONE -> {
 					binding.loaderLayout.circularLoader.visibility = View.GONE
@@ -130,6 +129,14 @@ class AddEditProductFragment : Fragment() {
 				}
 			}
 		}
+	}
+
+	private fun setAddProductErrors(errText: String) {
+		binding.loaderLayout.circularLoader.visibility = View.GONE
+		binding.loaderLayout.circularLoader.hideAnimationBehavior
+		binding.addProErrorTextView.visibility = View.VISIBLE
+		binding.addProErrorTextView.text = errText
+
 	}
 
 	private fun fillDataInAllViews() {
