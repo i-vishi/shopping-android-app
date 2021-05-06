@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -97,7 +96,8 @@ class HomeFragment : Fragment() {
 		binding.homeTopAppBar.homeSearchEditText.setOnEditorActionListener { textView, actionId, event ->
 			if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 				textView.clearFocus()
-				val inputManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+				val inputManager =
+					requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 				inputManager.hideSoftInputFromWindow(textView.windowToken, 0)
 				performSearch(textView.text.toString())
 				true
@@ -108,7 +108,8 @@ class HomeFragment : Fragment() {
 		binding.homeTopAppBar.searchOutlinedTextLayout.setEndIconOnClickListener {
 			it.clearFocus()
 			binding.homeTopAppBar.homeSearchEditText.setText("")
-			val inputManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+			val inputManager =
+				requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 			inputManager.hideSoftInputFromWindow(it.windowToken, 0)
 			viewModel.filterProducts("All")
 		}

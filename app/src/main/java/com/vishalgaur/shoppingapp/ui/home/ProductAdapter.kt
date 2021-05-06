@@ -2,7 +2,6 @@ package com.vishalgaur.shoppingapp.ui.home
 
 import android.content.Context
 import android.graphics.Paint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toUri
@@ -13,14 +12,12 @@ import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.databinding.ProductsListItemBinding
 import com.vishalgaur.shoppingapp.getOfferPercentage
 
-private const val TAG = "ProductAdapter"
-
 class ProductAdapter(private val data: List<Product>, private val context: Context) :
 	RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
 	lateinit var onClickListener: OnClickListener
 
-	inner class ViewHolder(private var binding: ProductsListItemBinding) :
+	inner class ViewHolder(binding: ProductsListItemBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 		private val proName = binding.productNameTv
 		private val proPrice = binding.productPriceTv

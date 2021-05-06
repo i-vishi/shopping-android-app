@@ -3,7 +3,6 @@ package com.vishalgaur.shoppingapp.viewModels
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import java.lang.IllegalArgumentException
 
 class HomeViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
 	@Suppress("UNCHECKED_CAST")

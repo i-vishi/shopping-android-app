@@ -3,7 +3,10 @@ package com.vishalgaur.shoppingapp.viewModels
 import android.app.Application
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -19,7 +22,7 @@ import java.util.concurrent.TimeUnit
 private const val TAG = "OtpViewModel"
 
 class OtpViewModel(application: Application, private val uData: UserData) :
-		AndroidViewModel(application) {
+	AndroidViewModel(application) {
 
 	private val _otpStatus = MutableLiveData<OTPStatus>()
 	val otpStatus: LiveData<OTPStatus> get() = _otpStatus
@@ -51,11 +54,11 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 
 	fun verifyPhoneOTPStart(phoneNumber: String, activity: FragmentActivity) {
 		val options = PhoneAuthOptions.newBuilder(authRepository.getFirebaseAuth())
-				.setPhoneNumber(phoneNumber)       // Phone number to verify
-				.setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-				.setActivity(activity)                 // Activity (for callback binding)
-				.setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
-				.build()
+			.setPhoneNumber(phoneNumber)       // Phone number to verify
+			.setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+			.setActivity(activity)                 // Activity (for callback binding)
+			.setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
+			.build()
 		PhoneAuthProvider.verifyPhoneNumber(options)
 
 		verificationInProgress = true
@@ -79,9 +82,9 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 		}
 
 		override fun onCodeSent(
-                verificationId: String,
-                token: PhoneAuthProvider.ForceResendingToken
-        ) {
+			verificationId: String,
+			token: PhoneAuthProvider.ForceResendingToken
+		) {
 			// Save verification ID and resending token so we can use them later
 			storedVerificationId = verificationId
 			resendToken = token

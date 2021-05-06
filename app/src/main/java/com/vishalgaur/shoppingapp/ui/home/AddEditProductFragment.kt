@@ -6,13 +6,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
@@ -45,20 +45,20 @@ class AddEditProductFragment : Fragment() {
 	private var imgList = mutableListOf<Uri>()
 
 	private val getImages =
-			registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { result ->
-				imgList.addAll(result)
-				if (imgList.size > 3) {
-					imgList = imgList.subList(0, 3)
-					makeToast("Maximum 3 images are allowed!")
-				}
-				val adapter = context?.let { AddProductImagesAdapter(it, imgList) }
-				binding.addProImagesRv.adapter = adapter
+		registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { result ->
+			imgList.addAll(result)
+			if (imgList.size > 3) {
+				imgList = imgList.subList(0, 3)
+				makeToast("Maximum 3 images are allowed!")
 			}
+			val adapter = context?.let { AddProductImagesAdapter(it, imgList) }
+			binding.addProImagesRv.adapter = adapter
+		}
 
 	override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+		inflater: LayoutInflater, container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View? {
 		// Inflate the layout for this fragment
 		binding = FragmentAddEditProductBinding.inflate(layoutInflater)
 
@@ -93,16 +93,16 @@ class AddEditProductFragment : Fragment() {
 		}
 		viewModel.dataStatus.observe(viewLifecycleOwner) { status ->
 			when (status) {
-                StoreDataStatus.LOADING -> {
-                    binding.loaderLayout.circularLoader.bringToFront()
-                    binding.loaderLayout.circularLoader.visibility = View.VISIBLE
-                    binding.loaderLayout.circularLoader.showAnimationBehavior
-                }
-                StoreDataStatus.DONE -> {
-                    binding.loaderLayout.circularLoader.visibility = View.GONE
-                    binding.loaderLayout.circularLoader.hideAnimationBehavior
-                    fillDataInAllViews()
-                }
+				StoreDataStatus.LOADING -> {
+					binding.loaderLayout.circularLoader.bringToFront()
+					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.circularLoader.showAnimationBehavior
+				}
+				StoreDataStatus.DONE -> {
+					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.circularLoader.hideAnimationBehavior
+					fillDataInAllViews()
+				}
 				else -> {
 					binding.loaderLayout.circularLoader.visibility = View.GONE
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
@@ -112,22 +112,22 @@ class AddEditProductFragment : Fragment() {
 		}
 		viewModel.addProductErrors.observe(viewLifecycleOwner) { status ->
 			when (status) {
-                AddProductErrors.ADDING -> {
-                    binding.loaderLayout.circularLoader.bringToFront()
-                    binding.loaderLayout.circularLoader.visibility = View.VISIBLE
-                    binding.loaderLayout.circularLoader.showAnimationBehavior
-                }
-                AddProductErrors.ERR_ADD -> {
-                    binding.loaderLayout.circularLoader.visibility = View.GONE
-                    binding.loaderLayout.circularLoader.hideAnimationBehavior
-                    binding.addProErrorTextView.visibility = View.VISIBLE
-                    binding.addProErrorTextView.text =
-                            getString(R.string.add_product_error_img_upload)
-                }
-                AddProductErrors.NONE -> {
-                    binding.loaderLayout.circularLoader.visibility = View.GONE
-                    binding.loaderLayout.circularLoader.hideAnimationBehavior
-                }
+				AddProductErrors.ADDING -> {
+					binding.loaderLayout.circularLoader.bringToFront()
+					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.circularLoader.showAnimationBehavior
+				}
+				AddProductErrors.ERR_ADD -> {
+					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.circularLoader.hideAnimationBehavior
+					binding.addProErrorTextView.visibility = View.VISIBLE
+					binding.addProErrorTextView.text =
+						getString(R.string.add_product_error_img_upload)
+				}
+				AddProductErrors.NONE -> {
+					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.circularLoader.hideAnimationBehavior
+				}
 			}
 		}
 	}
@@ -157,7 +157,8 @@ class AddEditProductFragment : Fragment() {
 		Log.d(TAG, "set views")
 
 		if (!isEdit) {
-			binding.addProAppBar.topAppBar.title = "Add Product - ${viewModel.selectedCategory.value}"
+			binding.addProAppBar.topAppBar.title =
+				"Add Product - ${viewModel.selectedCategory.value}"
 
 			val adapter = AddProductImagesAdapter(requireContext(), imgList)
 			binding.addProImagesRv.adapter = adapter
@@ -198,10 +199,13 @@ class AddEditProductFragment : Fragment() {
 		val price = binding.proPriceEditText.text.toString().toDoubleOrNull()
 		val mrp = binding.proMrpEditText.text.toString().toDoubleOrNull()
 		val desc = binding.proDescEditText.text.toString()
-		Log.d(TAG, "onAddProduct: Add product initiated, $name, $price, $mrp, $desc, $sizeList, $colorsList, $imgList")
+		Log.d(
+			TAG,
+			"onAddProduct: Add product initiated, $name, $price, $mrp, $desc, $sizeList, $colorsList, $imgList"
+		)
 		viewModel.submitProduct(
-                name, price, mrp, desc, sizeList.toList(), colorsList.toList(), imgList
-        )
+			name, price, mrp, desc, sizeList.toList(), colorsList.toList(), imgList
+		)
 	}
 
 	private fun setShoeSizesChips(shoeList: List<Int>? = emptyList()) {
@@ -245,10 +249,10 @@ class AddEditProductFragment : Fragment() {
 
 				chip.chipStrokeColor = ColorStateList.valueOf(Color.BLACK)
 				chip.chipStrokeWidth = TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        1F,
-                        context.resources.displayMetrics
-                )
+					TypedValue.COMPLEX_UNIT_DIP,
+					1F,
+					context.resources.displayMetrics
+				)
 				chip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor(v))
 				chip.isCheckable = true
 
@@ -274,15 +278,15 @@ class AddEditProductFragment : Fragment() {
 
 	private fun modifyErrors(err: AddProductViewErrors) {
 		when (err) {
-            AddProductViewErrors.NONE -> binding.addProErrorTextView.visibility = View.GONE
-            AddProductViewErrors.EMPTY -> {
-                binding.addProErrorTextView.visibility = View.VISIBLE
-                binding.addProErrorTextView.text = getString(R.string.add_product_error_string)
-            }
-            AddProductViewErrors.ERR_PRICE_0 -> {
-                binding.addProErrorTextView.visibility = View.VISIBLE
-                binding.addProErrorTextView.text = getString(R.string.add_pro_error_price_string)
-            }
+			AddProductViewErrors.NONE -> binding.addProErrorTextView.visibility = View.GONE
+			AddProductViewErrors.EMPTY -> {
+				binding.addProErrorTextView.visibility = View.VISIBLE
+				binding.addProErrorTextView.text = getString(R.string.add_product_error_string)
+			}
+			AddProductViewErrors.ERR_PRICE_0 -> {
+				binding.addProErrorTextView.visibility = View.VISIBLE
+				binding.addProErrorTextView.text = getString(R.string.add_pro_error_price_string)
+			}
 		}
 	}
 

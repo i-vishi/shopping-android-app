@@ -25,13 +25,12 @@ import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentProductDetailsBinding
 import com.vishalgaur.shoppingapp.ui.DotsIndicatorDecoration
 import com.vishalgaur.shoppingapp.viewModels.ProductViewModel
-import java.lang.IllegalArgumentException
 
 class ProductDetailsFragment : Fragment() {
 
 	inner class ProductViewModelFactory(
-			private val productId: String,
-			private val application: Application
+		private val productId: String,
+		private val application: Application
 	) : ViewModelProvider.Factory {
 		@Suppress("UNCHECKED_CAST")
 		override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -46,9 +45,9 @@ class ProductDetailsFragment : Fragment() {
 	private lateinit var viewModel: ProductViewModel
 
 	override fun onCreateView(
-			inflater: LayoutInflater,
-			container: ViewGroup?,
-			savedInstanceState: Bundle?
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?
 	): View? {
 		binding = FragmentProductDetailsBinding.inflate(layoutInflater)
 		val productId = arguments?.getString("productId")
@@ -64,7 +63,7 @@ class ProductDetailsFragment : Fragment() {
 
 	private fun setObservers() {
 		viewModel.dataStatus.observe(viewLifecycleOwner) {
-			when(it) {
+			when (it) {
 				StoreDataStatus.DONE -> {
 					binding.loaderLayout.circularLoader.visibility = View.GONE
 					binding.proDetailsScrollView.visibility = View.VISIBLE
@@ -91,7 +90,12 @@ class ProductDetailsFragment : Fragment() {
 			findNavController().navigateUp()
 		}
 		binding.addProAppBar.topAppBar.inflateMenu(R.menu.app_bar_menu)
-		binding.addProAppBar.topAppBar.overflowIcon?.setTint(ContextCompat.getColor(requireContext(), R.color.gray))
+		binding.addProAppBar.topAppBar.overflowIcon?.setTint(
+			ContextCompat.getColor(
+				requireContext(),
+				R.color.gray
+			)
+		)
 
 		setImagesView()
 
@@ -115,8 +119,8 @@ class ProductDetailsFragment : Fragment() {
 		if (context != null) {
 			binding.proDetailsImagesRecyclerview.isNestedScrollingEnabled = false
 			val adapter = ProductImagesAdapter(
-					requireContext(),
-					viewModel.productData.value?.images ?: emptyList()
+				requireContext(),
+				viewModel.productData.value?.images ?: emptyList()
 			)
 			binding.proDetailsImagesRecyclerview.adapter = adapter
 			val rad = resources.getDimension(R.dimen.radius)
@@ -124,7 +128,7 @@ class ProductDetailsFragment : Fragment() {
 			val inactiveColor = ContextCompat.getColor(requireContext(), R.color.gray)
 			val activeColor = ContextCompat.getColor(requireContext(), R.color.blue_accent_300)
 			val itemDecoration =
-					DotsIndicatorDecoration(rad, rad * 4, dotsHeight, inactiveColor, activeColor)
+				DotsIndicatorDecoration(rad, rad * 4, dotsHeight, inactiveColor, activeColor)
 			binding.proDetailsImagesRecyclerview.addItemDecoration(itemDecoration)
 			PagerSnapHelper().attachToRecyclerView(binding.proDetailsImagesRecyclerview)
 		}
@@ -137,12 +141,14 @@ class ProductDetailsFragment : Fragment() {
 					val radioButton = RadioButton(context)
 					radioButton.id = v
 					radioButton.tag = v
-					val param = binding.proDetailsSizesRadioGroup.layoutParams as ViewGroup.MarginLayoutParams
+					val param =
+						binding.proDetailsSizesRadioGroup.layoutParams as ViewGroup.MarginLayoutParams
 					param.setMargins(resources.getDimensionPixelSize(R.dimen.radio_margin_size))
 					param.width = ViewGroup.LayoutParams.WRAP_CONTENT
 					param.height = ViewGroup.LayoutParams.WRAP_CONTENT
 					radioButton.layoutParams = param
-					radioButton.background = ContextCompat.getDrawable(context, R.drawable.radio_selector)
+					radioButton.background =
+						ContextCompat.getDrawable(context, R.drawable.radio_selector)
 					radioButton.setButtonDrawable(R.color.transparent)
 					radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F)
 					radioButton.setTextColor(Color.BLACK)
@@ -164,12 +170,14 @@ class ProductDetailsFragment : Fragment() {
 					val radioButton = RadioButton(context)
 					radioButton.id = ind
 					radioButton.tag = k
-					val param = binding.proDetailsColorsRadioGroup.layoutParams as ViewGroup.MarginLayoutParams
+					val param =
+						binding.proDetailsColorsRadioGroup.layoutParams as ViewGroup.MarginLayoutParams
 					param.setMargins(resources.getDimensionPixelSize(R.dimen.radio_margin_size))
 					param.width = ViewGroup.LayoutParams.WRAP_CONTENT
 					param.height = ViewGroup.LayoutParams.WRAP_CONTENT
 					radioButton.layoutParams = param
-					radioButton.background = ContextCompat.getDrawable(context, R.drawable.color_radio_selector)
+					radioButton.background =
+						ContextCompat.getDrawable(context, R.drawable.color_radio_selector)
 					radioButton.setButtonDrawable(R.color.transparent)
 					radioButton.backgroundTintList = ColorStateList.valueOf(Color.parseColor(v))
 					if (k == "white") {

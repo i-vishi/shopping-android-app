@@ -14,48 +14,48 @@ import com.vishalgaur.shoppingapp.viewModels.AuthViewModelFactory
 
 abstract class LoginSignupBaseFragment<VBinding : ViewBinding> : Fragment() {
 
-    protected lateinit var viewModel: AuthViewModel
+	protected lateinit var viewModel: AuthViewModel
 
-    protected lateinit var binding: VBinding
-    protected abstract fun setViewBinding(): VBinding
+	protected lateinit var binding: VBinding
+	protected abstract fun setViewBinding(): VBinding
 
-    protected val focusChangeListener = MyOnFocusChangeListener()
+	protected val focusChangeListener = MyOnFocusChangeListener()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        init()
-    }
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		init()
+	}
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        setUpViews()
-        observeView()
-        return binding.root
-    }
+	override fun onCreateView(
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View? {
+		setUpViews()
+		observeView()
+		return binding.root
+	}
 
-    fun launchOtpActivity(from: String, extras: Bundle) {
-        val intent = Intent(context, OtpActivity::class.java).putExtra(
-            "from",
-            from
-        ).putExtras(extras)
-        startActivity(intent)
-    }
+	fun launchOtpActivity(from: String, extras: Bundle) {
+		val intent = Intent(context, OtpActivity::class.java).putExtra(
+			"from",
+			from
+		).putExtras(extras)
+		startActivity(intent)
+	}
 
-    open fun setUpViews() {}
+	open fun setUpViews() {}
 
-    open fun observeView() {}
+	open fun observeView() {}
 
-    private fun init() {
-        binding = setViewBinding()
-        if (this.activity != null) {
-            val viewModelFactory = AuthViewModelFactory(this.requireActivity().application)
-            viewModel =
-                ViewModelProvider(this, viewModelFactory).get(AuthViewModel::class.java)
-        }
-    }
+	private fun init() {
+		binding = setViewBinding()
+		if (this.activity != null) {
+			val viewModelFactory = AuthViewModelFactory(this.requireActivity().application)
+			viewModel =
+				ViewModelProvider(this, viewModelFactory).get(AuthViewModel::class.java)
+		}
+	}
 
-    interface OnClickListener: View.OnClickListener
+	interface OnClickListener : View.OnClickListener
 }

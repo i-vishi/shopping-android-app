@@ -12,25 +12,25 @@ import com.vishalgaur.shoppingapp.data.utils.ListTypeConverter
 @Database(entities = [UserData::class, Product::class], version = 1)
 @TypeConverters(ListTypeConverter::class)
 abstract class ShoppingAppDatabase : RoomDatabase() {
-    abstract fun userDao(): UserDao
-    abstract fun productsDao(): ProductsDao
+	abstract fun userDao(): UserDao
+	abstract fun productsDao(): ProductsDao
 
-    companion object {
-        @Volatile
-        private var INSTANCE: ShoppingAppDatabase? = null
+	companion object {
+		@Volatile
+		private var INSTANCE: ShoppingAppDatabase? = null
 
-        fun getInstance(context: Context): ShoppingAppDatabase =
-            INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
-            }
+		fun getInstance(context: Context): ShoppingAppDatabase =
+			INSTANCE ?: synchronized(this) {
+				INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+			}
 
-        private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(
-                context.applicationContext,
-                ShoppingAppDatabase::class.java, "ShoppingAppDb"
-            )
-                .fallbackToDestructiveMigration()
-                .allowMainThreadQueries()
-                .build()
-    }
+		private fun buildDatabase(context: Context) =
+			Room.databaseBuilder(
+				context.applicationContext,
+				ShoppingAppDatabase::class.java, "ShoppingAppDb"
+			)
+				.fallbackToDestructiveMigration()
+				.allowMainThreadQueries()
+				.build()
+	}
 }

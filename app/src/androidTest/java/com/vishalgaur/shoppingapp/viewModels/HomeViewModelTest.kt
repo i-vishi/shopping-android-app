@@ -1,31 +1,23 @@
 package com.vishalgaur.shoppingapp.viewModels
 
-import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.core.net.toUri
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.vishalgaur.shoppingapp.getOrAwaitValue
-import com.vishalgaur.shoppingapp.ui.AddProductViewErrors
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.notNullValue
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class HomeViewModelTest {
-    private lateinit var homeViewModel: HomeViewModel
+	private lateinit var homeViewModel: HomeViewModel
 
-    @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
+	@get:Rule
+	var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @Before
-    fun setUp() {
-        homeViewModel = HomeViewModel(ApplicationProvider.getApplicationContext())
-    }
+	@Before
+	fun setUp() {
+		homeViewModel = HomeViewModel(ApplicationProvider.getApplicationContext())
+	}
 
 //    @Test
 //    fun setCategory_setsLiveData() {
@@ -64,8 +56,8 @@ class HomeViewModelTest {
 //        assertThat(result, `is`(AddProductViewErrors.ERR_PRICE_0))
 //    }
 
-    //  current User has to be set to run the test
-    //
+	//  current User has to be set to run the test
+	//
 //    @Test
 //    fun submitProduct_allValid_returnsNoError() {
 //        val name = "  vwsf 6hy  "

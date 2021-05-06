@@ -3,10 +3,8 @@ package com.vishalgaur.shoppingapp.ui.home
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModel
-import com.vishalgaur.shoppingapp.viewModels.HomeViewModelFactory
 
 private const val TAG = "MainActivity"
 

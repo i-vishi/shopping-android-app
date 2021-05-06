@@ -8,12 +8,12 @@ import com.vishalgaur.shoppingapp.data.UserData
 
 @Dao
 interface UserDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(uData: UserData)
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	suspend fun insert(uData: UserData)
 
-    @Query("SELECT * FROM users WHERE userId = :userId")
-    suspend fun getById(userId: String): UserData?
+	@Query("SELECT * FROM users WHERE userId = :userId")
+	suspend fun getById(userId: String): UserData?
 
-    @Query("DELETE FROM users")
-    suspend fun clear()
+	@Query("DELETE FROM users")
+	suspend fun clear()
 }

@@ -29,7 +29,7 @@
         <argument
             android:name="isEdit"
             app:argType="boolean"
-            app:nullable="false"/>
+            app:nullable="false" />
         <argument
             android:name="productId"
             app:argType="string"
