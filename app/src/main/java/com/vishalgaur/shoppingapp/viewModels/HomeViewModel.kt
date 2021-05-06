@@ -99,7 +99,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	fun filterBySearch(queryText: String) {
 		filterProducts(_filterCategory.value!!)
 		_products.value = _products.value?.filter { product ->
-			product.name.contains(queryText, true)
+			product.name.contains(queryText, true) or
+					((queryText.toDoubleOrNull() ?: 0.0).compareTo(product.price) == 0)
 		}
 	}
 

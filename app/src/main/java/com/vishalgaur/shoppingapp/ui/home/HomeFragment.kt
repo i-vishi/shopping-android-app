@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,7 @@ import com.vishalgaur.shoppingapp.ui.MyOnFocusChangeListener
 import com.vishalgaur.shoppingapp.ui.RecyclerViewPaddingItemDecoration
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModel
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModelFactory
+import kotlinx.coroutines.*
 
 
 private const val TAG = "HomeFragment"
@@ -88,9 +90,27 @@ class HomeFragment : Fragment() {
 	}
 
 	private fun setViews() {
+		var lastInput = ""
+		val debounceJob: Job? = null
+		val uiScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 		binding.homeTopAppBar.topAppBar.inflateMenu(R.menu.home_app_bar_menu)
 		binding.homeTopAppBar.homeSearchEditText.onFocusChangeListener = focusChangeListener
-		binding.homeTopAppBar.homeSearchEditText.setOnEditorActionListener { textView, actionId, event ->
+		binding.homeTopAppBar.homeSearchEditText.doAfterTextChanged { editable ->
+			if (editable != null) {
+				val newtInput = editable.toString()
+				debounceJob?.cancel()
+				if (lastInput != newtInput) {
+					lastInput = newtInput
+					uiScope.launch {
+						delay(500)
+						if (lastInput == newtInput) {
+							performSearch(newtInput)
+						}
+					}
+				}
+			}
+		}
+		binding.homeTopAppBar.homeSearchEditText.setOnEditorActionListener { textView, actionId, _ ->
 			if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 				textView.clearFocus()
 				val inputManager =

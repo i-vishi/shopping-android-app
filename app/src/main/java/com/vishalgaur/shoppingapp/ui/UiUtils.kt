@@ -8,10 +8,16 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vishalgaur.shoppingapp.ui.home.MainActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 enum class SignUpViewErrors { NONE, ERR_EMAIL, ERR_MOBILE, ERR_EMAIL_MOBILE, ERR_EMPTY, ERR_NOT_ACC, ERR_PWD12NS }
@@ -34,6 +40,39 @@ class MyOnFocusChangeListener : View.OnFocusChangeListener {
 				inputManager.toggleSoftInputFromWindow(v.windowToken, 0, 0)
 
 			}
+		}
+	}
+}
+
+fun <T> throttleLatest(
+	intervalMs: Long = 300L,
+	coroutineScope: CoroutineScope,
+	destinationFunction: (T) -> Unit
+): (T) -> Unit {
+	var throttleJob: Job? = null
+	var latestParam: T
+	return { param: T ->
+		latestParam = param
+		if (throttleJob?.isCompleted != false) {
+			throttleJob = coroutineScope.launch {
+				delay(intervalMs)
+				latestParam.let(destinationFunction)
+			}
+		}
+	}
+}
+
+fun <T> debounce(
+	waitMs: Long = 300L,
+	coroutineScope: CoroutineScope,
+	destinationFunction: (T) -> Unit
+): (T) -> Unit {
+	var debounceJob: Job? = null
+	return { param: T ->
+		debounceJob?.cancel()
+		debounceJob = coroutineScope.launch {
+			delay(waitMs)
+			destinationFunction(param)
 		}
 	}
 }
