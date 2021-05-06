@@ -131,7 +131,9 @@ class HomeFragment : Fragment() {
 		return when (menuItem.itemId) {
 			R.id.home_filter -> {
 				val extraFilters = arrayOf("All", "None")
-				showDialogWithItems(ProductCategories.plus(extraFilters), -1, true)
+				val categoryList = ProductCategories.plus(extraFilters)
+				val checkedItem = categoryList.indexOf(viewModel.filterCategory.value)
+				showDialogWithItems(categoryList, checkedItem, true)
 				true
 			}
 			else -> false
@@ -187,7 +189,7 @@ class HomeFragment : Fragment() {
 				.setSingleChoiceItems(categoryItems, checkedItem) { _, which ->
 					checkedItem = which
 				}
-				.setNeutralButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
+				.setNegativeButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
 					dialog.cancel()
 				}
 				.setPositiveButton(getString(R.string.pro_cat_dialog_ok_btn)) { dialog, _ ->

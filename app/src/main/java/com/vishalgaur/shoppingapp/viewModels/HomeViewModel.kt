@@ -32,7 +32,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	private var _userProducts = MutableLiveData<List<Product>>()
 	val userProducts: LiveData<List<Product>> get() = _userProducts
 
-	private var filterCategory = MutableLiveData("All")
+	private var _filterCategory = MutableLiveData("All")
+	val filterCategory: LiveData<String> get() = _filterCategory
 
 	private val _storeDataStatus = MutableLiveData<StoreDataStatus>()
 	val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
@@ -96,7 +97,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	}
 
 	fun filterBySearch(queryText: String) {
-		filterProducts(filterCategory.value!!)
+		filterProducts(_filterCategory.value!!)
 		_products.value = _products.value?.filter { product ->
 			product.name.contains(queryText, true)
 		}
@@ -104,7 +105,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 	fun filterProducts(filterType: String) {
 		Log.d(TAG, "filterType is $filterType")
-		filterCategory.value = filterType
+		_filterCategory.value = filterType
 		_products.value = when (filterType) {
 			"None" -> emptyList()
 			"All" -> _allProducts.value

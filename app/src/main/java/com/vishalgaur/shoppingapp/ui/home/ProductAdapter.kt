@@ -3,12 +3,14 @@ package com.vishalgaur.shoppingapp.ui.home
 import android.content.Context
 import android.graphics.Paint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.Product
+import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.databinding.ProductsListItemBinding
 import com.vishalgaur.shoppingapp.getOfferPercentage
 
@@ -16,6 +18,7 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
 	RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
 	lateinit var onClickListener: OnClickListener
+	private val sessionManager = ShoppingAppSessionManager(context)
 
 	inner class ViewHolder(binding: ProductsListItemBinding) :
 		RecyclerView.ViewHolder(binding.root) {
@@ -56,12 +59,17 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
 
 			productImage.clipToOutline = true
 
-			proEditBtn.setOnClickListener {
-				onClickListener.onEditClick(productData.productId)
-			}
+			if (sessionManager.isUserSeller()) {
+				proEditBtn.setOnClickListener {
+					onClickListener.onEditClick(productData.productId)
+				}
 
-			proDeleteButton.setOnClickListener {
-				onClickListener.onDeleteClick(productData)
+				proDeleteButton.setOnClickListener {
+					onClickListener.onDeleteClick(productData)
+				}
+			} else {
+				proEditBtn.visibility = View.GONE
+				proDeleteButton.visibility = View.GONE
 			}
 		}
 	}
