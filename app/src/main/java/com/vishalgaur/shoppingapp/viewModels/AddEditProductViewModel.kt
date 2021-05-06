@@ -168,10 +168,17 @@ class AddEditProductViewModel(application: Application) : AndroidViewModel(appli
 						Log.d(TAG, "error uploading images")
 						_addProductErrors.value = AddProductErrors.ERR_ADD
 					} else {
-						val res =
-							async { productsRepository.insertProduct(_newProductData.value!!) }
-						res.await()
-						_addProductErrors.value = AddProductErrors.NONE
+						val deferredRes = async {
+							productsRepository.insertProduct(_newProductData.value!!)
+						}
+						val res = deferredRes.await()
+						if (res is Success) {
+							_addProductErrors.value = AddProductErrors.NONE
+						} else {
+							_addProductErrors.value = AddProductErrors.ERR_ADD
+							if (res is Error)
+								Log.d(TAG, "onInsertProduct: Error Occurred, ${res.exception}")
+						}
 					}
 				} else {
 					Log.d(TAG, "Product images empty, Cannot Add Product")

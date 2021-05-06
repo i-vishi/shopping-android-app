@@ -12,8 +12,11 @@ import com.vishalgaur.shoppingapp.data.Result.*
 import com.vishalgaur.shoppingapp.data.source.local.ProductsLocalDataSource
 import com.vishalgaur.shoppingapp.data.source.local.ShoppingAppDatabase
 import com.vishalgaur.shoppingapp.data.source.remote.ProductsRemoteDataSource
+import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
+import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import java.util.*
 
 class ProductsRepository(application: Application) {
@@ -41,9 +44,9 @@ class ProductsRepository(application: Application) {
 		productsRemoteSource = ProductsRemoteDataSource()
 	}
 
-	suspend fun refreshProducts() {
+	suspend fun refreshProducts(): StoreDataStatus? {
 		Log.d(TAG, "Updating Products in Room")
-		updateProductsFromRemoteSource()
+		return updateProductsFromRemoteSource()
 	}
 
 	fun observeProducts(): LiveData<Result<List<Product>>?> {
@@ -65,15 +68,22 @@ class ProductsRepository(application: Application) {
 		return productsLocalSource.getProductById(productId)
 	}
 
-	suspend fun insertProduct(newProduct: Product) {
-		coroutineScope {
-			launch {
+	suspend fun insertProduct(newProduct: Product): Result<Boolean> {
+		return supervisorScope {
+			val localRes = async {
 				Log.d(TAG, "onInsertProduct: adding product to local source")
 				productsLocalSource.insertProduct(newProduct)
 			}
-			launch {
+			val remoteRes = async {
 				Log.d(TAG, "onInsertProduct: adding product to remote source")
 				productsRemoteSource.insertProduct(newProduct)
+			}
+			try {
+				localRes.await()
+				remoteRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
 			}
 		}
 	}
@@ -97,15 +107,22 @@ class ProductsRepository(application: Application) {
 		return urlList
 	}
 
-	suspend fun updateProduct(product: Product) {
-		coroutineScope {
-			launch {
+	suspend fun updateProduct(product: Product): Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
 				Log.d(TAG, "onUpdate: updating product in remote source")
 				productsRemoteSource.updateProduct(product)
 			}
-			launch {
+			val localRes = async {
 				Log.d(TAG, "onUpdate: updating product in local source")
 				productsLocalSource.insertProduct(product)
+			}
+			try {
+				remoteRes.await()
+				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
 			}
 		}
 	}
@@ -138,32 +155,62 @@ class ProductsRepository(application: Application) {
 		return urlList
 	}
 
-	suspend fun deleteProductById(productId: String) {
-		coroutineScope {
-			launch {
+	suspend fun deleteProductById(productId: String) : Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
+				Log.d(TAG, "onDelete: deleting product from remote source")
 				productsRemoteSource.deleteProduct(productId)
 			}
-			launch {
+			val localRes = async {
+				Log.d(TAG, "onDelete: deleting product from local source")
 				productsLocalSource.deleteProduct(productId)
+			}
+			try {
+				remoteRes.await()
+				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
 			}
 		}
 	}
 
-	private suspend fun updateProductsFromRemoteSource() {
-		val remoteProducts = productsRemoteSource.getAllProducts()
-		if (remoteProducts is Success) {
-			Log.d(TAG, "pro list = ${remoteProducts.data}")
-			productsLocalSource.deleteAllProducts()
-			productsLocalSource.insertMultipleProducts(remoteProducts.data)
-		} else if (remoteProducts is Error) {
-			throw remoteProducts.exception
+	private suspend fun updateProductsFromRemoteSource(): StoreDataStatus? {
+		var res: StoreDataStatus? = null
+		try {
+			val remoteProducts = productsRemoteSource.getAllProducts()
+			if (remoteProducts is Success) {
+				Log.d(TAG, "pro list = ${remoteProducts.data}")
+				productsLocalSource.deleteAllProducts()
+				productsLocalSource.insertMultipleProducts(remoteProducts.data)
+				res = StoreDataStatus.DONE
+			} else {
+				res = StoreDataStatus.ERROR
+				if (remoteProducts is Error)
+					throw remoteProducts.exception
+			}
+		} catch (e: Exception) {
+			Log.d(TAG, "onUpdateProductsFromRemoteSource: Exception occurred, ${e.message}")
 		}
+
+		return res
 	}
 
-	private suspend fun updateProductFromRemoteSource(productId: String) {
-		val remoteProduct = productsRemoteSource.getProductById(productId)
-		if (remoteProduct is Success && remoteProduct.data != null) {
-			productsLocalSource.insertProduct(remoteProduct.data)
+	private suspend fun updateProductFromRemoteSource(productId: String): StoreDataStatus? {
+		var res: StoreDataStatus? = null
+		try {
+			val remoteProduct = productsRemoteSource.getProductById(productId)
+			if (remoteProduct is Success && remoteProduct.data != null) {
+				productsLocalSource.insertProduct(remoteProduct.data)
+				res = StoreDataStatus.DONE
+			} else {
+				res = StoreDataStatus.ERROR
+				if (remoteProduct is Error)
+					throw remoteProduct.exception
+			}
+		} catch (e: Exception) {
+			Log.d(TAG, "onUpdateProductFromRemoteSource: Exception occurred, ${e.message}")
 		}
+		return res
 	}
 }

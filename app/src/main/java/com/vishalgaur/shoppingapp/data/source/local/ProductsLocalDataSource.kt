@@ -1,6 +1,7 @@
 package com.vishalgaur.shoppingapp.data.source.local
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.Result
@@ -15,14 +16,26 @@ class ProductsLocalDataSource internal constructor(
 	private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ProductDataSource {
 	override fun observeProducts(): LiveData<Result<List<Product>>?> {
-		return Transformations.map(productsDao.observeProducts()) {
-			Success(it)
+		return try {
+			Transformations.map(productsDao.observeProducts()) {
+				Success(it)
+			}
+		} catch (e: Exception) {
+			Transformations.map(MutableLiveData(e)) {
+				Error(e)
+			}
 		}
 	}
 
 	fun observeProductsByOwner(ownerId: String): LiveData<Result<List<Product>>?> {
-		return Transformations.map(productsDao.observeProductsByOwner(ownerId)) {
-			Success(it)
+		return try {
+			Transformations.map(productsDao.observeProductsByOwner(ownerId)) {
+				Success(it)
+			}
+		} catch (e: Exception) {
+			Transformations.map(MutableLiveData(e)) {
+				Error(e)
+			}
 		}
 	}
 
@@ -69,10 +82,9 @@ class ProductsLocalDataSource internal constructor(
 		productsDao.insert(proData)
 	}
 
-	suspend fun insertMultipleProducts(proList: List<Product>) =
-		withContext(ioDispatcher) {
-			productsDao.insertListOfProducts(proList)
-		}
+	suspend fun insertMultipleProducts(proList: List<Product>) = withContext(ioDispatcher) {
+		productsDao.insertListOfProducts(proList)
+	}
 
 	suspend fun deleteProduct(productId: String): Unit = withContext(ioDispatcher) {
 		productsDao.deleteProductById(productId)

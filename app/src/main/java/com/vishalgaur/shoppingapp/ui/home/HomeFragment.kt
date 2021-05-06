@@ -67,15 +67,12 @@ class HomeFragment : Fragment() {
 					}
 
 					override fun onDeleteClick(productData: Product) {
-						Log.d(
-							TAG,
-							"onDeleteProduct: deletion initiated for ${productData.productId}"
-						)
+						Log.d(TAG, "onDeleteProduct: initiated for ${productData.productId}")
 						showDeleteDialog(productData.name, productData.productId)
 					}
 
 					override fun onEditClick(productId: String) {
-						Log.d(TAG, "onEditProduct: Edit Initiated for $productId")
+						Log.d(TAG, "onEditProduct: initiated for $productId")
 						navigateToAddEditProductFragment(isEdit = true, productId = productId)
 					}
 				}
@@ -156,6 +153,7 @@ class HomeFragment : Fragment() {
 		}
 		viewModel.allProducts.observe(viewLifecycleOwner) {
 			if (it != null) {
+				viewModel.setDataLoaded()
 				viewModel.filterProducts("All")
 			}
 		}
