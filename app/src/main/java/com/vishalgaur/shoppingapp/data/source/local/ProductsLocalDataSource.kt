@@ -27,7 +27,7 @@ class ProductsLocalDataSource internal constructor(
 		}
 	}
 
-	fun observeProductsByOwner(ownerId: String): LiveData<Result<List<Product>>?> {
+	override fun observeProductsByOwner(ownerId: String): LiveData<Result<List<Product>>?> {
 		return try {
 			Transformations.map(productsDao.observeProductsByOwner(ownerId)) {
 				Success(it)
@@ -47,11 +47,7 @@ class ProductsLocalDataSource internal constructor(
 		}
 	}
 
-	override suspend fun refreshProducts() {
-		// refresh products
-	}
-
-	suspend fun getAllProductsByOwner(ownerId: String): Result<List<Product>> =
+	override suspend fun getAllProductsByOwner(ownerId: String): Result<List<Product>> =
 		withContext(ioDispatcher) {
 			return@withContext try {
 				Success(productsDao.getProductsByOwnerId(ownerId))
@@ -82,15 +78,15 @@ class ProductsLocalDataSource internal constructor(
 		productsDao.insert(proData)
 	}
 
-	suspend fun insertMultipleProducts(proList: List<Product>) = withContext(ioDispatcher) {
-		productsDao.insertListOfProducts(proList)
+	override suspend fun insertMultipleProducts(data: List<Product>) = withContext(ioDispatcher) {
+		productsDao.insertListOfProducts(data)
 	}
 
-	suspend fun deleteProduct(productId: String): Unit = withContext(ioDispatcher) {
+	override suspend fun deleteProduct(productId: String): Unit = withContext(ioDispatcher) {
 		productsDao.deleteProductById(productId)
 	}
 
-	suspend fun deleteAllProducts() = withContext(ioDispatcher) {
+	override suspend fun deleteAllProducts() = withContext(ioDispatcher) {
 		productsDao.deleteAllProducts()
 	}
 }

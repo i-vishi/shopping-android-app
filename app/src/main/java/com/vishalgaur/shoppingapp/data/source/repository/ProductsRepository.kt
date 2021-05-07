@@ -9,19 +9,19 @@ import com.vishalgaur.shoppingapp.ERR_UPLOAD
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.Result
 import com.vishalgaur.shoppingapp.data.Result.*
+import com.vishalgaur.shoppingapp.data.source.ProductDataSource
 import com.vishalgaur.shoppingapp.data.source.local.ProductsLocalDataSource
 import com.vishalgaur.shoppingapp.data.source.local.ShoppingAppDatabase
 import com.vishalgaur.shoppingapp.data.source.remote.ProductsRemoteDataSource
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import java.util.*
 
-class ProductsRepository(application: Application) {
-	private val productsRemoteSource: ProductsRemoteDataSource
-	private val productsLocalSource: ProductsLocalDataSource
+class ProductsRepository(
+	private val productsRemoteSource: ProductDataSource,
+	private val productsLocalSource: ProductDataSource
+) {
 
 	companion object {
 		private const val TAG = "ProductsRepository"
@@ -31,17 +31,15 @@ class ProductsRepository(application: Application) {
 
 		fun getRepository(app: Application): ProductsRepository {
 			return INSTANCE ?: synchronized(this) {
-				ProductsRepository(app).also {
+				val database = ShoppingAppDatabase.getInstance(app)
+				ProductsRepository(
+					ProductsRemoteDataSource(),
+					ProductsLocalDataSource(database.productsDao())
+				).also {
 					INSTANCE = it
 				}
 			}
 		}
-	}
-
-	init {
-		val database = ShoppingAppDatabase.getInstance(application)
-		productsLocalSource = ProductsLocalDataSource(database.productsDao())
-		productsRemoteSource = ProductsRemoteDataSource()
 	}
 
 	suspend fun refreshProducts(): StoreDataStatus? {
@@ -155,7 +153,7 @@ class ProductsRepository(application: Application) {
 		return urlList
 	}
 
-	suspend fun deleteProductById(productId: String) : Result<Boolean> {
+	suspend fun deleteProductById(productId: String): Result<Boolean> {
 		return supervisorScope {
 			val remoteRes = async {
 				Log.d(TAG, "onDelete: deleting product from remote source")

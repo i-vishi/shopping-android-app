@@ -50,7 +50,6 @@ class AuthRepositoryTest {
 		authRemoteDataSource = FakeUserDataSource(userCustomer)
 		sessionManager = ShoppingAppSessionManager(ApplicationProvider.getApplicationContext())
 
-
 		authRepository = AuthRepository(
 			userLocalDataSource,
 			authRemoteDataSource,
@@ -132,14 +131,12 @@ class AuthRepositoryTest {
 	@Test
 	fun checkLogin_existingUser_returnsData() = runBlockingTest {
 		val result = authRepository.checkLogin(userCustomer.mobile, userCustomer.password)
-
 		assertThat(result, `is`(userCustomer))
 	}
 
 	@Test
 	fun checkLogin_newCredentials_returnsNull() = runBlockingTest {
 		val result = authRepository.checkLogin("+919879879879", "sdygt4")
-
 		assertThat(result, `is`(nullValue()))
 	}
 
@@ -151,10 +148,10 @@ class AuthRepositoryTest {
 		val localRes = userLocalDataSource.getUserById(userSeller.userId)
 
 		assertThat(sessionRes, `is`(false))
-		if(localRes is Result.Success)
+		if (localRes is Result.Success)
 			assert(false)
-		else if(localRes is Result.Error) {
-			assertEquals(localRes.exception.message,"User Not Found")
+		else if (localRes is Result.Error) {
+			assertEquals(localRes.exception.message, "User Not Found")
 		}
 	}
 

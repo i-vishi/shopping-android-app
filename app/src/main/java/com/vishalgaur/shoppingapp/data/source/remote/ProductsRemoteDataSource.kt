@@ -24,7 +24,6 @@ class ProductsRemoteDataSource : ProductDataSource {
 
 	private fun storageRef() = firebaseStorage.reference
 	private fun productsCollectionRef() = firebaseDb.collection(PRODUCT_COLLECTION)
-	private fun shoesStorageRef() = storageRef().child(SHOES_STORAGE_PATH)
 
 	override suspend fun refreshProducts() {
 		observableProducts.value = getAllProducts()
@@ -58,16 +57,16 @@ class ProductsRemoteDataSource : ProductDataSource {
 		}
 	}
 
-	override suspend fun getProductById(productId: String): Result<Product?> {
+	override suspend fun getProductById(productId: String): Result<Product> {
 		val resRef = productsCollectionRef().whereEqualTo(PRODUCT_ID_FIELD, productId).get().await()
 		return if (!resRef.isEmpty) {
-			Success(resRef.documents[0].toObject(Product::class.java))
+			Success(resRef.toObjects(Product::class.java)[0])
 		} else {
 			Error(Exception("Product with id: $productId Not Found!"))
 		}
 	}
 
-	suspend fun deleteProduct(productId: String) {
+	override suspend fun deleteProduct(productId: String) {
 		Log.d(TAG, "onDeleteProduct: delete product with Id: $productId initiated")
 		val resRef = productsCollectionRef().whereEqualTo(PRODUCT_ID_FIELD, productId).get().await()
 		if (!resRef.isEmpty) {
@@ -91,7 +90,7 @@ class ProductsRemoteDataSource : ProductDataSource {
 		}
 	}
 
-	suspend fun uploadImage(uri: Uri, fileName: String): Uri {
+	override suspend fun uploadImage(uri: Uri, fileName: String): Uri? {
 		val imgRef = storageRef().child("$SHOES_STORAGE_PATH/$fileName")
 		val uploadTask = imgRef.putFile(uri)
 		val uriRef = uploadTask.continueWithTask { task ->
@@ -103,7 +102,7 @@ class ProductsRemoteDataSource : ProductDataSource {
 		return uriRef.await()
 	}
 
-	fun deleteImage(imgUrl: String) {
+	override fun deleteImage(imgUrl: String) {
 		val ref = firebaseStorage.getReferenceFromUrl(imgUrl)
 		ref.delete().addOnSuccessListener {
 			Log.d(TAG, "onDelete: image deleted successfully!")
@@ -112,7 +111,7 @@ class ProductsRemoteDataSource : ProductDataSource {
 		}
 	}
 
-	fun revertUpload(fileName: String) {
+	override fun revertUpload(fileName: String) {
 		val imgRef = storageRef().child("${SHOES_STORAGE_PATH}/$fileName")
 		imgRef.delete().addOnSuccessListener {
 			Log.d(TAG, "onRevert: File with name: $fileName deleted successfully!")
