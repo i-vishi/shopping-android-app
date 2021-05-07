@@ -26,7 +26,7 @@ class ProductViewModel(private val productId: String, application: Application) 
 	private val _isLiked = MutableLiveData<Boolean>()
 	val isLiked: LiveData<Boolean> get() = _isLiked
 
-	private val productsRepository = ProductsRepository(application)
+	private val productsRepository = ProductsRepository.getRepository(application)
 
 	init {
 		Log.d(TAG, "init: productId: $productId")
