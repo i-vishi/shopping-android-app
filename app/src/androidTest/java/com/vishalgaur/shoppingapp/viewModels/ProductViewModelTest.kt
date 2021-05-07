@@ -2,10 +2,10 @@ package com.vishalgaur.shoppingapp.viewModels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.vishalgaur.shoppingapp.getOrAwaitValue
 import org.hamcrest.Matchers.`is`
-import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
