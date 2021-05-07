@@ -3,6 +3,7 @@ package com.vishalgaur.shoppingapp.viewModels
 import android.app.Application
 import android.net.Uri
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -51,7 +52,8 @@ class AddEditProductViewModel(application: Application) : AndroidViewModel(appli
 	private val _productData = MutableLiveData<Product>()
 	val productData: LiveData<Product> get() = _productData
 
-	private val _newProductData = MutableLiveData<Product>()
+	@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+	val newProductData = MutableLiveData<Product>()
 
 	init {
 		_errorStatus.value = AddProductViewErrors.NONE
@@ -117,7 +119,7 @@ class AddEditProductViewModel(application: Application) : AndroidViewModel(appli
 						emptyList(),
 						0.0
 					)
-				_newProductData.value = newProduct
+				newProductData.value = newProduct
 				Log.d(TAG, "pro = $newProduct")
 				if (_isEdit.value == true) {
 					updateProduct(imgList)
@@ -130,19 +132,19 @@ class AddEditProductViewModel(application: Application) : AndroidViewModel(appli
 
 	private fun updateProduct(imgList: List<Uri>) {
 		viewModelScope.launch {
-			if (_newProductData.value != null && _productData.value != null) {
+			if (newProductData.value != null && _productData.value != null) {
 				_addProductErrors.value = AddProductErrors.ADDING
 				val resImg =
 					async { productsRepository.updateImages(imgList, _productData.value!!.images) }
 				val imagesPaths = resImg.await()
-				_newProductData.value?.images = imagesPaths
-				if (_newProductData.value?.images?.isNotEmpty() == true) {
+				newProductData.value?.images = imagesPaths
+				if (newProductData.value?.images?.isNotEmpty() == true) {
 					if (imagesPaths[0] == ERR_UPLOAD) {
 						Log.d(TAG, "error uploading images")
 						_addProductErrors.value = AddProductErrors.ERR_ADD_IMG
 					} else {
 						val updateRes =
-							async { productsRepository.updateProduct(_newProductData.value!!) }
+							async { productsRepository.updateProduct(newProductData.value!!) }
 						val res = updateRes.await()
 						if (res is Success) {
 							Log.d(TAG, "onUpdate: Success")
@@ -165,18 +167,18 @@ class AddEditProductViewModel(application: Application) : AndroidViewModel(appli
 
 	private fun insertProduct(imgList: List<Uri>) {
 		viewModelScope.launch {
-			if (_newProductData.value != null) {
+			if (newProductData.value != null) {
 				_addProductErrors.value = AddProductErrors.ADDING
 				val resImg = async { productsRepository.insertImages(imgList) }
 				val imagesPaths = resImg.await()
-				_newProductData.value?.images = imagesPaths
-				if (_newProductData.value?.images?.isNotEmpty() == true) {
+				newProductData.value?.images = imagesPaths
+				if (newProductData.value?.images?.isNotEmpty() == true) {
 					if (imagesPaths[0] == ERR_UPLOAD) {
 						Log.d(TAG, "error uploading images")
 						_addProductErrors.value = AddProductErrors.ERR_ADD_IMG
 					} else {
 						val deferredRes = async {
-							productsRepository.insertProduct(_newProductData.value!!)
+							productsRepository.insertProduct(newProductData.value!!)
 						}
 						val res = deferredRes.await()
 						if (res is Success) {
