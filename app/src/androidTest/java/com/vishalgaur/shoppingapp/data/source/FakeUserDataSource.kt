@@ -1,13 +1,15 @@
 package com.vishalgaur.shoppingapp.data.source
 
-import com.google.firebase.firestore.DocumentSnapshot
 import com.vishalgaur.shoppingapp.data.Result
 import com.vishalgaur.shoppingapp.data.Result.Error
 import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.EmailMobileData
 
-class FakeUserDataSource(var uData: UserData?) : UserDataSource {
+class FakeUserDataSource(private var uData: UserData?) : UserDataSource {
+
+	private var emailMobileData = EmailMobileData()
+
 	override suspend fun addUser(userData: UserData) {
 		uData = userData
 	}
@@ -21,22 +23,34 @@ class FakeUserDataSource(var uData: UserData?) : UserDataSource {
 		return Error(Exception("User Not Found"))
 	}
 
-	override suspend fun getEmailsAndMobiles(): EmailMobileData? {
-		return super.getEmailsAndMobiles()
+	override suspend fun getEmailsAndMobiles(): EmailMobileData {
+		return emailMobileData
 	}
 
 	override suspend fun getUserByMobileAndPassword(
 		mobile: String,
 		password: String
-	): MutableList<DocumentSnapshot> {
-		return super.getUserByMobileAndPassword(mobile, password)
+	): MutableList<UserData> {
+		val res = mutableListOf<UserData>()
+		uData?.let {
+			if(it.mobile == mobile && it.password == password){
+				res.add(it)
+			}
+		}
+		return res
 	}
 
 	override suspend fun clearUser() {
-		super.clearUser()
+		uData = null
 	}
 
 	override suspend fun getUserByMobile(phoneNumber: String): UserData? {
 		return super.getUserByMobile(phoneNumber)
 	}
+
+	override fun updateEmailsAndMobiles(email: String, mobile: String) {
+		emailMobileData.emails.add(email)
+		emailMobileData.mobiles.add(mobile)
+	}
+
 }

@@ -58,7 +58,7 @@ class OtpActivity : AppCompatActivity() {
 			}
 		}
 
-		viewModel.authRepository.isLoggedIn.observe(this) {
+		viewModel.isUserLoggedIn.observe(this) {
 			if (it == true) {
 				if (fromWhere == getString(R.string.signup_fragment_label)) {
 					viewModel.signUp()

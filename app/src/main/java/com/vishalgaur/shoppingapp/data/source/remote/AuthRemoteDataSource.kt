@@ -42,17 +42,17 @@ class AuthRemoteDataSource : UserDataSource {
 			}
 	}
 
-	override suspend fun getUserByMobile(pNumber: String) =
-		usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, pNumber).get().await()
+	override suspend fun getUserByMobile(phoneNumber: String) =
+		usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, phoneNumber).get().await()
 			.documents[0]
 			.toObject(UserData::class.java)
 
 	override suspend fun getUserByMobileAndPassword(
 		mobile: String,
-		pwd: String
-	): MutableList<DocumentSnapshot> =
+		password: String
+	): MutableList<UserData> =
 		usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, mobile)
-			.whereEqualTo(USERS_PWD_FIELD, pwd).get().await().documents
+			.whereEqualTo(USERS_PWD_FIELD, password).get().await().toObjects(UserData::class.java)
 
 	override fun updateEmailsAndMobiles(email: String, mobile: String) {
 		allEmailsMobilesRef().update(EMAIL_MOBILE_EMAIL_FIELD, FieldValue.arrayUnion(email))

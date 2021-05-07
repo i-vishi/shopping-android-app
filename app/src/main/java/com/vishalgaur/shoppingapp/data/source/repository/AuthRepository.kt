@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
@@ -30,8 +29,6 @@ class AuthRepository(
 	private var firebaseAuth: FirebaseAuth = Firebase.auth
 	private var sessionManager = ShoppingAppSessionManager(application.applicationContext)
 
-	var isLoggedIn = MutableLiveData(false)
-
 	companion object {
 		private const val TAG = "AuthRepository"
 
@@ -52,12 +49,6 @@ class AuthRepository(
 		}
 	}
 
-//    init {
-//        val database = ShoppingAppDatabase.getInstance(application)
-//        userLocalDataSource = UserLocalDataSource(database.userDao())
-//        authRemoteDataSource = AuthRemoteDataSource()
-//    }
-
 	fun getFirebaseAuth() = firebaseAuth
 
 	fun isRememberMeOn() = sessionManager.isRememberMeOn()
@@ -65,10 +56,8 @@ class AuthRepository(
 	suspend fun refreshData() {
 		Log.d(TAG, "refreshing userdata")
 		if (sessionManager.isLoggedIn()) {
-			isLoggedIn.value = true
 			updateUserInLocalSource(sessionManager.getPhoneNumber())
 		} else {
-			isLoggedIn.value = false
 			sessionManager.logoutFromSession()
 			deleteUserFromLocalSource()
 		}
@@ -127,37 +116,30 @@ class AuthRepository(
 		val queryResult =
 			authRemoteDataSource.getUserByMobileAndPassword(mobile, password)
 		return if (queryResult.size > 0) {
-			queryResult[0].toObject(UserData::class.java)
+			queryResult[0]
 		} else {
 			null
 		}
 	}
 
-	fun verifyPhoneWithCode(verificationId: String, code: String) {
-		try {
-			val credential = PhoneAuthProvider.getCredential(verificationId, code)
-			signInWithPhoneAuthCredential(credential)
-		} catch (e: Exception) {
-			Log.d(TAG, "onVerifyWithCode: Exception Occurred: ${e.message}")
-		}
-	}
-
-	fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
-		firebaseAuth.signInWithCredential(credential)
+	fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential, isUserLoggedIn: MutableLiveData<Boolean>) {
+		 firebaseAuth.signInWithCredential(credential)
 			.addOnCompleteListener { task ->
 				if (task.isSuccessful) {
 					Log.d(TAG, "signInWithCredential:success")
 					val user = task.result?.user
 					if (user != null) {
-						isLoggedIn.value = true
+						isUserLoggedIn.postValue(true)
 					}
+
 				} else {
 					Log.w(TAG, "signInWithCredential:failure", task.exception)
 					if (task.exception is FirebaseAuthInvalidCredentialsException) {
 						Log.d(TAG, "createUserWithMobile:failure", task.exception)
-						isLoggedIn.value = false
+						isUserLoggedIn.postValue(false)
 						makeErrToast("Wrong OTP!")
 					}
+
 				}
 			}
 	}
@@ -165,7 +147,6 @@ class AuthRepository(
 	suspend fun signOut() {
 		sessionManager.logoutFromSession()
 		firebaseAuth.signOut()
-		isLoggedIn.value = false
 		userLocalDataSource.clearUser()
 	}
 

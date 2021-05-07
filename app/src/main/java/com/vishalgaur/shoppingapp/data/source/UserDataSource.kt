@@ -1,6 +1,5 @@
 package com.vishalgaur.shoppingapp.data.source
 
-import com.google.firebase.firestore.DocumentSnapshot
 import com.vishalgaur.shoppingapp.data.Result
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.EmailMobileData
@@ -19,7 +18,7 @@ interface UserDataSource {
 	suspend fun getUserByMobileAndPassword(
 		mobile: String,
 		password: String
-	): MutableList<DocumentSnapshot> {
+	): MutableList<UserData> {
 		return mutableListOf()
 	}
 

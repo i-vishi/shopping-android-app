@@ -29,6 +29,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 
 	val authRepository = AuthRepository.getRepository(application)
 
+	var isUserLoggedIn = MutableLiveData(false)
 	var storedVerificationId: String? = ""
 	private var verificationInProgress = false
 	private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
@@ -36,7 +37,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 
 	fun verifyOTP(otp: String) {
 		viewModelScope.launch {
-			authRepository.verifyPhoneWithCode(storedVerificationId!!, otp)
+			verifyPhoneWithCode(storedVerificationId!!, otp, isUserLoggedIn)
 		}
 	}
 
@@ -68,7 +69,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 
 		override fun onVerificationCompleted(credential: PhoneAuthCredential) {
 			Log.d(TAG, "onVerificationCompleted:$credential")
-			authRepository.signInWithPhoneAuthCredential(credential)
+			authRepository.signInWithPhoneAuthCredential(credential, isUserLoggedIn)
 		}
 
 		override fun onVerificationFailed(e: FirebaseException) {
@@ -88,6 +89,15 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 			// Save verification ID and resending token so we can use them later
 			storedVerificationId = verificationId
 			resendToken = token
+		}
+	}
+
+	private fun verifyPhoneWithCode(verificationId: String, code: String, isUserLoggedIn: MutableLiveData<Boolean>) {
+		try {
+			val credential = PhoneAuthProvider.getCredential(verificationId, code)
+			authRepository.signInWithPhoneAuthCredential(credential, isUserLoggedIn)
+		} catch (e: Exception) {
+			Log.d(TAG, "onVerifyWithCode: Exception Occurred: ${e.message}")
 		}
 	}
 }
