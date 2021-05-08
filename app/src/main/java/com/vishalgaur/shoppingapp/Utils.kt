@@ -49,6 +49,8 @@ internal fun getProductId(ownerId: String, proCategory: String): String {
 }
 
 internal fun getOfferPercentage(costPrice: Double, sellingPrice: Double): Int {
+	if (costPrice == 0.0 || sellingPrice == 0.0 || costPrice <= sellingPrice)
+		return 0
 	val off = ((costPrice - sellingPrice) * 100) / costPrice
 	return off.roundToInt()
 }

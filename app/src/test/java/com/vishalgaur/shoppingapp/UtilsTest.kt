@@ -1,8 +1,8 @@
 package com.vishalgaur.shoppingapp
 
 import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThat
 import org.junit.Test
 
 class UtilsTest {
@@ -90,7 +90,34 @@ class UtilsTest {
 	fun getProductId_hasExpectedSubStrings() {
 		val result = getProductId("soewifnc9we48yf0", "shoes")
 		val subs = result.split("-")
-		assertThat(result, `is`("pro-shoes-soewifnc9we48yf0-12"))
-		assertThat(subs.size, `is`(4))
+		assert(subs.size >= 3)
+	}
+
+	@Test
+	fun getOfferPercentage_zeroZero_returnsZero() {
+		val result = getOfferPercentage(0.0, 0.0)
+		assertThat(result, `is`(0))
+	}
+
+	@Test
+	fun getOfferPercentage_highLow_returnsZero() {
+		val result = getOfferPercentage(90.0, 100.0)
+		assertThat(result, `is`(0))
+	}
+
+	@Test
+	fun getOfferPercentage_lowHigh_returnsOfferInt() {
+		val result1 = getOfferPercentage(100.0, 90.5)
+		val result2 = getOfferPercentage(100.0, 90.75)
+		val result3 = getOfferPercentage(100.0, 90.25)
+		assertThat(result1, `is`(10))
+		assertThat(result2, `is`(9))
+		assertThat(result3, `is`(10))
+	}
+
+	@Test
+	fun getOfferPercentage_equal_returnsZero() {
+		val result = getOfferPercentage(90.5, 90.5)
+		assertThat(result, `is`(0))
 	}
 }
