@@ -13,6 +13,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import androidx.test.platform.app.InstrumentationRegistry
 import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -22,9 +23,12 @@ import org.junit.runner.RunWith
 class SignupFragmentTest {
 	private lateinit var signUpScenario: FragmentScenario<SignupFragment>
 	private lateinit var navController: NavController
+	private lateinit var sessionManager: ShoppingAppSessionManager
 
 	@Before
 	fun setUp() {
+		sessionManager = ShoppingAppSessionManager(ApplicationProvider.getApplicationContext())
+		sessionManager.logoutFromSession()
 		signUpScenario = launchFragmentInContainer(themeResId = R.style.Theme_ShoppingApp)
 		navController = TestNavHostController(ApplicationProvider.getApplicationContext())
 

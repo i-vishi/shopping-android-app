@@ -42,10 +42,9 @@ class AuthRemoteDataSource : UserDataSource {
 			}
 	}
 
-	override suspend fun getUserByMobile(phoneNumber: String) =
+	override suspend fun getUserByMobile(phoneNumber: String): UserData =
 		usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, phoneNumber).get().await()
-			.documents[0]
-			.toObject(UserData::class.java)
+			.toObjects(UserData::class.java)[0]
 
 	override suspend fun getUserByMobileAndPassword(
 		mobile: String,
