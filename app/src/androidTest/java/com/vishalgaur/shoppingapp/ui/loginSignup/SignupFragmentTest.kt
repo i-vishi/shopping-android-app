@@ -8,13 +8,21 @@ import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import androidx.test.platform.app.InstrumentationRegistry
+import com.vishalgaur.shoppingapp.EMAIL_ERROR_TEXT
+import com.vishalgaur.shoppingapp.MOB_ERROR_TEXT
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.clickClickableSpan
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.not
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -73,8 +81,13 @@ class SignupFragmentTest {
 	}
 
 	@Test
-	fun userCanClickSwitch() {
+	fun userCanClickTermsSwitch() {
 		clickTermsSwitch()
+	}
+
+	@Test
+	fun userCanClickSellerSwitch() {
+		clickSellerSwitch()
 	}
 
 	@Test
@@ -92,6 +105,79 @@ class SignupFragmentTest {
 		clickLoginText()
 		assertEquals(navController.currentDestination?.id, R.id.LoginFragment)
 	}
+
+	@Test
+	fun onSignUp_emptyForm_showsError() {
+		clickSignUpButton()
+
+		onView(withId(R.id.signup_error_text_view)).check(matches(isDisplayed()))
+	}
+
+	@Test
+	fun onSignUp_invalidEmail_showsEmailError() {
+		insertInNameEditText("Vishal Gaur ")
+		insertInMobileEditText("8976527465  ")
+		insertInEmailEditText("  weuiyjyew.dciwe")
+		insertInPwdEditText("dh239048fy")
+		insertInCnfPwdEditText("dh239048fy")
+		clickTermsSwitch()
+		clickSignUpButton()
+
+		onView(withId(R.id.signup_email_edit_text)).check(matches(hasErrorText(`is`(EMAIL_ERROR_TEXT))))
+	}
+
+	@Test
+	fun onSignUp_invalidMobile_showsMobileError() {
+		insertInNameEditText("Vishal Gaur ")
+		insertInMobileEditText("86527465  ")
+		insertInEmailEditText("  weuiyj@yew.dciwe")
+		insertInPwdEditText("dh239048fy")
+		insertInCnfPwdEditText("dh239048fy")
+		clickTermsSwitch()
+		clickSignUpButton()
+
+		onView(withId(R.id.signup_mobile_edit_text)).check(matches(hasErrorText(`is`(MOB_ERROR_TEXT))))
+	}
+
+	@Test
+	fun onSignUp_notAcceptedTerms_showsError() {
+		insertInNameEditText("Vishal Gaur ")
+		insertInMobileEditText("8652744565  ")
+		insertInEmailEditText("  weuiyj@yew.dciwe")
+		insertInPwdEditText("dh239048fy")
+		insertInCnfPwdEditText("dh239048fy")
+		clickSignUpButton()
+
+		onView(withId(R.id.signup_error_text_view)).check(matches(withText("Accept the Terms.")))
+	}
+
+	@Test
+	fun onSignUp_notSamePasswords_showsError() {
+		insertInNameEditText("Vishal Gaur ")
+		insertInMobileEditText("8652744565  ")
+		insertInEmailEditText("  weuiyj@yew.dciwe")
+		insertInPwdEditText("dh2398fy")
+		insertInCnfPwdEditText("dh239048fy")
+		clickTermsSwitch()
+		clickSignUpButton()
+
+		onView(withId(R.id.signup_error_text_view)).check(matches(withText("Both passwords are not same!")))
+	}
+
+	@Test
+	fun onSignUp_validForm_showsNoError() {
+		Intents.init()
+		insertInNameEditText("Vishal Gaur ")
+		insertInMobileEditText("8652744565  ")
+		insertInEmailEditText("  weuiyj@yew.dciwe")
+		insertInPwdEditText("dh2398fy")
+		insertInCnfPwdEditText("dh2398fy")
+		clickTermsSwitch()
+		clickSignUpButton()
+
+		intended(hasComponent(OtpActivity::class.java.name))
+	}
+
 
 	private fun insertInNameEditText(name: String) =
 		onView(withId(R.id.signup_name_edit_text)).perform(scrollTo(), clearText(), typeText(name))
@@ -126,6 +212,9 @@ class SignupFragmentTest {
 
 	private fun clickTermsSwitch() =
 		onView(withId(R.id.signup_policy_switch)).perform(scrollTo(), click())
+
+	private fun clickSellerSwitch() =
+		onView(withId(R.id.signup_seller_switch)).perform(scrollTo(), click())
 
 	private fun clickSignUpButton() =
 		onView(withId(R.id.signup_signup_btn)).perform(scrollTo(), click())
