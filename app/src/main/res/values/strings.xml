@@ -93,5 +93,7 @@
     <string name="price_card_charges_label_text">Import Charges</string>
     <string name="price_card_divider_desc">Divider Line</string>
     <string name="cart_fragment_label">Your Cart</string>
+    <string name="next_btn_text">Next</string>
+    <string name="edit_btn_text">Edit</string>
 
 </resources>

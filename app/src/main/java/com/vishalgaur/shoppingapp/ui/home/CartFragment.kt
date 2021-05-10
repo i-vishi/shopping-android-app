@@ -25,5 +25,8 @@ class CartFragment: Fragment() {
 	private fun setViews() {
 		binding.loaderLayout.circularLoader.visibility = View.GONE
 		binding.cartAppBar.topAppBar.title = getString(R.string.cart_fragment_label)
+		binding.cartCheckOutBtn.setOnClickListener {
+
+		}
 	}
 }
