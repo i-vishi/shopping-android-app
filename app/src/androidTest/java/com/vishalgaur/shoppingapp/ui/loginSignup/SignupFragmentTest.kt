@@ -13,6 +13,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import androidx.test.platform.app.InstrumentationRegistry
 import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.clickClickableSpan
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -81,16 +82,16 @@ class SignupFragmentTest {
 		clickSignUpButton()
 	}
 
-//    @Test
-//    fun userCanClickLogInText() {
-//        clickLoginText()
-//    }
+	@Test
+	fun userCanClickLogInText() {
+		clickLoginText()
+	}
 
-//    @Test
-//    fun onLoginClick_navigateToLoginFragment() {
-//        clickLoginText()
-//        assertEquals(navController.currentDestination?.id, R.id.SignupFragment)
-//    }
+	@Test
+	fun onLoginClick_navigateToLoginFragment() {
+		clickLoginText()
+		assertEquals(navController.currentDestination?.id, R.id.LoginFragment)
+	}
 
 	private fun insertInNameEditText(name: String) =
 		onView(withId(R.id.signup_name_edit_text)).perform(scrollTo(), clearText(), typeText(name))
@@ -129,10 +130,10 @@ class SignupFragmentTest {
 	private fun clickSignUpButton() =
 		onView(withId(R.id.signup_signup_btn)).perform(scrollTo(), click())
 
-//    private fun clickLoginText() =
-//        onView(withId(R.id.signup_login_text_view)).check(matches(withText(containsString("Log In"))))
-//            .perform(
-//                click()
-//            )
+	private fun clickLoginText() =
+		onView(withId(R.id.signup_login_text_view)).perform(
+			scrollTo(),
+			clickClickableSpan("Log In")
+		)
 
 }
