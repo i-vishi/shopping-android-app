@@ -57,6 +57,15 @@ class ProductDetailsFragment : Fragment() {
 			viewModel = ViewModelProvider(this, viewModelFactory).get(ProductViewModel::class.java)
 		}
 
+		if(viewModel.isSeller()) {
+			binding.proDetailsAddCartBtn.visibility = View.GONE
+		} else {
+			binding.proDetailsAddCartBtn.visibility = View.VISIBLE
+			binding.proDetailsAddCartBtn.setOnClickListener {
+				navigateToCartFragment()
+			}
+		}
+
 		setObservers()
 		return binding.root
 	}
@@ -113,19 +122,10 @@ class ProductDetailsFragment : Fragment() {
 		setShoeSizeButtons()
 		setShoeColorsButtons()
 		binding.proDetailsSpecificsText.text = viewModel.productData.value?.description ?: ""
-
-		if(viewModel.isSeller()) {
-			binding.proDetailsAddCartBtn.visibility = View.GONE
-		} else {
-			binding.proDetailsAddCartBtn.visibility = View.VISIBLE
-			binding.proDetailsAddCartBtn.setOnClickListener {
-				navigateToCartFragment()
-			}
-		}
 	}
 
 	private fun navigateToCartFragment() {
-		findNavController()
+		findNavController().navigate(R.id.action_productDetailsFragment_to_cartFragment)
 	}
 
 	private fun setImagesView() {

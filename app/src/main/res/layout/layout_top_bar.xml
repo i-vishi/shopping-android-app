@@ -18,7 +18,7 @@
         app:navigationIcon="@drawable/ic_outline_arrow_back_24"
         app:navigationIconTint="@color/gray"
         app:title="@string/app_name"
-        app:titleTextAppearance="@style/TextAppearance.MyTheme.Headline6"
+        app:titleTextAppearance="@style/AppBarTitleStyle"
         app:titleTextColor="@color/black" />
 
 

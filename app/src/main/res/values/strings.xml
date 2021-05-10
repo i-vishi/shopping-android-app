@@ -92,5 +92,6 @@
     <string name="price_card_shipping_label_string">Shipping</string>
     <string name="price_card_charges_label_text">Import Charges</string>
     <string name="price_card_divider_desc">Divider Line</string>
+    <string name="cart_fragment_label">Your Cart</string>
 
 </resources>

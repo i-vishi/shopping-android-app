@@ -18,7 +18,7 @@
         android:layout_margin="16dp">
 
         <ImageView
-            android:id="@+id/cart_product_image_view"
+            android:id="@+id/product_image_view"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:background="@drawable/round_outline_rect"
@@ -51,7 +51,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cart_product_image_view"
+            app:layout_constraintTop_toBottomOf="@id/product_image_view"
             tools:text="Item Name name name wofe348" />
 
         <RatingBar

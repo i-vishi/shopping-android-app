@@ -53,5 +53,13 @@
         <argument
             android:name="productId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.home.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart" />
 </navigation>

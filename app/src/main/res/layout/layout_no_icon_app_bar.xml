@@ -16,9 +16,9 @@
         android:background="@color/white"
         app:buttonGravity="center_vertical"
         app:contentInsetStartWithNavigation="0dp"
-        tools:title="@string/app_name"
-        app:titleTextAppearance="@style/TextAppearance.MyTheme.Headline6"
-        app:titleTextColor="@color/black" />
+        app:titleTextAppearance="@style/AppBarTitleStyle"
+        app:titleTextColor="@color/black"
+        tools:title="@string/app_name" />
 
 
 </com.google.android.material.appbar.AppBarLayout>
