@@ -83,5 +83,6 @@
     <string name="search_hint">Search Product...</string>
     <string name="search_placeholder_text">Search Product</string>
     <string name="add_product_insert_error">Error Saving Product!</string>
+    <string name="app_icon_img_desc">App Icon</string>
 
 </resources>
