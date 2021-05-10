@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/product_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardElevation="0dp"
+    app:strokeColor="#CCCCCC"
+    app:strokeWidth="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/price_items_label_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textColor="@color/dark_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Items(3)" />
+
+        <TextView
+            android:id="@+id/price_items_amount_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/price_items_label_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/price_items_label_tv"
+            tools:text="$123.45" />
+
+        <TextView
+            android:id="@+id/price_shipping_label_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/price_card_shipping_label_string"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textColor="@color/dark_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/price_items_label_tv" />
+
+        <TextView
+            android:id="@+id/price_shipping_amount_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/price_shipping_label_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/price_shipping_label_tv"
+            tools:text="$123.45" />
+
+        <TextView
+            android:id="@+id/price_charges_label_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/price_card_charges_label_text"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textColor="@color/dark_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/price_shipping_label_tv" />
+
+        <TextView
+            android:id="@+id/price_charges_amount_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/price_charges_label_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/price_charges_label_tv"
+            tools:text="$123.45" />
+
+        <ImageView
+            android:id="@+id/card_dotted_divider"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginTop="16dp"
+            android:layerType="software"
+            android:contentDescription="@string/price_card_divider_desc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/price_charges_label_tv"
+            app:srcCompat="@drawable/dotted_line_drawable" />
+
+        <TextView
+            android:id="@+id/price_total_label_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/price_card_charges_label_text"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textColor="@color/dark_gray"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_dotted_divider" />
+
+        <TextView
+            android:id="@+id/price_total_amount_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textColor="@color/blue_accent_300"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/price_total_label_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/price_total_label_tv"
+            tools:text="$123.45" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -80,9 +80,17 @@
     <string name="edit_product_btn_text">Save Changes</string>
     <string name="home_app_bar_search_label">Search</string>
     <string name="home_app_bar_filter_label">Filter</string>
-    <string name="search_hint">Search Product...</string>
+    <string name="search_hint">Search Product…</string>
     <string name="search_placeholder_text">Search Product</string>
     <string name="add_product_insert_error">Error Saving Product!</string>
     <string name="app_icon_img_desc">App Icon</string>
+    <string name="pro_details_add_to_cart_btn_text">Add To Cart</string>
+    <string name="pro_details_go_to_cart_btn_text">Go To Cart</string>
+    <string name="pro_details_delete_btn_desc">Remove Product Button</string>
+    <string name="cart_check_out_btn">Check Out</string>
+    <string name="price_card_items_string">Items(%s)</string>
+    <string name="price_card_shipping_label_string">Shipping</string>
+    <string name="price_card_charges_label_text">Import Charges</string>
+    <string name="price_card_divider_desc">Divider Line</string>
 
 </resources>

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.Result
+import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import kotlinx.coroutines.launch
@@ -27,6 +28,7 @@ class ProductViewModel(private val productId: String, application: Application) 
 	val isLiked: LiveData<Boolean> get() = _isLiked
 
 	private val productsRepository = ProductsRepository.getRepository(application)
+	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 
 	init {
 		Log.d(TAG, "init: productId: $productId")
@@ -56,4 +58,6 @@ class ProductViewModel(private val productId: String, application: Application) 
 	fun toggleLikeProduct() {
 		_isLiked.value = !_isLiked.value!!
 	}
+
+	fun isSeller() = sessionManager.isUserSeller()
 }

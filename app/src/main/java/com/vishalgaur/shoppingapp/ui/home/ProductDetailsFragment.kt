@@ -113,6 +113,19 @@ class ProductDetailsFragment : Fragment() {
 		setShoeSizeButtons()
 		setShoeColorsButtons()
 		binding.proDetailsSpecificsText.text = viewModel.productData.value?.description ?: ""
+
+		if(viewModel.isSeller()) {
+			binding.proDetailsAddCartBtn.visibility = View.GONE
+		} else {
+			binding.proDetailsAddCartBtn.visibility = View.VISIBLE
+			binding.proDetailsAddCartBtn.setOnClickListener {
+				navigateToCartFragment()
+			}
+		}
+	}
+
+	private fun navigateToCartFragment() {
+		findNavController()
 	}
 
 	private fun setImagesView() {
