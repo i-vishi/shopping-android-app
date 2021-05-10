@@ -61,5 +61,14 @@
         android:id="@+id/cartFragment"
         android:name="com.vishalgaur.shoppingapp.ui.home.CartFragment"
         android:label="fragment_cart"
-        tools:layout="@layout/fragment_cart" />
+        tools:layout="@layout/fragment_cart" >
+        <action
+            android:id="@+id/action_cartFragment_to_selectAddressFragment"
+            app:destination="@id/selectAddressFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectAddressFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.home.SelectAddressFragment"
+        android:label="fragment_select_address"
+        tools:layout="@layout/fragment_select_address" />
 </navigation>

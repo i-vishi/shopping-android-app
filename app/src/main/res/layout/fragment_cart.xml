@@ -69,6 +69,7 @@
         android:padding="16dp"
         android:text="@string/cart_check_out_btn"
         android:textAllCaps="false"
+        android:translationY="-8dp"
         android:textSize="16sp"
         android:textStyle="bold" />
 

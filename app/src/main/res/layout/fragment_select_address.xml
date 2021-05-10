@@ -58,6 +58,7 @@
         android:padding="16dp"
         android:text="@string/next_btn_text"
         android:textAllCaps="false"
+        android:translationY="-8dp"
         android:textSize="16sp"
         android:textStyle="bold" />
 

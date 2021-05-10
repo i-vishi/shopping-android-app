@@ -187,7 +187,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <Button
-        android:id="@+id/cart_check_out_btn"
+        android:id="@+id/pro_details_add_cart_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"

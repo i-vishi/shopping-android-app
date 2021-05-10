@@ -95,5 +95,7 @@
     <string name="cart_fragment_label">Your Cart</string>
     <string name="next_btn_text">Next</string>
     <string name="edit_btn_text">Edit</string>
+    <string name="ship_to_title">Ship To</string>
+    <string name="add_menu_item_title">Add</string>
 
 </resources>
