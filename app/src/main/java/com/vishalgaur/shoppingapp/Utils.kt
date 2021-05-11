@@ -37,6 +37,15 @@ internal fun isPhoneValid(phone: String): Boolean {
 	}
 }
 
+internal fun isZipCodeValid(zipCode: String): Boolean {
+	val ZIPCODE_PATTERN = Pattern.compile("^\\s*[1-9]\\d{5}\\s*\$")
+	return if (zipCode.isEmpty()) {
+		false
+	} else {
+		ZIPCODE_PATTERN.matcher(zipCode).matches()
+	}
+}
+
 internal fun getRandomString(length: Int, uNum: String, endLength: Int): String {
 	val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
 	fun getStr(l: Int): String = (1..l).map { allowedChars.random() }.joinToString("")
@@ -53,6 +62,11 @@ internal fun getOfferPercentage(costPrice: Double, sellingPrice: Double): Int {
 		return 0
 	val off = ((costPrice - sellingPrice) * 100) / costPrice
 	return off.roundToInt()
+}
+
+internal fun getAddressId(userId: String): String {
+	val uniqueId = UUID.randomUUID().toString()
+	return "$userId-$uniqueId"
 }
 
 

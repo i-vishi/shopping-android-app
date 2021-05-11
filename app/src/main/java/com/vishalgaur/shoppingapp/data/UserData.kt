@@ -38,6 +38,7 @@ data class UserData(
 
 	@Parcelize
 	data class Address(
+		var addressId: String = "",
 		var fName: String = "",
 		var lName: String = "",
 		var countryISOCode: String = "",
@@ -47,9 +48,10 @@ data class UserData(
 		var state: String = "",
 		var zipCode: String = "",
 		var phoneNumber: String = ""
-	) : Parcelable{
+	) : Parcelable {
 		fun toHashMap(): HashMap<String, String> {
 			return hashMapOf(
+				"addressId" to addressId,
 				"fName" to fName,
 				"lName" to lName,
 				"countryISOCode" to countryISOCode,

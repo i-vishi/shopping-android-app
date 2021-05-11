@@ -8,7 +8,6 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +15,6 @@ import com.vishalgaur.shoppingapp.ui.home.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -27,6 +25,8 @@ enum class LoginViewErrors { NONE, ERR_EMPTY, ERR_MOBILE }
 enum class OTPStatus { NONE, CORRECT, WRONG }
 
 enum class AddProductViewErrors { NONE, EMPTY, ERR_PRICE_0 }
+
+enum class AddAddressViewErrors { EMPTY, ERR_FNAME_EMPTY, ERR_LNAME_EMPTY, ERR_STR1_EMPTY, ERR_CITY_EMPTY, ERR_STATE_EMPTY, ERR_ZIP_EMPTY, ERR_ZIP_INVALID, ERR_PHONE_INVALID, ERR_PHONE_EMPTY }
 
 class MyOnFocusChangeListener : View.OnFocusChangeListener {
 	override fun onFocusChange(v: View?, hasFocus: Boolean) {

@@ -108,5 +108,6 @@
     <string name="add_address_state_label_text">State/Province/Region</string>
     <string name="add_address_phone_label_text">Phone Number</string>
     <string name="county_hint">India</string>
+    <string name="add_address_zipcode_label_text">Zip Code</string>
 
 </resources>
