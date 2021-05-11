@@ -130,7 +130,7 @@ class AddEditAddressViewModel(application: Application) : AndroidViewModel(appli
 				} else {
 					_addAddressStatus.value = AddAddressStatus.ERR_ADD
 					if (res is Error) {
-						Log.d(TAG, "onInsertAddress: Error, ${res.exception}")
+						Log.d(TAG, "onInsertAddress: Error, ${res.exception.message}")
 					}
 				}
 			} else {

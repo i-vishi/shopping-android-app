@@ -15,6 +15,7 @@
     <color name="blue_200">#4284ed</color>
     <color name="blue_accent_300">#02d5ee</color>
     <color name="gold">#FFD770</color>
+    <color name="light_gray">#CCCCCC</color>
     <color name="mtrl_textinput_default_box_stroke_color">#cccccc</color>
     <color name="transparent">#00000000</color>
     <color name="blue_shadow_color">#B9DADF</color>

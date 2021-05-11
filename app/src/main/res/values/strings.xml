@@ -109,5 +109,7 @@
     <string name="add_address_phone_label_text">Phone Number</string>
     <string name="county_hint">India</string>
     <string name="add_address_zipcode_label_text">Zip Code</string>
+    <string name="person_name">%s %s</string>
+    <string name="save_address_error_text">Error Saving Address!</string>
 
 </resources>

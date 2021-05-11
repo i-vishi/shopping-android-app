@@ -83,5 +83,10 @@
         <argument
             android:name="isEdit"
             app:argType="boolean" />
+        <action
+            android:id="@+id/action_addEditAddressFragment_to_selectAddressFragment"
+            app:destination="@id/selectAddressFragment"
+            app:popUpTo="@id/selectAddressFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

@@ -13,6 +13,7 @@ import com.vishalgaur.shoppingapp.databinding.FragmentSelectAddressBinding
 class SelectAddressFragment : Fragment() {
 
 	private lateinit var binding: FragmentSelectAddressBinding
+
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
