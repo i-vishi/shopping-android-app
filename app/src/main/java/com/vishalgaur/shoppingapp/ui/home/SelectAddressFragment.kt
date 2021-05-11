@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.databinding.FragmentSelectAddressBinding
 
-class SelectAddressFragment: Fragment() {
+class SelectAddressFragment : Fragment() {
 
 	private lateinit var binding: FragmentSelectAddressBinding
 	override fun onCreateView(
@@ -30,8 +31,8 @@ class SelectAddressFragment: Fragment() {
 			findNavController().navigateUp()
 		}
 		binding.shipToAppBar.topAppBar.setOnMenuItemClickListener { menuItem ->
-			if(menuItem.itemId == R.id.add_item) {
-				navigateToAddAddress()
+			if (menuItem.itemId == R.id.add_item) {
+				navigateToAddAddress(false)
 				true
 			} else {
 				false
@@ -39,7 +40,10 @@ class SelectAddressFragment: Fragment() {
 		}
 	}
 
-	private fun navigateToAddAddress() {
-		findNavController()
+	private fun navigateToAddAddress(isEdit: Boolean) {
+		findNavController().navigate(
+			R.id.action_selectAddressFragment_to_addEditAddressFragment,
+			bundleOf("isEdit" to isEdit)
+		)
 	}
 }

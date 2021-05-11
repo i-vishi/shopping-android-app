@@ -70,5 +70,18 @@
         android:id="@+id/selectAddressFragment"
         android:name="com.vishalgaur.shoppingapp.ui.home.SelectAddressFragment"
         android:label="fragment_select_address"
-        tools:layout="@layout/fragment_select_address" />
+        tools:layout="@layout/fragment_select_address" >
+        <action
+            android:id="@+id/action_selectAddressFragment_to_addEditAddressFragment"
+            app:destination="@id/addEditAddressFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditAddressFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.home.AddEditAddressFragment"
+        android:label="fragment_add_edit_address"
+        tools:layout="@layout/fragment_add_edit_address" >
+        <argument
+            android:name="isEdit"
+            app:argType="boolean" />
+    </fragment>
 </navigation>

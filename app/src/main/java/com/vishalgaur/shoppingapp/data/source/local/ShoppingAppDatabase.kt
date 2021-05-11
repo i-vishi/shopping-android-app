@@ -8,9 +8,10 @@ import androidx.room.TypeConverters
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.ListTypeConverter
+import com.vishalgaur.shoppingapp.data.utils.ObjectListTypeConvertor
 
 @Database(entities = [UserData::class, Product::class], version = 1)
-@TypeConverters(ListTypeConverter::class)
+@TypeConverters(ListTypeConverter::class, ObjectListTypeConvertor::class)
 abstract class ShoppingAppDatabase : RoomDatabase() {
 	abstract fun userDao(): UserDao
 	abstract fun productsDao(): ProductsDao

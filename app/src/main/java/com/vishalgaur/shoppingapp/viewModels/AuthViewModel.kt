@@ -89,6 +89,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 									"+91" + mobile.trim(),
 									email.trim(),
 									pwd1.trim(),
+									ArrayList(),
+									ArrayList(),
 									if (isSeller) UserType.SELLER.name else UserType.CUSTOMER.name
 								)
 							_userData.value = newData
