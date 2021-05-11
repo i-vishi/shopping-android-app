@@ -1,7 +1,6 @@
 package com.vishalgaur.shoppingapp.data.source.remote
 
 import android.util.Log
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -53,6 +52,15 @@ class AuthRemoteDataSource : UserDataSource {
 		usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, mobile)
 			.whereEqualTo(USERS_PWD_FIELD, password).get().await().toObjects(UserData::class.java)
 
+	override suspend fun insertAddress(newAddress: UserData.Address, userId: String) {
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		if (!userRef.isEmpty) {
+			val docId = userRef.documents[0].id
+			usersCollectionRef().document(docId)
+				.update(USERS_ADDRESSES_FIELD, FieldValue.arrayUnion(newAddress.toHashMap()))
+		}
+	}
+
 	override fun updateEmailsAndMobiles(email: String, mobile: String) {
 		allEmailsMobilesRef().update(EMAIL_MOBILE_EMAIL_FIELD, FieldValue.arrayUnion(email))
 		allEmailsMobilesRef().update(EMAIL_MOBILE_MOB_FIELD, FieldValue.arrayUnion(mobile))
@@ -65,6 +73,7 @@ class AuthRemoteDataSource : UserDataSource {
 	companion object {
 		private const val USERS_COLLECTION = "users"
 		private const val USERS_ID_FIELD = "userId"
+		private const val USERS_ADDRESSES_FIELD = "addresses"
 		private const val USERS_MOBILE_FIELD = "mobile"
 		private const val USERS_PWD_FIELD = "password"
 		private const val EMAIL_MOBILE_DOC = "emailAndMobiles"

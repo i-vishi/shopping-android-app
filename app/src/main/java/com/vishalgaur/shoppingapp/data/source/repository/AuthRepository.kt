@@ -9,6 +9,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.vishalgaur.shoppingapp.data.Result
+import com.vishalgaur.shoppingapp.data.Result.Error
+import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.source.UserDataSource
@@ -17,8 +20,10 @@ import com.vishalgaur.shoppingapp.data.source.local.UserLocalDataSource
 import com.vishalgaur.shoppingapp.data.source.remote.AuthRemoteDataSource
 import com.vishalgaur.shoppingapp.data.utils.SignUpErrors
 import com.vishalgaur.shoppingapp.data.utils.UserType
+import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 class AuthRepository(
 	private val userLocalDataSource: UserDataSource,
@@ -177,5 +182,31 @@ class AuthRepository(
 			}
 		}
 
+	}
+
+	suspend fun insertAddress(newAddress: UserData.Address, userId: String): Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
+				Log.d(TAG, "onInsertAddress: adding address to remote source")
+				authRemoteDataSource.insertAddress(newAddress, userId)
+			}
+			val localRes = async {
+				Log.d(TAG, "onInsertAddress: updating address to local source")
+				val userRes = authRemoteDataSource.getUserById(userId)
+				if (userRes is Success) {
+					userLocalDataSource.clearUser()
+					userLocalDataSource.addUser(userRes.data!!)
+				} else if (userRes is Error) {
+					throw userRes.exception
+				}
+			}
+			try {
+				remoteRes.await()
+				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
+			}
+		}
 	}
 }

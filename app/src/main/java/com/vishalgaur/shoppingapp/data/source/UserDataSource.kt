@@ -22,6 +22,8 @@ interface UserDataSource {
 		return mutableListOf()
 	}
 
+	suspend fun insertAddress(newAddress: UserData.Address, userId: String){}
+
 	suspend fun clearUser() {}
 
 	suspend fun getUserByMobile(phoneNumber: String): UserData? {

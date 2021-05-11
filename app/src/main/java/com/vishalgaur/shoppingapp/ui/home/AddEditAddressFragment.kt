@@ -151,7 +151,7 @@ class AddEditAddressFragment : Fragment() {
 
 	private fun setCountrySelectTextField() {
 		val isoCountriesMap = getISOCountriesMap()
-		val countries = isoCountriesMap.values.toSet().toList()
+		val countries = isoCountriesMap.values.toSortedSet().toList()
 		val defaultCountry = Locale.getDefault().displayCountry
 		val countryAdapter = ArrayAdapter(requireContext(), R.layout.country_list_item, countries)
 		(binding.addressCountryEditText as? AutoCompleteTextView)?.let {
@@ -161,6 +161,13 @@ class AddEditAddressFragment : Fragment() {
 	}
 
 	private fun modifyErrors(errList: List<AddAddressViewErrors>) {
+		binding.fNameOutlinedTextField.error = null
+		binding.lNameOutlinedTextField.error = null
+		binding.streetAddOutlinedTextField.error = null
+		binding.cityOutlinedTextField.error = null
+		binding.stateOutlinedTextField.error = null
+		binding.zipCodeOutlinedTextField.error = null
+		binding.phoneOutlinedTextField.error = null
 		errList.forEach { err ->
 			when (err) {
 				AddAddressViewErrors.EMPTY -> setEditTextsError(true)
@@ -181,7 +188,7 @@ class AddEditAddressFragment : Fragment() {
 				AddAddressViewErrors.ERR_PHONE_INVALID ->
 					setEditTextsError(false, binding.phoneOutlinedTextField)
 				AddAddressViewErrors.ERR_PHONE_EMPTY ->
-					setEditTextsError(false, binding.phoneOutlinedTextField)
+					setEditTextsError(true, binding.phoneOutlinedTextField)
 			}
 		}
 	}
