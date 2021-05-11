@@ -97,5 +97,16 @@
     <string name="edit_btn_text">Edit</string>
     <string name="ship_to_title">Ship To</string>
     <string name="add_menu_item_title">Add</string>
+    <string name="add_address_btn_text">Add Address</string>
+    <string name="price_card_total_label_text">Total Price</string>
+    <string name="add_address_country_label_text">Country or region</string>
+    <string name="add_address_first_name_label_text">First Name</string>
+    <string name="add_address_last_name_label_text">Last Name</string>
+    <string name="add_address_street_add_label_text">Street Address</string>
+    <string name="add_address_street_add2_label_text">Street Address 2 (Optional)</string>
+    <string name="add_address_city_label_text">City</string>
+    <string name="add_address_state_label_text">State/Province/Region</string>
+    <string name="add_address_phone_label_text">Phone Number</string>
+    <string name="county_hint">India</string>
 
 </resources>

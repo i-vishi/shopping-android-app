@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.R
@@ -27,7 +26,6 @@ class SelectAddressFragment: Fragment() {
 	private fun setViews() {
 		binding.shipToAppBar.topAppBar.title = getString(R.string.ship_to_title)
 		binding.shipToAppBar.topAppBar.inflateMenu(R.menu.menu_with_add_only)
-		binding.shipToAppBar.topAppBar.overflowIcon?.setTint(ContextCompat.getColor(requireContext(), R.color.blue_accent_300))
 		binding.shipToAppBar.topAppBar.setNavigationOnClickListener {
 			findNavController().navigateUp()
 		}

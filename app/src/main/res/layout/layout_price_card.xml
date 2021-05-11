@@ -98,7 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/price_card_charges_label_text"
+            android:text="@string/price_card_total_label_text"
             android:textAppearance="@style/TextAppearance.MyTheme.Body1"
             android:textColor="@color/dark_gray"
             android:textStyle="bold"

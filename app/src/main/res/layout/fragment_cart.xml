@@ -64,13 +64,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
         android:backgroundTint="@color/blue_accent_300"
         android:padding="16dp"
         android:text="@string/cart_check_out_btn"
         android:textAllCaps="false"
-        android:translationY="-8dp"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:translationY="-8dp" />
 
 </RelativeLayout>
