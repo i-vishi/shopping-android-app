@@ -122,8 +122,11 @@ class AuthRepository(
 		}
 	}
 
-	fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential, isUserLoggedIn: MutableLiveData<Boolean>) {
-		 firebaseAuth.signInWithCredential(credential)
+	fun signInWithPhoneAuthCredential(
+		credential: PhoneAuthCredential,
+		isUserLoggedIn: MutableLiveData<Boolean>
+	) {
+		firebaseAuth.signInWithCredential(credential)
 			.addOnCompleteListener { task ->
 				if (task.isSuccessful) {
 					Log.d(TAG, "signInWithCredential:success")
@@ -161,11 +164,14 @@ class AuthRepository(
 	private suspend fun updateUserInLocalSource(phoneNumber: String?) {
 		coroutineScope {
 			launch {
-				userLocalDataSource.clearUser()
 				if (phoneNumber != null) {
-					val uData = authRemoteDataSource.getUserByMobile(phoneNumber)
-					if (uData != null) {
-						userLocalDataSource.addUser(uData)
+					val getUser = userLocalDataSource.getUserByMobile(phoneNumber)
+					if (getUser == null) {
+						userLocalDataSource.clearUser()
+						val uData = authRemoteDataSource.getUserByMobile(phoneNumber)
+						if (uData != null) {
+							userLocalDataSource.addUser(uData)
+						}
 					}
 				}
 			}

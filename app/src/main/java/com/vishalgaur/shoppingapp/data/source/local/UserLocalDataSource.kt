@@ -1,5 +1,6 @@
 package com.vishalgaur.shoppingapp.data.source.local
 
+import android.util.Log
 import com.vishalgaur.shoppingapp.data.Result
 import com.vishalgaur.shoppingapp.data.Result.*
 import com.vishalgaur.shoppingapp.data.UserData
@@ -31,6 +32,21 @@ class UserLocalDataSource internal constructor(
 				}
 			} catch (e: Exception) {
 				return@withContext Error(e)
+			}
+		}
+
+	override suspend fun getUserByMobile(phoneNumber: String): UserData? =
+		withContext(ioDispatcher) {
+			try {
+				val uData = userDao.getByMobile(phoneNumber)
+				if (uData != null) {
+					return@withContext uData
+				} else {
+					return@withContext null
+				}
+			} catch (e: Exception) {
+				Log.d("UserLocalSource", "onGetUser: Error Occurred, $e")
+				return@withContext null
 			}
 		}
 

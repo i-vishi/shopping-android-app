@@ -8,6 +8,7 @@ import com.vishalgaur.shoppingapp.data.Result
 import com.vishalgaur.shoppingapp.data.Result.Error
 import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
+import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
 import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import kotlinx.coroutines.async
@@ -18,6 +19,7 @@ private const val TAG = "HomeViewModel"
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 	private val productsRepository = ProductsRepository.getRepository(application)
+	private val authRepository = AuthRepository.getRepository(application)
 
 	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 	private val currentUser = sessionManager.getUserIdFromSession()
@@ -39,6 +41,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
 
 	init {
+		viewModelScope.launch {
+			authRepository.refreshData()
+		}
 		if (isUserASeller)
 			getProductsByOwner()
 		else

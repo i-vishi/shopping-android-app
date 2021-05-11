@@ -38,6 +38,8 @@ class SelectAddressFragment : Fragment() {
 				false
 			}
 		}
+
+		binding.loaderLayout.circularLoader.visibility = View.GONE
 	}
 
 	private fun navigateToAddAddress(isEdit: Boolean) {
