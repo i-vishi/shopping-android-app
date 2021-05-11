@@ -59,6 +59,23 @@ class AddEditAddressViewModel(application: Application) : AndroidViewModel(appli
 
 	fun setAddressData(addressId: String) {
 		_addressId.value = addressId
+		viewModelScope.launch {
+			Log.d(TAG, "onLoad: Getting Address Data")
+			_dataStatus.value = StoreDataStatus.LOADING
+			val res = async { authRepository.getAddressesByUserId(currentUser!!) }
+			val addRes = res.await()
+			if (addRes is Success) {
+				val addData = addRes.data?.find { address -> address.addressId == addressId }
+				_addressData.value = addData ?: UserData.Address()
+				Log.d(TAG, "onLoad: Success")
+				_dataStatus.value = StoreDataStatus.DONE
+			} else {
+				_dataStatus.value = StoreDataStatus.ERROR
+				_addressData.value = UserData.Address()
+				if (addRes is Error)
+					Log.d(TAG, "onLoad: Error, ${addRes.exception.message}")
+			}
+		}
 	}
 
 	fun submitAddress(

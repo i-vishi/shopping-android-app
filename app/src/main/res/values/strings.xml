@@ -98,6 +98,7 @@
     <string name="ship_to_title">Ship To</string>
     <string name="add_menu_item_title">Add</string>
     <string name="add_address_btn_text">Add Address</string>
+    <string name="save_address_btn_text">Save Address</string>
     <string name="price_card_total_label_text">Total Price</string>
     <string name="add_address_country_label_text">Country or region</string>
     <string name="add_address_first_name_label_text">First Name</string>
@@ -111,5 +112,6 @@
     <string name="add_address_zipcode_label_text">Zip Code</string>
     <string name="person_name">%s %s</string>
     <string name="save_address_error_text">Error Saving Address!</string>
+    <string name="ship_to_error_empty">Please select an address!</string>
 
 </resources>

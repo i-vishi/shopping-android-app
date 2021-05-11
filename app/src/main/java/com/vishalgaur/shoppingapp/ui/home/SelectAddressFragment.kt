@@ -20,6 +20,7 @@ class SelectAddressFragment : Fragment() {
 
 	private lateinit var binding: FragmentSelectAddressBinding
 	private val orderViewModel: OrderViewModel by activityViewModels()
+	private lateinit var addressAdapter: AddressAdapter
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -41,10 +42,14 @@ class SelectAddressFragment : Fragment() {
 
 		orderViewModel.userAddresses.observe(viewLifecycleOwner) { addressList ->
 			if (context != null) {
-				val addressAdapter = AddressAdapter(requireContext(), addressList ?: emptyList())
+				addressAdapter = AddressAdapter(requireContext(), addressList ?: emptyList())
 				addressAdapter.onClickListener = object : AddressAdapter.OnClickListener {
-					override fun onEditClick(addressTd: String) {
+					override fun onEditClick(addressId: String) {
 						Log.d(TAG, "onEditAddress: initiated")
+						findNavController().navigate(
+							R.id.action_selectAddressFragment_to_addEditAddressFragment,
+							bundleOf("isEdit" to true, "addressId" to addressId)
+						)
 					}
 
 					override fun onDeleteClick(addressId: String) {
@@ -80,6 +85,7 @@ class SelectAddressFragment : Fragment() {
 		binding.shipToAppBar.topAppBar.setNavigationOnClickListener {
 			findNavController().navigateUp()
 		}
+		binding.shipToErrorTextView.visibility = View.GONE
 		binding.shipToAppBar.topAppBar.setOnMenuItemClickListener { menuItem ->
 			if (menuItem.itemId == R.id.add_item) {
 				navigateToAddAddress(false)
@@ -90,6 +96,20 @@ class SelectAddressFragment : Fragment() {
 		}
 
 		binding.loaderLayout.circularLoader.visibility = View.GONE
+		binding.shipToNextBtn.setOnClickListener {
+			navigateToPaymentAddress(addressAdapter.lastCheckedAddress)
+		}
+	}
+
+	private fun navigateToPaymentAddress(addressId: String?) {
+		if (addressId != null) {
+			Log.d(TAG, "navigate to Payment")
+			binding.shipToErrorTextView.visibility = View.GONE
+
+		} else {
+			Log.d(TAG, "error = select one address")
+			binding.shipToErrorTextView.visibility = View.VISIBLE
+		}
 	}
 
 	private fun navigateToAddAddress(isEdit: Boolean) {

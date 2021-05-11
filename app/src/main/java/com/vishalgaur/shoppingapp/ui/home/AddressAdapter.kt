@@ -22,7 +22,7 @@ class AddressAdapter(private val context: Context, addresses: List<UserData.Addr
 	lateinit var onClickListener: OnClickListener
 	private val data: List<UserData.Address> = addresses
 
-	private var lastCheckedAddress: String? = null
+	var lastCheckedAddress: String? = null
 	private var lastCheckedCard: MaterialCardView? = null
 	var selectedAddressPos = -1
 
@@ -63,7 +63,7 @@ class AddressAdapter(private val context: Context, addresses: List<UserData.Addr
 	override fun getItemCount(): Int = data.size
 
 	interface OnClickListener {
-		fun onEditClick(addressTd: String)
+		fun onEditClick(addressId: String)
 		fun onDeleteClick(addressId: String)
 	}
 

@@ -107,7 +107,10 @@ class AddEditAddressFragment : Fragment() {
 					setLoaderState()
 					makeToast("Error getting Data, Try Again!")
 				}
-				StoreDataStatus.DONE -> setLoaderState()
+				StoreDataStatus.DONE -> {
+					fillDataInViews()
+					setLoaderState()
+				}
 				else -> {
 					setLoaderState()
 				}
@@ -130,6 +133,23 @@ class AddEditAddressFragment : Fragment() {
 				}
 				else -> setLoaderState()
 			}
+		}
+	}
+
+	private fun fillDataInViews() {
+		viewModel.addressData.value?.let { address ->
+			binding.addAddressTopAppBar.topAppBar.title = "Edit Address"
+			val countryName = getISOCountriesMap()[address.countryISOCode]
+			binding.addressCountryEditText.setText(countryName, false)
+			binding.addressFirstNameEditText.setText(address.fName)
+			binding.addressLastNameEditText.setText(address.lName)
+			binding.addressStreetAddEditText.setText(address.streetAddress)
+			binding.addressStreetAdd2EditText.setText(address.streetAddress2)
+			binding.addressCityEditText.setText(address.city)
+			binding.addressStateEditText.setText(address.state)
+			binding.addressZipcodeEditText.setText(address.zipCode)
+			binding.addressPhoneEditText.setText(address.phoneNumber.substringAfter("+91"))
+			binding.addAddressSaveBtn.setText(R.string.save_address_btn_text)
 		}
 	}
 

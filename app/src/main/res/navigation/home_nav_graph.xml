@@ -83,6 +83,10 @@
         <argument
             android:name="isEdit"
             app:argType="boolean" />
+        <argument
+            android:name="addressId"
+            app:argType="string"
+            app:nullable="true" />
         <action
             android:id="@+id/action_addEditAddressFragment_to_selectAddressFragment"
             app:destination="@id/selectAddressFragment"
