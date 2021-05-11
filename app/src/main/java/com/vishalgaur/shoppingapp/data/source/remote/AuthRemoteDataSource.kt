@@ -22,11 +22,11 @@ class AuthRemoteDataSource : UserDataSource {
 
 
 	override suspend fun getUserById(userId: String): Result<UserData?> {
-		val resRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get()
-		return if (resRef.isSuccessful) {
-			Success(resRef.result?.documents?.get(0)?.toObject(UserData::class.java))
+		val resRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		return if (!resRef.isEmpty) {
+			Success(resRef.toObjects(UserData::class.java)[0])
 		} else {
-			Error(Exception(resRef.exception))
+			Error(Exception("User Not Found!"))
 		}
 	}
 
@@ -44,6 +44,16 @@ class AuthRemoteDataSource : UserDataSource {
 	override suspend fun getUserByMobile(phoneNumber: String): UserData =
 		usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, phoneNumber).get().await()
 			.toObjects(UserData::class.java)[0]
+
+	override suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?> {
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		return if (!userRef.isEmpty) {
+			val userData = userRef.documents[0].toObject(UserData::class.java)
+			Success(userData!!.addresses)
+		} else {
+			Error(Exception("User Not Found!"))
+		}
+	}
 
 	override suspend fun getUserByMobileAndPassword(
 		mobile: String,

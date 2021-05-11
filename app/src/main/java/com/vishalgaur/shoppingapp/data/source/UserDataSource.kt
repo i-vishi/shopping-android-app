@@ -29,4 +29,6 @@ interface UserDataSource {
 	suspend fun getUserByMobile(phoneNumber: String): UserData? {
 		return null
 	}
+
+	suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?>
 }

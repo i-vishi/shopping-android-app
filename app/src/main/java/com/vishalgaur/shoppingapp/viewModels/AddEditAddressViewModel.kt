@@ -86,7 +86,6 @@ class AddEditAddressViewModel(application: Application) : AndroidViewModel(appli
 		else if (!isPhoneValid(phoneNumber)) errorsList.add(AddAddressViewErrors.ERR_PHONE_INVALID)
 
 		_errorStatus.value = errorsList
-		Log.d(TAG, "errors = ${_errorStatus.value}")
 
 		if (errorsList.isEmpty()) {
 			val addressId = if (_isEdit.value == true) _addressId.value!! else
@@ -104,7 +103,6 @@ class AddEditAddressViewModel(application: Application) : AndroidViewModel(appli
 				"+91" + phoneNumber.trim()
 			)
 			newAddressData.value = newAddress
-			Log.d(TAG, "address = $newAddress")
 			if (_isEdit.value == true) {
 				updateAddress()
 			} else {

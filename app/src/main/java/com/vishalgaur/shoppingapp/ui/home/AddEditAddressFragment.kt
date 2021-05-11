@@ -93,7 +93,6 @@ class AddEditAddressFragment : Fragment() {
 
 	private fun setObservers() {
 		viewModel.errorStatus.observe(viewLifecycleOwner) { errList ->
-			Log.d(TAG, "errors = $errList")
 			if (errList.isEmpty()) {
 				binding.addAddressErrorTextView.visibility = View.GONE
 			} else {

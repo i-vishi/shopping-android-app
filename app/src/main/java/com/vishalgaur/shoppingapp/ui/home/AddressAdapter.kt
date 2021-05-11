@@ -2,6 +2,8 @@ package com.vishalgaur.shoppingapp.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,6 +13,8 @@ import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.getISOCountriesMap
 import com.vishalgaur.shoppingapp.databinding.LayoutAddressCardBinding
+
+private const val TAG = "AddressAdapter"
 
 class AddressAdapter(private val context: Context, addresses: List<UserData.Address>) :
 	RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
@@ -66,17 +70,8 @@ class AddressAdapter(private val context: Context, addresses: List<UserData.Addr
 	@SuppressLint("ResourceAsColor")
 	private fun onCardClick(position: Int, addressTd: String, card: MaterialCardView) {
 		if (addressTd != lastCheckedAddress) {
-			lastCheckedCard?.apply {
-				isChecked = false
-				strokeWidth = TypedValue.applyDimension(
-					TypedValue.COMPLEX_UNIT_DIP,
-					1F,
-					resources.displayMetrics
-				).toInt()
-				strokeColor = R.color.light_gray
-			}
 			card.apply {
-				strokeColor = R.color.blue_accent_300
+				setStrokeColor(ColorStateList.valueOf(R.color.blue_accent_300))
 				isChecked = true
 				strokeWidth = TypedValue.applyDimension(
 					TypedValue.COMPLEX_UNIT_DIP,
@@ -84,9 +79,20 @@ class AddressAdapter(private val context: Context, addresses: List<UserData.Addr
 					resources.displayMetrics
 				).toInt()
 			}
+			lastCheckedCard?.apply {
+				setStrokeColor(ColorStateList.valueOf(R.color.light_gray))
+				isChecked = false
+				strokeWidth = TypedValue.applyDimension(
+					TypedValue.COMPLEX_UNIT_DIP,
+					1F,
+					resources.displayMetrics
+				).toInt()
+			}
+
 			lastCheckedAddress = addressTd
 			lastCheckedCard = card
 			selectedAddressPos = position
+			Log.d(TAG, "onCardClick: selected address = $addressTd")
 		}
 	}
 

@@ -209,4 +209,8 @@ class AuthRepository(
 			}
 		}
 	}
+
+	suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?> {
+		return userLocalDataSource.getAddressesByUserId(userId)
+	}
 }
