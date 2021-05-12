@@ -109,6 +109,8 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 		Log.d(TAG, "toggling Like: $productId")
 	}
 
+	fun getItemsCount() = _cartItems.value?.size
+
 	private suspend fun getAllProductsInCart() {
 		viewModelScope.launch {
 			_dataStatus.value = StoreDataStatus.LOADING
@@ -131,13 +133,13 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 					}
 				}
 			}
+			_priceList.value = priceMap
+			_cartProducts.value = proList
 			if (!res) {
 				_dataStatus.value = StoreDataStatus.ERROR
 			} else {
 				_dataStatus.value = StoreDataStatus.DONE
 			}
-			_priceList.value = priceMap
-			_cartProducts.value = proList
 		}
 	}
 }

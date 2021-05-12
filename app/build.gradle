@@ -58,6 +58,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
 
+    // RecyclerView - beta with ConcatAdapter (previously MergeAdapter)
+    implementation "androidx.recyclerview:recyclerview:1.2.0"
+
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"

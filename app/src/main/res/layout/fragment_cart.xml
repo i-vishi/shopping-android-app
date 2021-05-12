@@ -44,16 +44,16 @@
             tools:itemCount="2"
             tools:listitem="@layout/cart_list_item" />
 
-        <include
-            android:id="@+id/cart_price_card_layout"
-            layout="@layout/layout_price_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cart_products_recycler_view" />
+<!--        <include-->
+<!--            android:id="@+id/cart_price_card_layout"-->
+<!--            layout="@layout/layout_price_card"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/cart_products_recycler_view" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
