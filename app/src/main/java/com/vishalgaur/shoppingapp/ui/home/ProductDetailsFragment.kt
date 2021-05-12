@@ -1,5 +1,6 @@
 package com.vishalgaur.shoppingapp.ui.home
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -71,7 +72,7 @@ class ProductDetailsFragment : Fragment() {
 					navigateToCartFragment()
 				} else {
 					onAddToCart()
-					if (viewModel.errorStatus.value == AddItemErrors.NONE) {
+					if (viewModel.errorStatus.value?.isEmpty() == true) {
 						viewModel.addItemStatus.observe(viewLifecycleOwner) { status ->
 							if (status == AddObjectStatus.DONE) {
 								makeToast("Product Added To Cart")
@@ -118,8 +119,24 @@ class ProductDetailsFragment : Fragment() {
 			}
 		}
 		viewModel.errorStatus.observe(viewLifecycleOwner) {
-			if(it == AddItemErrors.ERROR){
-				makeToast("Please Select Size and Color.")
+			if (it.isNotEmpty())
+				modifyErrors(it)
+		}
+	}
+
+	@SuppressLint("ResourceAsColor")
+	private fun modifyErrors(errList: List<AddItemErrors>) {
+		makeToast("Please Select Size and Color.")
+		if (!errList.isNullOrEmpty()) {
+			errList.forEach { err ->
+				when (err) {
+					AddItemErrors.ERROR_SIZE -> {
+						binding.proDetailsSelectSizeLabel.setTextColor(R.color.red_600)
+					}
+					AddItemErrors.ERROR_COLOR -> {
+						binding.proDetailsSelectColorLabel.setTextColor(R.color.red_600)
+					}
+				}
 			}
 		}
 	}

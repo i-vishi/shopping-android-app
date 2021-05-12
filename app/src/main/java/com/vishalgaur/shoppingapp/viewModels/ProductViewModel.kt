@@ -31,8 +31,8 @@ class ProductViewModel(private val productId: String, application: Application) 
 	private val _dataStatus = MutableLiveData<StoreDataStatus>()
 	val dataStatus: LiveData<StoreDataStatus> get() = _dataStatus
 
-	private val _errorStatus = MutableLiveData<AddItemErrors>()
-	val errorStatus: LiveData<AddItemErrors> get() = _errorStatus
+	private val _errorStatus = MutableLiveData<List<AddItemErrors>>()
+	val errorStatus: LiveData<List<AddItemErrors>> get() = _errorStatus
 
 	private val _addItemStatus = MutableLiveData<AddObjectStatus?>()
 	val addItemStatus: LiveData<AddObjectStatus?> get() = _addItemStatus
@@ -49,7 +49,7 @@ class ProductViewModel(private val productId: String, application: Application) 
 	private val currentUserId = sessionManager.getUserIdFromSession()
 
 	init {
-		_errorStatus.value = AddItemErrors.NONE
+		_errorStatus.value = emptyList()
 		Log.d(TAG, "init: productId: $productId")
 		getProductDetails()
 		checkIfInCart()
@@ -101,10 +101,11 @@ class ProductViewModel(private val productId: String, application: Application) 
 	}
 
 	fun addToCart(size: Int?, color: String?) {
-		if (size == null || color.isNullOrBlank()) {
-			_errorStatus.value = AddItemErrors.ERROR
-		} else {
-			_errorStatus.value = AddItemErrors.NONE
+		val errList = mutableListOf<AddItemErrors>()
+		if (size == null) errList.add(AddItemErrors.ERROR_SIZE)
+		if (color.isNullOrBlank()) errList.add(AddItemErrors.ERROR_COLOR)
+
+		if (errList.isEmpty()) {
 			val itemId = UUID.randomUUID().toString()
 			val newItem = UserData.CartItem(
 				itemId, productId, productData.value!!.owner, 1, color, size

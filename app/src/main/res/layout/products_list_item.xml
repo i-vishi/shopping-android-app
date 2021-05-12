@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp">
+        android:layout_margin="12dp">
 
         <ImageView
             android:id="@+id/product_image_view"
@@ -72,6 +72,7 @@
             android:layout_marginTop="16dp"
             android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
             android:textColor="@color/blue_accent_300"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_rating_bar"
