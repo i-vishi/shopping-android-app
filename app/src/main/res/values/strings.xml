@@ -100,6 +100,7 @@
     <string name="add_address_btn_text">Add Address</string>
     <string name="save_address_btn_text">Save Address</string>
     <string name="price_card_total_label_text">Total Price</string>
+    <string name="price_text">$%s</string>
     <string name="add_address_country_label_text">Country or region</string>
     <string name="add_address_first_name_label_text">First Name</string>
     <string name="add_address_last_name_label_text">Last Name</string>
