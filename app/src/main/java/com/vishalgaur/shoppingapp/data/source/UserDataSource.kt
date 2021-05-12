@@ -24,6 +24,7 @@ interface UserDataSource {
 
 	suspend fun insertAddress(newAddress: UserData.Address, userId: String){}
 
+	suspend fun updateAddress(newAddress: UserData.Address, userId: String) {}
 	suspend fun clearUser() {}
 
 	suspend fun getUserByMobile(phoneNumber: String): UserData? {

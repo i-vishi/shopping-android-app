@@ -181,7 +181,17 @@ class AuthRepository(
 				}
 			}
 		}
+	}
 
+	suspend fun hardRefreshUserData() {
+		userLocalDataSource.clearUser()
+		val mobile = sessionManager.getPhoneNumber()
+		if (mobile != null) {
+			val uData = authRemoteDataSource.getUserByMobile(mobile)
+			if (uData != null) {
+				userLocalDataSource.addUser(uData)
+			}
+		}
 	}
 
 	suspend fun insertAddress(newAddress: UserData.Address, userId: String): Result<Boolean> {
@@ -193,6 +203,33 @@ class AuthRepository(
 			val localRes = async {
 				Log.d(TAG, "onInsertAddress: updating address to local source")
 				val userRes = authRemoteDataSource.getUserById(userId)
+				if (userRes is Success) {
+					userLocalDataSource.clearUser()
+					userLocalDataSource.addUser(userRes.data!!)
+				} else if (userRes is Error) {
+					throw userRes.exception
+				}
+			}
+			try {
+				remoteRes.await()
+				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
+			}
+		}
+	}
+
+	suspend fun updateAddress(newAddress: UserData.Address, userId: String): Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
+				Log.d(TAG, "onUpdateAddress: updating address on remote source")
+				authRemoteDataSource.updateAddress(newAddress, userId)
+			}
+			val localRes = async {
+				Log.d(TAG, "onUpdateAddress: updating address on local source")
+				val userRes =
+					authRemoteDataSource.getUserById(userId)
 				if (userRes is Success) {
 					userLocalDataSource.clearUser()
 					userLocalDataSource.addUser(userRes.data!!)

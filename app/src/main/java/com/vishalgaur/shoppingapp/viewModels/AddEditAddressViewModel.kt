@@ -129,6 +129,27 @@ class AddEditAddressViewModel(application: Application) : AndroidViewModel(appli
 	}
 
 	private fun updateAddress() {
+		viewModelScope.launch {
+			if (newAddressData.value != null && _addressData.value != null) {
+				_addAddressStatus.value = AddAddressStatus.ADDING
+				val updateRes = async {
+					authRepository.updateAddress(newAddressData.value!!, currentUser!!)
+				}
+				val res = updateRes.await()
+				if (res is Success) {
+					authRepository.hardRefreshUserData()
+					Log.d(TAG, "onUpdate: Success")
+					_addAddressStatus.value = AddAddressStatus.DONE
+				} else {
+					Log.d(TAG, "onUpdate: Some error occurred!")
+					_addAddressStatus.value = AddAddressStatus.ERR_ADD
+					if (res is Error)
+						Log.d(TAG, "onUpdate: Error, ${res.exception}")
+				}
+			} else {
+				Log.d(TAG, "Address Null, Cannot Update!")
+			}
+		}
 	}
 
 	private fun insertAddress() {
@@ -140,6 +161,7 @@ class AddEditAddressViewModel(application: Application) : AndroidViewModel(appli
 				}
 				val res = deferredRes.await()
 				if (res is Success) {
+					authRepository.hardRefreshUserData()
 					Log.d(TAG, "onInsertAddress: Success")
 					_addAddressStatus.value = AddAddressStatus.DONE
 				} else {

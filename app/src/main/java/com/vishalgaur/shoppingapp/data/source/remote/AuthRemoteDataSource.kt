@@ -71,6 +71,21 @@ class AuthRemoteDataSource : UserDataSource {
 		}
 	}
 
+	override suspend fun updateAddress(newAddress: UserData.Address, userId: String) {
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		if (!userRef.isEmpty) {
+			val docId = userRef.documents[0].id
+			val oldAddressList =
+				userRef.documents[0].toObject(UserData::class.java)?.addresses?.toMutableList()
+			val idx = oldAddressList?.indexOfFirst { it.addressId == newAddress.addressId } ?: -1
+			if (idx != -1) {
+				oldAddressList?.set(idx, newAddress)
+			}
+			usersCollectionRef().document(docId)
+				.update(USERS_ADDRESSES_FIELD, oldAddressList?.map { it.toHashMap() })
+		}
+	}
+
 	override fun updateEmailsAndMobiles(email: String, mobile: String) {
 		allEmailsMobilesRef().update(EMAIL_MOBILE_EMAIL_FIELD, FieldValue.arrayUnion(email))
 		allEmailsMobilesRef().update(EMAIL_MOBILE_MOB_FIELD, FieldValue.arrayUnion(mobile))
