@@ -8,7 +8,7 @@ import com.vishalgaur.shoppingapp.data.UserData
 class ObjectListTypeConvertor {
 	@TypeConverter
 	fun stringToAddressObjectList(data: String?): List<UserData.Address> {
-		if (data == null) {
+		if (data.isNullOrBlank()) {
 			return emptyList()
 		}
 		val listType = object : TypeToken<List<UserData.Address>>() {}.type
@@ -28,7 +28,7 @@ class ObjectListTypeConvertor {
 
 	@TypeConverter
 	fun stringToCartObjectList(data: String?): List<UserData.CartItem> {
-		if (data == null) {
+		if (data.isNullOrBlank()) {
 			return emptyList()
 		}
 		val listType = object : TypeToken<List<UserData.CartItem>>() {}.type

@@ -113,5 +113,6 @@
     <string name="person_name">%s %s</string>
     <string name="save_address_error_text">Error Saving Address!</string>
     <string name="ship_to_error_empty">Please select an address!</string>
+    <string name="delete_address_message_text">On clicking Delete, Address will be deleted premanently!</string>
 
 </resources>

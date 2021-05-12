@@ -12,6 +12,7 @@ import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
 import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 private const val TAG = "OrderViewModel"
@@ -44,6 +45,17 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 				_dataStatus.value = StoreDataStatus.ERROR
 				if (res is Error)
 					Log.d(TAG, "Getting Addresses: Error Occurred, ${res.exception.message}")
+			}
+		}
+	}
+
+	fun deleteAddress(addressId: String) {
+		viewModelScope.launch {
+			val delRes = async { authRepository.deleteAddressById(addressId, currentUser!!) }
+			when (val res = delRes.await()) {
+				is Success -> Log.d(TAG, "onDeleteAddress: Success")
+				is Error -> Log.d(TAG, "onDeleteAddress: Error, ${res.exception}")
+				else -> Log.d(TAG, "onDeleteAddress: Some error occurred!")
 			}
 		}
 	}

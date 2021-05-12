@@ -91,6 +91,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 									pwd1.trim(),
 									ArrayList(),
 									ArrayList(),
+									ArrayList(),
 									if (isSeller) UserType.SELLER.name else UserType.CUSTOMER.name
 								)
 							_userData.value = newData

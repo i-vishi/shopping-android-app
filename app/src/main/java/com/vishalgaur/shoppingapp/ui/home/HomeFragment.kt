@@ -186,7 +186,7 @@ class HomeFragment : Fragment() {
 			MaterialAlertDialogBuilder(it)
 				.setTitle(getString(R.string.delete_dialog_title_text))
 				.setMessage(getString(R.string.delete_dialog_message_text, productName))
-				.setNeutralButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
+				.setNegativeButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
 					dialog.cancel()
 				}
 				.setPositiveButton(getString(R.string.delete_dialog_delete_btn_text)) { dialog, _ ->

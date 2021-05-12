@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentSelectAddressBinding
@@ -46,14 +47,12 @@ class SelectAddressFragment : Fragment() {
 				addressAdapter.onClickListener = object : AddressAdapter.OnClickListener {
 					override fun onEditClick(addressId: String) {
 						Log.d(TAG, "onEditAddress: initiated")
-						findNavController().navigate(
-							R.id.action_selectAddressFragment_to_addEditAddressFragment,
-							bundleOf("isEdit" to true, "addressId" to addressId)
-						)
+						navigateToAddEditAddress(true, addressId)
 					}
 
 					override fun onDeleteClick(addressId: String) {
 						Log.d(TAG, "onDeleteAddress: initiated")
+						showDeleteDialog(addressId)
 					}
 				}
 
@@ -88,7 +87,7 @@ class SelectAddressFragment : Fragment() {
 		binding.shipToErrorTextView.visibility = View.GONE
 		binding.shipToAppBar.topAppBar.setOnMenuItemClickListener { menuItem ->
 			if (menuItem.itemId == R.id.add_item) {
-				navigateToAddAddress(false)
+				navigateToAddEditAddress(false)
 				true
 			} else {
 				false
@@ -98,6 +97,22 @@ class SelectAddressFragment : Fragment() {
 		binding.loaderLayout.circularLoader.visibility = View.GONE
 		binding.shipToNextBtn.setOnClickListener {
 			navigateToPaymentAddress(addressAdapter.lastCheckedAddress)
+		}
+	}
+
+	private fun showDeleteDialog(addressId: String) {
+		context?.let {
+			MaterialAlertDialogBuilder(it)
+				.setTitle(getString(R.string.delete_dialog_title_text))
+				.setMessage(getString(R.string.delete_address_message_text))
+				.setNeutralButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
+					dialog.cancel()
+				}
+				.setPositiveButton(getString(R.string.delete_dialog_delete_btn_text)) { dialog, _ ->
+					orderViewModel.deleteAddress(addressId)
+					dialog.cancel()
+				}
+				.show()
 		}
 	}
 
@@ -112,10 +127,10 @@ class SelectAddressFragment : Fragment() {
 		}
 	}
 
-	private fun navigateToAddAddress(isEdit: Boolean) {
+	private fun navigateToAddEditAddress(isEdit: Boolean, addressId: String? = null) {
 		findNavController().navigate(
 			R.id.action_selectAddressFragment_to_addEditAddressFragment,
-			bundleOf("isEdit" to isEdit)
+			bundleOf("isEdit" to isEdit, "addressId" to addressId)
 		)
 	}
 }
