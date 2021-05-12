@@ -28,6 +28,8 @@ enum class AddProductViewErrors { NONE, EMPTY, ERR_PRICE_0 }
 
 enum class AddAddressViewErrors { EMPTY, ERR_FNAME_EMPTY, ERR_LNAME_EMPTY, ERR_STR1_EMPTY, ERR_CITY_EMPTY, ERR_STATE_EMPTY, ERR_ZIP_EMPTY, ERR_ZIP_INVALID, ERR_PHONE_INVALID, ERR_PHONE_EMPTY }
 
+enum class AddItemErrors {NONE, ERROR}
+
 class MyOnFocusChangeListener : View.OnFocusChangeListener {
 	override fun onFocusChange(v: View?, hasFocus: Boolean) {
 		if (v != null) {

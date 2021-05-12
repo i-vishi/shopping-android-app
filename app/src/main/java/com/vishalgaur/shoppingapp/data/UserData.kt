@@ -76,6 +76,8 @@ data class UserData(
 		var color: String?,
 		var size: Int?
 	) : Parcelable {
+		constructor() : this("", "", "", 0, "NA", -1)
+
 		fun toHashMap(): HashMap<String, Any> {
 			val hashMap = hashMapOf<String, Any>()
 			hashMap["itemId"] = itemId

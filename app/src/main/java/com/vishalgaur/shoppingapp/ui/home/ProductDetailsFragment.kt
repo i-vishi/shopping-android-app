@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
@@ -19,10 +20,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.data.utils.AddObjectStatus
 import com.vishalgaur.shoppingapp.data.utils.ShoeColors
 import com.vishalgaur.shoppingapp.data.utils.ShoeSizes
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentProductDetailsBinding
+import com.vishalgaur.shoppingapp.ui.AddItemErrors
 import com.vishalgaur.shoppingapp.ui.DotsIndicatorDecoration
 import com.vishalgaur.shoppingapp.viewModels.ProductViewModel
 
@@ -43,6 +46,8 @@ class ProductDetailsFragment : Fragment() {
 
 	private lateinit var binding: FragmentProductDetailsBinding
 	private lateinit var viewModel: ProductViewModel
+	private var selectedSize: Int? = null
+	private var selectedColor: String? = null
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -57,12 +62,24 @@ class ProductDetailsFragment : Fragment() {
 			viewModel = ViewModelProvider(this, viewModelFactory).get(ProductViewModel::class.java)
 		}
 
-		if(viewModel.isSeller()) {
+		if (viewModel.isSeller()) {
 			binding.proDetailsAddCartBtn.visibility = View.GONE
 		} else {
 			binding.proDetailsAddCartBtn.visibility = View.VISIBLE
 			binding.proDetailsAddCartBtn.setOnClickListener {
-				navigateToCartFragment()
+				if (viewModel.isItemInCart.value == true) {
+					navigateToCartFragment()
+				} else {
+					onAddToCart()
+					if (viewModel.errorStatus.value == AddItemErrors.NONE) {
+						viewModel.addItemStatus.observe(viewLifecycleOwner) { status ->
+							if (status == AddObjectStatus.DONE) {
+								makeToast("Product Added To Cart")
+								viewModel.checkIfInCart()
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -89,6 +106,20 @@ class ProductDetailsFragment : Fragment() {
 				binding.proDetailsLikeBtn.setImageResource(R.drawable.liked_heart_drawable)
 			} else {
 				binding.proDetailsLikeBtn.setImageResource(R.drawable.heart_icon_drawable)
+			}
+		}
+		viewModel.isItemInCart.observe(viewLifecycleOwner) {
+			if (it == true) {
+				binding.proDetailsAddCartBtn.text =
+					getString(R.string.pro_details_go_to_cart_btn_text)
+			} else {
+				binding.proDetailsAddCartBtn.text =
+					getString(R.string.pro_details_add_to_cart_btn_text)
+			}
+		}
+		viewModel.errorStatus.observe(viewLifecycleOwner) {
+			if(it == AddItemErrors.ERROR){
+				makeToast("Please Select Size and Color.")
 			}
 		}
 	}
@@ -124,8 +155,16 @@ class ProductDetailsFragment : Fragment() {
 		binding.proDetailsSpecificsText.text = viewModel.productData.value?.description ?: ""
 	}
 
+	private fun onAddToCart() {
+		viewModel.addToCart(selectedSize, selectedColor)
+	}
+
 	private fun navigateToCartFragment() {
 		findNavController().navigate(R.id.action_productDetailsFragment_to_cartFragment)
+	}
+
+	private fun makeToast(text: String) {
+		Toast.makeText(context, text, Toast.LENGTH_LONG).show()
 	}
 
 	private fun setImagesView() {
@@ -168,6 +207,12 @@ class ProductDetailsFragment : Fragment() {
 					radioButton.setTypeface(null, Typeface.BOLD)
 					radioButton.textAlignment = View.TEXT_ALIGNMENT_CENTER
 					radioButton.text = "$v"
+					radioButton.setOnCheckedChangeListener { buttonView, isChecked ->
+						val tag = buttonView.tag.toString().toInt()
+						if (isChecked) {
+							selectedSize = tag
+						}
+					}
 					addView(radioButton)
 				}
 			}
@@ -197,6 +242,12 @@ class ProductDetailsFragment : Fragment() {
 						radioButton.backgroundTintMode = PorterDuff.Mode.MULTIPLY
 					} else {
 						radioButton.backgroundTintMode = PorterDuff.Mode.ADD
+					}
+					radioButton.setOnCheckedChangeListener { buttonView, isChecked ->
+						val tag = buttonView.tag.toString()
+						if (isChecked) {
+							selectedColor = tag
+						}
 					}
 					addView(radioButton)
 					ind++

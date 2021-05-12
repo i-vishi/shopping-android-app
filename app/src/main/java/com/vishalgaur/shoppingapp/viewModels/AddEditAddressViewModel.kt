@@ -12,7 +12,7 @@ import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
-import com.vishalgaur.shoppingapp.data.utils.AddAddressStatus
+import com.vishalgaur.shoppingapp.data.utils.AddObjectStatus
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.getAddressId
 import com.vishalgaur.shoppingapp.isPhoneValid
@@ -40,8 +40,8 @@ class AddEditAddressViewModel(application: Application) : AndroidViewModel(appli
 	private val _errorStatus = MutableLiveData<List<AddAddressViewErrors>>()
 	val errorStatus: LiveData<List<AddAddressViewErrors>> get() = _errorStatus
 
-	private val _addAddressStatus = MutableLiveData<AddAddressStatus?>()
-	val addAddressStatus: LiveData<AddAddressStatus?> get() = _addAddressStatus
+	private val _addAddressStatus = MutableLiveData<AddObjectStatus?>()
+	val addAddressStatus: LiveData<AddObjectStatus?> get() = _addAddressStatus
 
 	private val _addressData = MutableLiveData<UserData.Address>()
 	val addressData: LiveData<UserData.Address> get() = _addressData
@@ -131,7 +131,7 @@ class AddEditAddressViewModel(application: Application) : AndroidViewModel(appli
 	private fun updateAddress() {
 		viewModelScope.launch {
 			if (newAddressData.value != null && _addressData.value != null) {
-				_addAddressStatus.value = AddAddressStatus.ADDING
+				_addAddressStatus.value = AddObjectStatus.ADDING
 				val updateRes = async {
 					authRepository.updateAddress(newAddressData.value!!, currentUser!!)
 				}
@@ -139,10 +139,10 @@ class AddEditAddressViewModel(application: Application) : AndroidViewModel(appli
 				if (res is Success) {
 					authRepository.hardRefreshUserData()
 					Log.d(TAG, "onUpdate: Success")
-					_addAddressStatus.value = AddAddressStatus.DONE
+					_addAddressStatus.value = AddObjectStatus.DONE
 				} else {
 					Log.d(TAG, "onUpdate: Some error occurred!")
-					_addAddressStatus.value = AddAddressStatus.ERR_ADD
+					_addAddressStatus.value = AddObjectStatus.ERR_ADD
 					if (res is Error)
 						Log.d(TAG, "onUpdate: Error, ${res.exception}")
 				}
@@ -155,7 +155,7 @@ class AddEditAddressViewModel(application: Application) : AndroidViewModel(appli
 	private fun insertAddress() {
 		viewModelScope.launch {
 			if (newAddressData.value != null) {
-				_addAddressStatus.value = AddAddressStatus.ADDING
+				_addAddressStatus.value = AddObjectStatus.ADDING
 				val deferredRes = async {
 					authRepository.insertAddress(newAddressData.value!!, currentUser!!)
 				}
@@ -163,9 +163,9 @@ class AddEditAddressViewModel(application: Application) : AndroidViewModel(appli
 				if (res is Success) {
 					authRepository.hardRefreshUserData()
 					Log.d(TAG, "onInsertAddress: Success")
-					_addAddressStatus.value = AddAddressStatus.DONE
+					_addAddressStatus.value = AddObjectStatus.DONE
 				} else {
-					_addAddressStatus.value = AddAddressStatus.ERR_ADD
+					_addAddressStatus.value = AddObjectStatus.ERR_ADD
 					if (res is Error) {
 						Log.d(TAG, "onInsertAddress: Error, ${res.exception.message}")
 					}

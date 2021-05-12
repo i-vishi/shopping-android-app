@@ -8,7 +8,7 @@ enum class LogInErrors { NONE, LERR }
 
 enum class AddProductErrors { NONE, ERR_ADD, ERR_ADD_IMG, ADDING }
 
-enum class AddAddressStatus { DONE, ERR_ADD, ADDING }
+enum class AddObjectStatus { DONE, ERR_ADD, ADDING }
 
 enum class UserType { CUSTOMER, SELLER }
 

@@ -13,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.vishalgaur.shoppingapp.R
-import com.vishalgaur.shoppingapp.data.utils.AddAddressStatus
+import com.vishalgaur.shoppingapp.data.utils.AddObjectStatus
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.data.utils.getISOCountriesMap
 import com.vishalgaur.shoppingapp.databinding.FragmentAddEditAddressBinding
@@ -83,7 +83,7 @@ class AddEditAddressFragment : Fragment() {
 			onAddAddress()
 			if (viewModel.errorStatus.value?.isEmpty() == true) {
 				viewModel.addAddressStatus.observe(viewLifecycleOwner) { status ->
-					if (status == AddAddressStatus.DONE) {
+					if (status == AddObjectStatus.DONE) {
 						findNavController().navigate(R.id.action_addEditAddressFragment_to_selectAddressFragment)
 					}
 				}
@@ -119,15 +119,15 @@ class AddEditAddressFragment : Fragment() {
 
 		viewModel.addAddressStatus.observe(viewLifecycleOwner) { status ->
 			when (status) {
-				AddAddressStatus.DONE -> setLoaderState()
-				AddAddressStatus.ERR_ADD -> {
+				AddObjectStatus.DONE -> setLoaderState()
+				AddObjectStatus.ERR_ADD -> {
 					setLoaderState()
 					binding.addAddressErrorTextView.visibility = View.VISIBLE
 					binding.addAddressErrorTextView.text =
 						getString(R.string.save_address_error_text)
 					makeToast(getString(R.string.save_address_error_text))
 				}
-				AddAddressStatus.ADDING -> {
+				AddObjectStatus.ADDING -> {
 					binding.loaderLayout.circularLoader.bringToFront()
 					setLoaderState(View.VISIBLE)
 				}
