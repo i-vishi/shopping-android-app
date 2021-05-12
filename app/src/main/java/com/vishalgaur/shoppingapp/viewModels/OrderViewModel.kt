@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.Result.Error
 import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
@@ -35,6 +36,9 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 	private val _priceList = MutableLiveData<Map<String, Double>>()
 	val priceList: LiveData<Map<String, Double>> get() = _priceList
 
+	private val _cartProducts = MutableLiveData<List<Product>>()
+	val cartProducts: LiveData<List<Product>> get() = _cartProducts
+
 	private val _dataStatus = MutableLiveData<StoreDataStatus>()
 	val dataStatus: LiveData<StoreDataStatus> get() = _dataStatus
 
@@ -52,7 +56,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 				val uData = userRes.data
 				if (uData != null) {
 					_cartItems.value = uData.cart
-					val priceRes = async { getAllItemsPrice() }
+					val priceRes = async { getAllProductsInCart() }
 					priceRes.await()
 					Log.d(TAG, "Getting Cart Items: Success ${_priceList.value}")
 				} else {
@@ -101,10 +105,15 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 		return _priceList.value?.values?.sum() ?: 0.0
 	}
 
-	private suspend fun getAllItemsPrice() {
+	fun toggleLikeProduct(productId: String) {
+		Log.d(TAG, "toggling Like: $productId")
+	}
+
+	private suspend fun getAllProductsInCart() {
 		viewModelScope.launch {
 			_dataStatus.value = StoreDataStatus.LOADING
 			val priceMap = mutableMapOf<String, Double>()
+			val proList = mutableListOf<Product>()
 			var res = true
 			_cartItems.value?.let { itemList ->
 				itemList.forEach label@{ item ->
@@ -114,6 +123,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 					val proRes = productDeferredRes.await()
 					if (proRes is Success) {
 						val proData = proRes.data
+						proList.add(proData)
 						priceMap[item.itemId] = proData.price
 					} else {
 						res = false
@@ -127,6 +137,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 				_dataStatus.value = StoreDataStatus.DONE
 			}
 			_priceList.value = priceMap
+			_cartProducts.value = proList
 		}
 	}
 }

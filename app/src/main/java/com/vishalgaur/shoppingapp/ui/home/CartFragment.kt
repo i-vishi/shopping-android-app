@@ -1,6 +1,7 @@
 package com.vishalgaur.shoppingapp.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,15 +9,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentCartBinding
 import com.vishalgaur.shoppingapp.viewModels.OrderViewModel
 
+private const val TAG = "CartFragment"
+
 class CartFragment : Fragment() {
 
 	private lateinit var binding: FragmentCartBinding
 	private val orderViewModel: OrderViewModel by activityViewModels()
+	private lateinit var itemsAdapter: CartItemAdapter
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -37,7 +42,35 @@ class CartFragment : Fragment() {
 		orderViewModel.getCartItems()
 
 		orderViewModel.cartItems.observe(viewLifecycleOwner) { itemList ->
-			// set adapter and recyclerview
+			if (context != null) {
+				val items = itemList ?: emptyList()
+				val likesList = emptyList<String>()
+				val proList = orderViewModel.cartProducts.value ?: emptyList()
+				itemsAdapter = CartItemAdapter(requireContext(), items, proList, likesList)
+				itemsAdapter.onClickListener = object : CartItemAdapter.OnClickListener {
+					override fun onLikeClick(productId: String) {
+						Log.d(TAG, "onToggle Like Clicked")
+						orderViewModel.toggleLikeProduct(productId)
+					}
+
+					override fun onDeleteClick(itemId: String) {
+						Log.d(TAG, "onDelete: initiated")
+					}
+
+					override fun onPlusClick() {
+						Log.d(TAG, "onPlus: Increasing quantity")
+					}
+
+					override fun onMinusClick() {
+						Log.d(TAG, "onMinus: decreasing quantity")
+					}
+				}
+
+				binding.cartProductsRecyclerView.apply {
+					adapter = itemsAdapter
+					clipToPadding = false
+				}
+			}
 
 			if (itemList.isNotEmpty()) {
 				setPriceCard(itemList)
