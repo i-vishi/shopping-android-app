@@ -22,9 +22,18 @@ interface UserDataSource {
 		return mutableListOf()
 	}
 
-	suspend fun insertAddress(newAddress: UserData.Address, userId: String){}
+	suspend fun insertAddress(newAddress: UserData.Address, userId: String) {}
 
 	suspend fun updateAddress(newAddress: UserData.Address, userId: String) {}
+
+	suspend fun deleteAddress(addressId: String, userId: String) {}
+
+	suspend fun insertCartItem(newItem: UserData.CartItem, userId: String) {}
+
+	suspend fun updateCartItem(item: UserData.CartItem, userId: String) {}
+
+	suspend fun deleteCartItem(itemId: String, userId: String) {}
+
 	suspend fun clearUser() {}
 
 	suspend fun getUserByMobile(phoneNumber: String): UserData? {

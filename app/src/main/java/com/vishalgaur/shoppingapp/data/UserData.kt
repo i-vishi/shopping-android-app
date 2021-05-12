@@ -20,6 +20,8 @@ data class UserData(
 	var likes: List<String> = ArrayList(),
 	@TypeConverters(ObjectListTypeConvertor::class)
 	var addresses: List<Address> = ArrayList(),
+	@TypeConverters(ObjectListTypeConvertor::class)
+	var cart: List<CartItem> = ArrayList(),
 	var userType: String = UserType.CUSTOMER.name
 ) : Parcelable {
 	fun toHashMap(): HashMap<String, Any> {
@@ -62,6 +64,29 @@ data class UserData(
 				"zipCode" to zipCode,
 				"phoneNumber" to phoneNumber
 			)
+		}
+	}
+
+	@Parcelize
+	data class CartItem(
+		var itemId: String = "",
+		var productId: String = "",
+		var ownerId: String = "",
+		var quantity: Int = 0,
+		var color: String?,
+		var size: Int?
+	) : Parcelable {
+		fun toHashMap(): HashMap<String, Any> {
+			val hashMap = hashMapOf<String, Any>()
+			hashMap["itemId"] = itemId
+			hashMap["productId"] = productId
+			hashMap["ownerId"] = ownerId
+			hashMap["quantity"] = quantity
+			if (color != null)
+				hashMap["color"] = color!!
+			if (size != null)
+				hashMap["size"] = size!!
+			return hashMap
 		}
 	}
 }

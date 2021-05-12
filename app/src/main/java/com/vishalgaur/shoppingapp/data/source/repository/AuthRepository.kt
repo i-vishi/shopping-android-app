@@ -247,6 +247,119 @@ class AuthRepository(
 		}
 	}
 
+	suspend fun deleteAddressById(addressId: String, userId: String): Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
+				Log.d(TAG, "onDelete: deleting address from remote source")
+				authRemoteDataSource.deleteAddress(addressId, userId)
+			}
+			val localRes = async {
+				Log.d(TAG, "onDelete: deleting address from local source")
+				val userRes =
+					authRemoteDataSource.getUserById(userId)
+				if (userRes is Success) {
+					userLocalDataSource.clearUser()
+					userLocalDataSource.addUser(userRes.data!!)
+				} else if (userRes is Error) {
+					throw userRes.exception
+				}
+			}
+			try {
+				remoteRes.await()
+				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
+			}
+		}
+	}
+
+	suspend fun insertCartItemByUserId(
+		cartItem: UserData.CartItem,
+		userId: String
+	): Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
+				Log.d(TAG, "onInsertCartItem: adding item to remote source")
+				authRemoteDataSource.insertCartItem(cartItem, userId)
+			}
+			val localRes = async {
+				Log.d(TAG, "onInsertCartItem: updating item to local source")
+				val userRes = authRemoteDataSource.getUserById(userId)
+				if (userRes is Success) {
+					userLocalDataSource.clearUser()
+					userLocalDataSource.addUser(userRes.data!!)
+				} else if (userRes is Error) {
+					throw userRes.exception
+				}
+			}
+			try {
+				remoteRes.await()
+				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
+			}
+		}
+	}
+
+	suspend fun updateCartItemByUserId(
+		cartItem: UserData.CartItem,
+		userId: String
+	): Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
+				Log.d(TAG, "onUpdateCartItem: updating cart item on remote source")
+				authRemoteDataSource.updateCartItem(cartItem, userId)
+			}
+			val localRes = async {
+				Log.d(TAG, "onUpdateCartItem: updating cart item on local source")
+				val userRes =
+					authRemoteDataSource.getUserById(userId)
+				if (userRes is Success) {
+					userLocalDataSource.clearUser()
+					userLocalDataSource.addUser(userRes.data!!)
+				} else if (userRes is Error) {
+					throw userRes.exception
+				}
+			}
+			try {
+				remoteRes.await()
+				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
+			}
+		}
+	}
+
+	suspend fun deleteCartItemByUserId(itemId: String, userId: String): Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
+				Log.d(TAG, "onDelete: deleting cart item from remote source")
+				authRemoteDataSource.deleteCartItem(itemId, userId)
+			}
+			val localRes = async {
+				Log.d(TAG, "onDelete: deleting cart item from local source")
+				val userRes =
+					authRemoteDataSource.getUserById(userId)
+				if (userRes is Success) {
+					userLocalDataSource.clearUser()
+					userLocalDataSource.addUser(userRes.data!!)
+				} else if (userRes is Error) {
+					throw userRes.exception
+				}
+			}
+			try {
+				remoteRes.await()
+				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
+			}
+		}
+	}
+
 	suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?> {
 		return userLocalDataSource.getAddressesByUserId(userId)
 	}

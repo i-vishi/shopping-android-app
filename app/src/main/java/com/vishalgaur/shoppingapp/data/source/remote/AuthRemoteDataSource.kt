@@ -86,6 +86,60 @@ class AuthRemoteDataSource : UserDataSource {
 		}
 	}
 
+	override suspend fun deleteAddress(addressId: String, userId: String) {
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		if (!userRef.isEmpty) {
+			val docId = userRef.documents[0].id
+			val oldAddressList =
+				userRef.documents[0].toObject(UserData::class.java)?.addresses?.toMutableList()
+			val idx = oldAddressList?.indexOfFirst { it.addressId == addressId } ?: -1
+			if (idx != -1) {
+				oldAddressList?.removeAt(idx)
+			}
+			usersCollectionRef().document(docId)
+				.update(USERS_ADDRESSES_FIELD, oldAddressList?.map { it.toHashMap() })
+		}
+	}
+
+	override suspend fun insertCartItem(newItem: UserData.CartItem, userId: String) {
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		if (!userRef.isEmpty) {
+			val docId = userRef.documents[0].id
+			usersCollectionRef().document(docId)
+				.update(USERS_CART_FIELD, FieldValue.arrayUnion(newItem.toHashMap()))
+		}
+	}
+
+	override suspend fun updateCartItem(item: UserData.CartItem, userId: String) {
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		if (!userRef.isEmpty) {
+			val docId = userRef.documents[0].id
+			val oldCart =
+				userRef.documents[0].toObject(UserData::class.java)?.cart?.toMutableList()
+			val idx = oldCart?.indexOfFirst { it.itemId == item.itemId } ?: -1
+			if (idx != -1) {
+				oldCart?.set(idx, item)
+			}
+			usersCollectionRef().document(docId)
+				.update(USERS_CART_FIELD, oldCart?.map { it.toHashMap() })
+		}
+	}
+
+	override suspend fun deleteCartItem(itemId: String, userId: String) {
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		if (!userRef.isEmpty) {
+			val docId = userRef.documents[0].id
+			val oldCart =
+				userRef.documents[0].toObject(UserData::class.java)?.cart?.toMutableList()
+			val idx = oldCart?.indexOfFirst { it.itemId == itemId } ?: -1
+			if (idx != -1) {
+				oldCart?.removeAt(idx)
+			}
+			usersCollectionRef().document(docId)
+				.update(USERS_CART_FIELD, oldCart?.map { it.toHashMap() })
+		}
+	}
+
 	override fun updateEmailsAndMobiles(email: String, mobile: String) {
 		allEmailsMobilesRef().update(EMAIL_MOBILE_EMAIL_FIELD, FieldValue.arrayUnion(email))
 		allEmailsMobilesRef().update(EMAIL_MOBILE_MOB_FIELD, FieldValue.arrayUnion(mobile))
@@ -99,6 +153,7 @@ class AuthRemoteDataSource : UserDataSource {
 		private const val USERS_COLLECTION = "users"
 		private const val USERS_ID_FIELD = "userId"
 		private const val USERS_ADDRESSES_FIELD = "addresses"
+		private const val USERS_CART_FIELD = "cart"
 		private const val USERS_MOBILE_FIELD = "mobile"
 		private const val USERS_PWD_FIELD = "password"
 		private const val EMAIL_MOBILE_DOC = "emailAndMobiles"
