@@ -46,8 +46,11 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 	val dataStatus: LiveData<StoreDataStatus> get() = _dataStatus
 
 	init {
-		getUserLikes()
-		getCartItems()
+		viewModelScope.launch {
+			authRepository.hardRefreshUserData()
+			getUserLikes()
+			getCartItems()
+		}
 	}
 
 	fun getCartItems() {

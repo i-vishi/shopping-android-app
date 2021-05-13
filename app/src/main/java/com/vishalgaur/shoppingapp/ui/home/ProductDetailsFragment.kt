@@ -83,7 +83,6 @@ class ProductDetailsFragment : Fragment() {
 				}
 			}
 		}
-
 		setObservers()
 		return binding.root
 	}
@@ -93,12 +92,12 @@ class ProductDetailsFragment : Fragment() {
 			when (it) {
 				StoreDataStatus.DONE -> {
 					binding.loaderLayout.circularLoader.visibility = View.GONE
-					binding.proDetailsScrollView.visibility = View.VISIBLE
+					binding.proDetailsLayout.visibility = View.VISIBLE
 					setViews()
 				}
 				else -> {
+					binding.proDetailsLayout.visibility = View.GONE
 					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
-					binding.proDetailsScrollView.visibility = View.GONE
 				}
 			}
 		}

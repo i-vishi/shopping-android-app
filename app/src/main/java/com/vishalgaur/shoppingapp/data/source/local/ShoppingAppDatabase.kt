@@ -10,7 +10,7 @@ import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.ListTypeConverter
 import com.vishalgaur.shoppingapp.data.utils.ObjectListTypeConvertor
 
-@Database(entities = [UserData::class, Product::class], version = 1)
+@Database(entities = [UserData::class, Product::class], version = 2)
 @TypeConverters(ListTypeConverter::class, ObjectListTypeConvertor::class)
 abstract class ShoppingAppDatabase : RoomDatabase() {
 	abstract fun userDao(): UserDao

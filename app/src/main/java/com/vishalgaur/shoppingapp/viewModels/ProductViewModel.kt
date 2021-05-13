@@ -50,10 +50,14 @@ class ProductViewModel(private val productId: String, application: Application) 
 
 	init {
 		_errorStatus.value = emptyList()
-		Log.d(TAG, "init: productId: $productId")
-		getProductDetails()
-		checkIfInCart()
-		_isLiked.value = false
+		viewModelScope.launch {
+			authRepository.hardRefreshUserData()
+			Log.d(TAG, "init: productId: $productId")
+			getProductDetails()
+			checkIfInCart()
+			setLike()
+		}
+
 	}
 
 	private fun getProductDetails() {
@@ -71,6 +75,20 @@ class ProductViewModel(private val productId: String, application: Application) 
 			} catch (e: Exception) {
 				_productData.value = Product()
 				_dataStatus.value = StoreDataStatus.ERROR
+			}
+		}
+	}
+
+	private fun setLike() {
+		viewModelScope.launch {
+			val res = authRepository.getLikesByUserId(currentUserId!!)
+			if (res is Success) {
+				val userLikes = res.data ?: emptyList()
+				_isLiked.value = userLikes.contains(productId)
+				Log.d(TAG, "Getting Likes: Success")
+			} else {
+				if (res is Error)
+					Log.d(TAG, "Getting Likes: Error Occurred, ${res.exception.message}")
 			}
 		}
 	}
