@@ -42,7 +42,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 	init {
 		viewModelScope.launch {
-			authRepository.refreshData()
+			authRepository.hardRefreshUserData()
 		}
 		if (isUserASeller)
 			getProductsByOwner()

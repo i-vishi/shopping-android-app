@@ -50,7 +50,10 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 		Log.d(TAG, "Getting Cart Items")
 		_dataStatus.value = StoreDataStatus.LOADING
 		viewModelScope.launch {
-			val deferredRes = async { authRepository.getUserData(currentUser!!) }
+			val deferredRes = async {
+				authRepository.hardRefreshUserData()
+				authRepository.getUserData(currentUser!!)
+			}
 			val userRes = deferredRes.await()
 			if (userRes is Success) {
 				val uData = userRes.data
@@ -110,6 +113,60 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 	}
 
 	fun getItemsCount() = _cartItems.value?.size
+
+	fun setQuantityOfItem(itemId: String, value: Int) {
+		viewModelScope.launch {
+			_dataStatus.value = StoreDataStatus.LOADING
+			var cartList: MutableList<UserData.CartItem>
+			_cartItems.value?.let { items ->
+				val item = items.find { it.itemId == itemId }
+				val itemPos = items.indexOfFirst { it.itemId == itemId }
+				cartList = items.toMutableList()
+				if (item != null) {
+					item.quantity = item.quantity + value
+					val deferredRes = async {
+						authRepository.updateCartItemByUserId(item, currentUser!!)
+					}
+					val res = deferredRes.await()
+					if (res is Success) {
+						cartList[itemPos] = item
+						_cartItems.value = cartList
+						_dataStatus.value = StoreDataStatus.DONE
+					} else {
+						_dataStatus.value = StoreDataStatus.ERROR
+						if (res is Error)
+							Log.d(TAG, "onUpdateQuantity: Error Occurred: ${res.exception.message}")
+					}
+				}
+			}
+		}
+	}
+
+	fun deleteItemFromCart(itemId: String) {
+		viewModelScope.launch {
+			_dataStatus.value = StoreDataStatus.LOADING
+			var cartList: MutableList<UserData.CartItem>
+			_cartItems.value?.let { items ->
+				val itemPos = items.indexOfFirst { it.itemId == itemId }
+				val proId = items.find { it.itemId == itemId }?.productId
+				cartList = items.toMutableList()
+				val deferredRes = async {
+					authRepository.deleteCartItemByUserId(itemId, currentUser!!)
+				}
+				val res = deferredRes.await()
+				if (res is Success) {
+					cartList.removeAt(itemPos)
+					_cartItems.value = cartList
+					val priceRes = async { getAllProductsInCart() }
+					priceRes.await()
+				} else {
+					_dataStatus.value = StoreDataStatus.ERROR
+					if (res is Error)
+						Log.d(TAG, "onUpdateQuantity: Error Occurred: ${res.exception.message}")
+				}
+			}
+		}
+	}
 
 	private suspend fun getAllProductsInCart() {
 		viewModelScope.launch {

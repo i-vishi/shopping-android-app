@@ -34,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
+            android:overScrollMode="never"
             android:padding="8dp"
             app:flow_horizontalAlign="center"
             app:flow_verticalAlign="center"

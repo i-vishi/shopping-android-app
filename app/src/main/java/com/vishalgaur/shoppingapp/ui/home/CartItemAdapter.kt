@@ -35,7 +35,7 @@ class CartItemAdapter(
 					.into(binding.productImageView)
 				binding.productImageView.clipToOutline = true
 			}
-			binding.cartProductQuantityTextBtn.text = itemData.quantity.toString()
+			binding.cartProductQuantityTextView.text = itemData.quantity.toString()
 
 			if (likesList.contains(proData.productId)) {
 				binding.cartProductLikeBtn.setImageResource(R.drawable.liked_heart_drawable)
@@ -50,10 +50,10 @@ class CartItemAdapter(
 				onClickListener.onDeleteClick(itemData.itemId)
 			}
 			binding.cartProductPlusBtn.setOnClickListener {
-				onClickListener.onPlusClick()
+				onClickListener.onPlusClick(itemData.itemId)
 			}
 			binding.cartProductMinusBtn.setOnClickListener {
-				onClickListener.onMinusClick()
+				onClickListener.onMinusClick(itemData.itemId, itemData.quantity)
 			}
 
 		}
@@ -76,7 +76,7 @@ class CartItemAdapter(
 	interface OnClickListener {
 		fun onLikeClick(productId: String)
 		fun onDeleteClick(itemId: String)
-		fun onPlusClick()
-		fun onMinusClick()
+		fun onPlusClick(itemId: String)
+		fun onMinusClick(itemId: String, currQuantity: Int)
 	}
 }

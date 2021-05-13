@@ -166,8 +166,10 @@ class HomeFragment : Fragment() {
 				StoreDataStatus.LOADING -> {
 					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
+					binding.productsRecyclerView.visibility = View.GONE
 				}
 				else -> {
+					binding.productsRecyclerView.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
 					binding.loaderLayout.circularLoader.visibility = View.GONE
 				}

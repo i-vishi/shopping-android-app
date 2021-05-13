@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
@@ -43,10 +44,11 @@ class CartFragment : Fragment() {
 
 		orderViewModel.getCartItems()
 
-		orderViewModel.cartItems.observe(viewLifecycleOwner) { itemList ->
+		orderViewModel.cartProducts.observe(viewLifecycleOwner) { itemList ->
 			if (context != null) {
 				if (itemList.isNotEmpty()) {
-					setItemsAdapter(itemList)
+					val cartItems = orderViewModel.cartItems.value
+					setItemsAdapter(cartItems)
 					val concatAdapter = ConcatAdapter(
 						itemsAdapter,
 						PriceCardAdapter()
@@ -73,14 +75,17 @@ class CartFragment : Fragment() {
 			}
 		}
 		orderViewModel.priceList.observe(viewLifecycleOwner) {
-			orderViewModel.cartItems.value?.let {
-				setItemsAdapter(it)
-				val concatAdapter = ConcatAdapter(
-					itemsAdapter,
-					PriceCardAdapter()
-				)
-				binding.cartProductsRecyclerView.adapter = concatAdapter
+			if (it.isNotEmpty()) {
+				orderViewModel.cartItems.value?.let { items ->
+					setItemsAdapter(items)
+					val concatAdapter = ConcatAdapter(
+						itemsAdapter,
+						PriceCardAdapter()
+					)
+					binding.cartProductsRecyclerView.adapter = concatAdapter
+				}
 			}
+
 		}
 	}
 
@@ -105,31 +110,43 @@ class CartFragment : Fragment() {
 
 			override fun onDeleteClick(itemId: String) {
 				Log.d(TAG, "onDelete: initiated")
+				showDeleteDialog(itemId)
 			}
 
-			override fun onPlusClick() {
+			override fun onPlusClick(itemId: String) {
 				Log.d(TAG, "onPlus: Increasing quantity")
+				orderViewModel.setQuantityOfItem(itemId, 1)
 			}
 
-			override fun onMinusClick() {
+			override fun onMinusClick(itemId: String, currQuantity: Int) {
 				Log.d(TAG, "onMinus: decreasing quantity")
+				if (currQuantity == 1) {
+					showDeleteDialog(itemId)
+				} else {
+					orderViewModel.setQuantityOfItem(itemId, -1)
+				}
 			}
 		}
 	}
 
-//	private fun setPriceCard(itemList: List<UserData.CartItem>) {
-//		binding.cartPriceCardLayout.priceItemsLabelTv.text =
-//			getString(R.string.price_card_items_string, itemList.size.toString())
-//		binding.cartPriceCardLayout.priceItemsAmountTv.text =
-//			getString(R.string.price_text, orderViewModel.getItemsPriceTotal().toString())
-//		binding.cartPriceCardLayout.priceShippingAmountTv.text = getString(R.string.price_text, "0")
-//		binding.cartPriceCardLayout.priceChargesAmountTv.text = getString(R.string.price_text, "0")
-//		binding.cartPriceCardLayout.priceTotalAmountTv.text =
-//			getString(R.string.price_text, orderViewModel.getItemsPriceTotal().toString())
-//	}
-
 	private fun navigateToSelectAddress() {
 		findNavController().navigate(R.id.action_cartFragment_to_selectAddressFragment)
+	}
+
+	private fun showDeleteDialog(itemId: String) {
+		context?.let {
+			MaterialAlertDialogBuilder(it)
+				.setTitle(getString(R.string.delete_dialog_title_text))
+				.setMessage(getString(R.string.delete_cart_item_message_text))
+				.setNegativeButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
+					dialog.cancel()
+				}
+				.setPositiveButton(getString(R.string.delete_dialog_delete_btn_text)) { dialog, _ ->
+					orderViewModel.deleteItemFromCart(itemId)
+					dialog.cancel()
+				}
+				.show()
+		}
 	}
 
 	inner class PriceCardAdapter : RecyclerView.Adapter<PriceCardAdapter.ViewHolder>() {
