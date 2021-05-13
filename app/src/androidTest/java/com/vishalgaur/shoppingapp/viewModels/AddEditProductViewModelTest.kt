@@ -28,6 +28,9 @@ class AddEditProductViewModelTest {
 		"+919999988888",
 		"somemail123seller@somemail.com",
 		"1234",
+		emptyList(),
+		emptyList(),
+		emptyList(),
 		"SELLER"
 	)
 
