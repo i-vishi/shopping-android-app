@@ -55,12 +55,40 @@ class AuthRemoteDataSource : UserDataSource {
 		}
 	}
 
+	override suspend fun getLikesByUserId(userId: String): Result<List<String>?> {
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		return if (!userRef.isEmpty) {
+			val userData = userRef.documents[0].toObject(UserData::class.java)
+			Success(userData!!.likes)
+		} else {
+			Error(Exception("User Not Found!"))
+		}
+	}
+
 	override suspend fun getUserByMobileAndPassword(
 		mobile: String,
 		password: String
 	): MutableList<UserData> =
 		usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, mobile)
 			.whereEqualTo(USERS_PWD_FIELD, password).get().await().toObjects(UserData::class.java)
+
+	override suspend fun likeProduct(productId: String, userId: String) {
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		if (!userRef.isEmpty) {
+			val docId = userRef.documents[0].id
+			usersCollectionRef().document(docId)
+				.update(USERS_LIKES_FIELD, FieldValue.arrayUnion(productId))
+		}
+	}
+
+	override suspend fun dislikeProduct(productId: String, userId: String) {
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		if (!userRef.isEmpty) {
+			val docId = userRef.documents[0].id
+			usersCollectionRef().document(docId)
+				.update(USERS_LIKES_FIELD, FieldValue.arrayRemove(productId))
+		}
+	}
 
 	override suspend fun insertAddress(newAddress: UserData.Address, userId: String) {
 		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
@@ -153,6 +181,7 @@ class AuthRemoteDataSource : UserDataSource {
 		private const val USERS_COLLECTION = "users"
 		private const val USERS_ID_FIELD = "userId"
 		private const val USERS_ADDRESSES_FIELD = "addresses"
+		private const val USERS_LIKES_FIELD = "likes"
 		private const val USERS_CART_FIELD = "cart"
 		private const val USERS_MOBILE_FIELD = "mobile"
 		private const val USERS_PWD_FIELD = "password"

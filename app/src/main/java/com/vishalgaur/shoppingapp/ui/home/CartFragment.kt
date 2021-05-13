@@ -74,6 +74,14 @@ class CartFragment : Fragment() {
 				}
 			}
 		}
+		orderViewModel.cartItems.observe(viewLifecycleOwner) { items ->
+			setItemsAdapter(items)
+			val concatAdapter = ConcatAdapter(
+				itemsAdapter,
+				PriceCardAdapter()
+			)
+			binding.cartProductsRecyclerView.adapter = concatAdapter
+		}
 		orderViewModel.priceList.observe(viewLifecycleOwner) {
 			if (it.isNotEmpty()) {
 				orderViewModel.cartItems.value?.let { items ->
@@ -85,7 +93,16 @@ class CartFragment : Fragment() {
 					binding.cartProductsRecyclerView.adapter = concatAdapter
 				}
 			}
-
+		}
+		orderViewModel.userLikes.observe(viewLifecycleOwner) {
+			orderViewModel.cartItems.value?.let { items ->
+				setItemsAdapter(items)
+				val concatAdapter = ConcatAdapter(
+					itemsAdapter,
+					PriceCardAdapter()
+				)
+				binding.cartProductsRecyclerView.adapter = concatAdapter
+			}
 		}
 	}
 
@@ -99,7 +116,7 @@ class CartFragment : Fragment() {
 
 	private fun setItemsAdapter(itemList: List<UserData.CartItem>?) {
 		val items = itemList ?: emptyList()
-		val likesList = emptyList<String>()
+		val likesList = orderViewModel.userLikes.value ?: emptyList()
 		val proList = orderViewModel.cartProducts.value ?: emptyList()
 		itemsAdapter = CartItemAdapter(requireContext(), items, proList, likesList)
 		itemsAdapter.onClickListener = object : CartItemAdapter.OnClickListener {

@@ -44,6 +44,11 @@ class CartItemAdapter(
 			}
 
 			binding.cartProductLikeBtn.setOnClickListener {
+				if (!likesList.contains(proData.productId)) {
+					binding.cartProductLikeBtn.setImageResource(R.drawable.liked_heart_drawable)
+				} else {
+					binding.cartProductLikeBtn.setImageResource(R.drawable.heart_icon_drawable)
+				}
 				onClickListener.onLikeClick(proData.productId)
 			}
 			binding.cartProductDeleteBtn.setOnClickListener {

@@ -53,14 +53,14 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:background="@drawable/round_button"
+            android:backgroundTint="#FFFFFF"
             android:contentDescription="@string/pro_details_like_btn_desc"
             android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="@+id/cart_product_title_tv"
             app:layout_constraintEnd_toStartOf="@+id/cart_product_delete_btn"
             app:layout_constraintTop_toTopOf="@+id/cart_product_title_tv"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/heart_icon_drawable"
-            app:tint="@color/gray" />
+            app:srcCompat="@drawable/heart_icon_drawable" />
 
         <ImageButton
             android:id="@+id/cart_product_delete_btn"
@@ -90,44 +90,6 @@
             app:layout_constraintTop_toBottomOf="@+id/cart_product_title_tv"
             app:layout_constraintVertical_bias="1.0"
             tools:text="$1234.56" />
-
-        <!--        <com.google.android.material.button.MaterialButtonToggleGroup-->
-        <!--            android:id="@+id/cart_product_quantity_toggle_group"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginEnd="8dp"-->
-        <!--            app:layout_constraintBottom_toBottomOf="@id/cart_product_price_tv"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintHorizontal_bias="1.0"-->
-        <!--            app:layout_constraintStart_toEndOf="@id/cart_product_price_tv"-->
-        <!--            app:layout_constraintTop_toTopOf="@+id/cart_product_price_tv">-->
-
-        <!--            <Button-->
-        <!--                android:id="@+id/cart_product_minus_btn"-->
-        <!--                style="@style/Widget.App.Button.OutlinedButton.IconOnly"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                app:icon="@drawable/ic_remove_24" />-->
-
-        <!--            <Button-->
-        <!--                android:id="@+id/cart_product_quantity_text_btn"-->
-        <!--                style="@style/Widget.App.Button.OutlinedButton.IconOnly"-->
-        <!--                android:layout_width="40dp"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:backgroundTint="@color/blue_shadow_color"-->
-        <!--                android:clickable="false"-->
-        <!--                android:textAppearance="@style/TextAppearance.MyTheme.Body1"-->
-        <!--                android:textSize="14sp"-->
-        <!--                android:textStyle="bold"-->
-        <!--                tools:text="123" />-->
-
-        <!--            <Button-->
-        <!--                android:id="@+id/cart_product_plus_btn"-->
-        <!--                style="@style/Widget.App.Button.OutlinedButton.IconOnly"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                app:icon="@drawable/ic_add_24" />-->
-        <!--        </com.google.android.material.button.MaterialButtonToggleGroup>-->
 
         <LinearLayout
             android:id="@+id/cart_product_quantity_buttons_layout"

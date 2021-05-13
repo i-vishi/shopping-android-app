@@ -194,6 +194,59 @@ class AuthRepository(
 		}
 	}
 
+	suspend fun insertProductToLikes(productId: String, userId: String): Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
+				Log.d(TAG, "onLikeProduct: adding product to remote source")
+				authRemoteDataSource.likeProduct(productId, userId)
+			}
+			val localRes = async {
+				Log.d(TAG, "onLikeProduct: updating product to local source")
+				val userRes = authRemoteDataSource.getUserById(userId)
+				if (userRes is Success) {
+					userLocalDataSource.clearUser()
+					userLocalDataSource.addUser(userRes.data!!)
+				} else if (userRes is Error) {
+					throw userRes.exception
+				}
+			}
+			try {
+				remoteRes.await()
+				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
+			}
+		}
+	}
+
+	suspend fun removeProductFromLikes(productId: String, userId: String): Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
+				Log.d(TAG, "onDislikeProduct: deleting product from remote source")
+				authRemoteDataSource.dislikeProduct(productId, userId)
+			}
+			val localRes = async {
+				Log.d(TAG, "onDislikeProduct: deleting product from local source")
+				val userRes =
+					authRemoteDataSource.getUserById(userId)
+				if (userRes is Success) {
+					userLocalDataSource.clearUser()
+					userLocalDataSource.addUser(userRes.data!!)
+				} else if (userRes is Error) {
+					throw userRes.exception
+				}
+			}
+			try {
+				remoteRes.await()
+				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
+			}
+		}
+	}
+
 	suspend fun insertAddress(newAddress: UserData.Address, userId: String): Result<Boolean> {
 		return supervisorScope {
 			val remoteRes = async {
@@ -362,6 +415,10 @@ class AuthRepository(
 
 	suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?> {
 		return userLocalDataSource.getAddressesByUserId(userId)
+	}
+
+	suspend fun getLikesByUserId(userId: String): Result<List<String>?> {
+		return userLocalDataSource.getLikesByUserId(userId)
 	}
 
 	suspend fun getUserData(userId: String): Result<UserData?> {

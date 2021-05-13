@@ -67,6 +67,23 @@ class UserLocalDataSource internal constructor(
 			}
 		}
 
+	override suspend fun getLikesByUserId(userId: String): Result<List<String>?> =
+		withContext(ioDispatcher) {
+			try {
+				val uData = userDao.getById(userId)
+				if (uData != null) {
+					val addressList = uData.likes
+					return@withContext Success(addressList)
+				} else {
+					return@withContext Error(Exception("User Not Found"))
+				}
+
+			} catch (e: Exception) {
+				Log.d("UserLocalSource", "onGetLikes: Error Occurred, ${e.message}")
+				return@withContext Error(e)
+			}
+		}
+
 	override suspend fun clearUser() {
 		withContext(ioDispatcher) {
 			userDao.clear()

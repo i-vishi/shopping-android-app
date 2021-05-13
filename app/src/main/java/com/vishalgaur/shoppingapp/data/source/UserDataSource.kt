@@ -22,6 +22,10 @@ interface UserDataSource {
 		return mutableListOf()
 	}
 
+	suspend fun likeProduct(productId: String, userId: String) {}
+
+	suspend fun dislikeProduct(productId: String, userId: String) {}
+
 	suspend fun insertAddress(newAddress: UserData.Address, userId: String) {}
 
 	suspend fun updateAddress(newAddress: UserData.Address, userId: String) {}
@@ -41,4 +45,6 @@ interface UserDataSource {
 	}
 
 	suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?>
+
+	suspend fun getLikesByUserId(userId: String): Result<List<String>?>
 }
