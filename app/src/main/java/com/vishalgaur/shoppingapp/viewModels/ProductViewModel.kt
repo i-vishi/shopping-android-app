@@ -76,7 +76,20 @@ class ProductViewModel(private val productId: String, application: Application) 
 	}
 
 	fun toggleLikeProduct() {
-		_isLiked.value = !_isLiked.value!!
+		Log.d(TAG, "toggling Like")
+		viewModelScope.launch {
+			val deferredRes = async {
+				if (_isLiked.value == true) {
+					authRepository.removeProductFromLikes(productId, currentUserId!!)
+				} else {
+					authRepository.insertProductToLikes(productId, currentUserId!!)
+				}
+			}
+			val res = deferredRes.await()
+			if (res is Success) {
+				_isLiked.value = !_isLiked.value!!
+			}
+		}
 	}
 
 	fun isSeller() = sessionManager.isUserSeller()
