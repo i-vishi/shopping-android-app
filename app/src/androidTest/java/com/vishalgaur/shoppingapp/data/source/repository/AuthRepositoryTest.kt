@@ -25,6 +25,9 @@ class AuthRepositoryTest {
 		"+919999990000",
 		"somemail@mail.com",
 		"12345",
+		emptyList(),
+		emptyList(),
+		emptyList(),
 		"SELLER",
 	)
 	private val userCustomer = UserData(
@@ -33,6 +36,9 @@ class AuthRepositoryTest {
 		"+919090909090",
 		"somemail1232@mail.com",
 		"12345",
+		emptyList(),
+		emptyList(),
+		emptyList(),
 		"CUSTOMER",
 	)
 
