@@ -9,11 +9,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.vishalgaur.shoppingapp.ERR_UPLOAD
+import com.vishalgaur.shoppingapp.ShoppingApplication
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.Result.Error
 import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
-import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.AddProductErrors
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.getProductId
@@ -25,7 +25,8 @@ private const val TAG = "AddEditViewModel"
 
 class AddEditProductViewModel(application: Application) : AndroidViewModel(application) {
 
-	private val productsRepository = ProductsRepository.getRepository(application)
+	private val productsRepository =
+		(application.applicationContext as ShoppingApplication).productsRepository
 
 	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 
@@ -75,7 +76,8 @@ class AddEditProductViewModel(application: Application) : AndroidViewModel(appli
 			val res = async { productsRepository.getProductById(productId) }
 			val proRes = res.await()
 			if (proRes is Success) {
-				_productData.value = proRes.data!!
+				val proData = proRes.data
+				_productData.value = proData
 				_selectedCategory.value = _productData.value!!.category
 				Log.d(TAG, "onLoad: Successfully retrieved product data")
 				_dataStatus.value = StoreDataStatus.DONE

@@ -12,8 +12,6 @@ import com.vishalgaur.shoppingapp.data.Result.Error
 import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.UserData
-import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
-import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -26,7 +24,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 	private val currentUser = sessionManager.getUserIdFromSession()
 
 	private val authRepository = (application as ShoppingApplication).authRepository
-	private val productsRepository = ProductsRepository.getRepository(application)
+	private val productsRepository = (application as ShoppingApplication).productsRepository
 
 	private val _userAddresses = MutableLiveData<List<UserData.Address>>()
 	val userAddresses: LiveData<List<UserData.Address>> get() = _userAddresses
@@ -200,7 +198,6 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 			var cartList: MutableList<UserData.CartItem>
 			_cartItems.value?.let { items ->
 				val itemPos = items.indexOfFirst { it.itemId == itemId }
-				val proId = items.find { it.itemId == itemId }?.productId
 				cartList = items.toMutableList()
 				val deferredRes = async {
 					authRepository.deleteCartItemByUserId(itemId, currentUser!!)

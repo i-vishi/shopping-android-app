@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.vishalgaur.shoppingapp.*
 import com.vishalgaur.shoppingapp.data.UserData
-import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.LogInErrors
 import com.vishalgaur.shoppingapp.data.utils.SignUpErrors
 import com.vishalgaur.shoppingapp.data.utils.UserType
@@ -22,7 +21,7 @@ private const val TAG = "AuthViewModel"
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
 	private val authRepository = (application as ShoppingApplication).authRepository
-	private val productsRepository = ProductsRepository.getRepository(application)
+	private val productsRepository = (application as ShoppingApplication).productsRepository
 
 	private val _userData = MutableLiveData<UserData>()
 	val userData: LiveData<UserData> get() = _userData

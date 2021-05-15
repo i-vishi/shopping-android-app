@@ -12,7 +12,6 @@ import com.vishalgaur.shoppingapp.data.Result.Error
 import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.UserData
-import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.AddObjectStatus
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.ui.AddItemErrors
@@ -43,7 +42,7 @@ class ProductViewModel(private val productId: String, application: Application) 
 	private val _isItemInCart = MutableLiveData<Boolean>()
 	val isItemInCart: LiveData<Boolean> get() = _isItemInCart
 
-	private val productsRepository = ProductsRepository.getRepository(application)
+	private val productsRepository =(application as ShoppingApplication).productsRepository
 	private val authRepository = (application as ShoppingApplication).authRepository
 	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 	private val currentUserId = sessionManager.getUserIdFromSession()

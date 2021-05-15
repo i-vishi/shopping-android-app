@@ -9,8 +9,6 @@ import com.vishalgaur.shoppingapp.data.Result
 import com.vishalgaur.shoppingapp.data.Result.Error
 import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
-import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
-import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -19,7 +17,7 @@ private const val TAG = "HomeViewModel"
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-	private val productsRepository = ProductsRepository.getRepository(application)
+	private val productsRepository = (application.applicationContext as ShoppingApplication).productsRepository
 	private val authRepository = (application.applicationContext as ShoppingApplication).authRepository
 
 	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
