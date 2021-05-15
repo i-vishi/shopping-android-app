@@ -1,6 +1,5 @@
 package com.vishalgaur.shoppingapp.data.source.repository
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -16,9 +15,6 @@ import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.source.UserDataSource
-import com.vishalgaur.shoppingapp.data.source.local.ShoppingAppDatabase
-import com.vishalgaur.shoppingapp.data.source.local.UserLocalDataSource
-import com.vishalgaur.shoppingapp.data.source.remote.AuthRemoteDataSource
 import com.vishalgaur.shoppingapp.data.utils.SignUpErrors
 import com.vishalgaur.shoppingapp.data.utils.UserType
 import kotlinx.coroutines.async
@@ -29,30 +25,13 @@ import kotlinx.coroutines.supervisorScope
 class AuthRepository(
 	private val userLocalDataSource: UserDataSource,
 	private val authRemoteDataSource: UserDataSource,
-	private val context: Context
+	private var sessionManager : ShoppingAppSessionManager
 ) {
 
 	private var firebaseAuth: FirebaseAuth = Firebase.auth
-	private var sessionManager = ShoppingAppSessionManager(context.applicationContext)
 
 	companion object {
 		private const val TAG = "AuthRepository"
-
-//		@Volatile
-//		private var INSTANCE: AuthRepository? = null
-//
-//		fun getRepository(app: Application): AuthRepository {
-//			return INSTANCE ?: synchronized(this) {
-//				val database = ShoppingAppDatabase.getInstance(app)
-//				AuthRepository(
-//					UserLocalDataSource(database.userDao()),
-//					AuthRemoteDataSource(),
-//					app.applicationContext
-//				).also {
-//					INSTANCE = it
-//				}
-//			}
-//		}
 	}
 
 	fun getFirebaseAuth() = firebaseAuth
@@ -96,7 +75,7 @@ class AuthRepository(
 		)
 	}
 
-	suspend fun checkEmailAndMobile(email: String, mobile: String): SignUpErrors? {
+	suspend fun checkEmailAndMobile(email: String, mobile: String, context: Context): SignUpErrors? {
 		Log.d(TAG, "on SignUp: Checking email and mobile")
 		var sErr: SignUpErrors? = null
 		val queryResult = authRemoteDataSource.getEmailsAndMobiles()
@@ -108,9 +87,9 @@ class AuthRepository(
 			} else {
 				sErr = SignUpErrors.SERR
 				when {
-					!mob && em -> makeErrToast("Email is already registered!")
-					mob && !em -> makeErrToast("Mobile is already registered!")
-					mob && em -> makeErrToast("Email and mobile is already registered!")
+					!mob && em -> makeErrToast("Email is already registered!", context)
+					mob && !em -> makeErrToast("Mobile is already registered!", context)
+					mob && em -> makeErrToast("Email and mobile is already registered!", context)
 				}
 			}
 		}
@@ -130,7 +109,7 @@ class AuthRepository(
 
 	fun signInWithPhoneAuthCredential(
 		credential: PhoneAuthCredential,
-		isUserLoggedIn: MutableLiveData<Boolean>
+		isUserLoggedIn: MutableLiveData<Boolean>, context: Context
 	) {
 		firebaseAuth.signInWithCredential(credential)
 			.addOnCompleteListener { task ->
@@ -146,7 +125,7 @@ class AuthRepository(
 					if (task.exception is FirebaseAuthInvalidCredentialsException) {
 						Log.d(TAG, "createUserWithMobile:failure", task.exception)
 						isUserLoggedIn.postValue(false)
-						makeErrToast("Wrong OTP!")
+						makeErrToast("Wrong OTP!", context)
 					}
 
 				}
@@ -159,8 +138,8 @@ class AuthRepository(
 		userLocalDataSource.clearUser()
 	}
 
-	private fun makeErrToast(text: String) {
-		Toast.makeText(context.applicationContext, text, Toast.LENGTH_LONG).show()
+	private fun makeErrToast(text: String, context: Context) {
+		Toast.makeText(context, text, Toast.LENGTH_LONG).show()
 	}
 
 	private suspend fun deleteUserFromLocalSource() {

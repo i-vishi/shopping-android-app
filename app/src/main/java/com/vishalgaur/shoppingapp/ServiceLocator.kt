@@ -2,12 +2,11 @@ package com.vishalgaur.shoppingapp
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import androidx.room.Room
+import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.source.local.ShoppingAppDatabase
 import com.vishalgaur.shoppingapp.data.source.local.UserLocalDataSource
 import com.vishalgaur.shoppingapp.data.source.remote.AuthRemoteDataSource
 import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
-import kotlinx.coroutines.runBlocking
 
 object ServiceLocator {
 	private var database: ShoppingAppDatabase? = null
@@ -24,7 +23,8 @@ object ServiceLocator {
 	}
 
 	private fun createAuthRepository(context: Context): AuthRepository {
-		val newRepo = AuthRepository(createUserLocalDataSource(context), AuthRemoteDataSource(), context)
+		val appSession = ShoppingAppSessionManager(context.applicationContext)
+		val newRepo = AuthRepository(createUserLocalDataSource(context), AuthRemoteDataSource(), appSession)
 		authRepository = newRepo
 		return newRepo
 	}

@@ -15,7 +15,6 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.vishalgaur.shoppingapp.ShoppingApplication
 import com.vishalgaur.shoppingapp.data.UserData
-import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
 import com.vishalgaur.shoppingapp.ui.OTPStatus
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -70,7 +69,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 
 		override fun onVerificationCompleted(credential: PhoneAuthCredential) {
 			Log.d(TAG, "onVerificationCompleted:$credential")
-			authRepository.signInWithPhoneAuthCredential(credential, isUserLoggedIn)
+			authRepository.signInWithPhoneAuthCredential(credential, isUserLoggedIn, application.applicationContext)
 		}
 
 		override fun onVerificationFailed(e: FirebaseException) {
@@ -96,7 +95,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 	private fun verifyPhoneWithCode(verificationId: String, code: String, isUserLoggedIn: MutableLiveData<Boolean>) {
 		try {
 			val credential = PhoneAuthProvider.getCredential(verificationId, code)
-			authRepository.signInWithPhoneAuthCredential(credential, isUserLoggedIn)
+			authRepository.signInWithPhoneAuthCredential(credential, isUserLoggedIn, getApplication<ShoppingApplication>().applicationContext)
 		} catch (e: Exception) {
 			Log.d(TAG, "onVerifyWithCode: Exception Occurred: ${e.message}")
 		}

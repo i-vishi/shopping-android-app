@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.vishalgaur.shoppingapp.*
 import com.vishalgaur.shoppingapp.data.UserData
-import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
 import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.LogInErrors
 import com.vishalgaur.shoppingapp.data.utils.SignUpErrors
@@ -110,7 +109,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
 	private fun checkUniqueUser(uData: UserData) {
 		viewModelScope.launch {
-			val res = async { authRepository.checkEmailAndMobile(uData.email, uData.mobile) }
+			val res = async { authRepository.checkEmailAndMobile(uData.email, uData.mobile, getApplication<ShoppingApplication>().applicationContext) }
 			_signErrorStatus.value = res.await()
 		}
 	}
