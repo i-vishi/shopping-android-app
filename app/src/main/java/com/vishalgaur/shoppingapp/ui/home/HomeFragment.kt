@@ -12,11 +12,10 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
-import com.vishalgaur.shoppingapp.ShoppingApplication
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.utils.ProductCategories
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
@@ -24,7 +23,6 @@ import com.vishalgaur.shoppingapp.databinding.FragmentHomeBinding
 import com.vishalgaur.shoppingapp.ui.MyOnFocusChangeListener
 import com.vishalgaur.shoppingapp.ui.RecyclerViewPaddingItemDecoration
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModel
-import com.vishalgaur.shoppingapp.viewModels.HomeViewModelFactory
 import kotlinx.coroutines.*
 
 
@@ -33,7 +31,7 @@ private const val TAG = "HomeFragment"
 class HomeFragment : Fragment() {
 
 	private lateinit var binding: FragmentHomeBinding
-	private lateinit var viewModel: HomeViewModel
+	private val viewModel: HomeViewModel by viewModels()
 	private val focusChangeListener = MyOnFocusChangeListener()
 
 	override fun onCreateView(
@@ -42,10 +40,6 @@ class HomeFragment : Fragment() {
 	): View? {
 		// Inflate the layout for this fragment
 		binding = FragmentHomeBinding.inflate(layoutInflater)
-		if (activity != null) {
-			val viewModelFactory = HomeViewModelFactory(requireContext().applicationContext as ShoppingApplication)
-			viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
-		}
 
 		setViews()
 
