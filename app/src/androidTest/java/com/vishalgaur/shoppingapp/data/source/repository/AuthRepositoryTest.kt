@@ -1,5 +1,6 @@
 package com.vishalgaur.shoppingapp.data.source.repository
 
+import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
@@ -43,6 +44,8 @@ class AuthRepositoryTest {
 		"CUSTOMER",
 	)
 
+	private lateinit var context: Context
+
 	private lateinit var userLocalDataSource: FakeUserDataSource
 	private lateinit var authRemoteDataSource: FakeUserDataSource
 	private lateinit var sessionManager: ShoppingAppSessionManager
@@ -52,6 +55,7 @@ class AuthRepositoryTest {
 
 	@Before
 	fun createRepository() {
+		context = ApplicationProvider.getApplicationContext()
 		FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext())
 		userLocalDataSource = FakeUserDataSource(userSeller)
 		authRemoteDataSource = FakeUserDataSource(userCustomer)
@@ -60,7 +64,7 @@ class AuthRepositoryTest {
 		authRepository = AuthRepository(
 			userLocalDataSource,
 			authRemoteDataSource,
-			ApplicationProvider.getApplicationContext()
+			sessionManager
 		)
 	}
 
@@ -95,7 +99,8 @@ class AuthRepositoryTest {
 		authRemoteDataSource.updateEmailsAndMobiles("mail123@mail.com", "+919999988888")
 		runOnUiThread {
 			runBlockingTest {
-				val result = authRepository.checkEmailAndMobile("mail123@mail.com", "+919685")
+				val result =
+					authRepository.checkEmailAndMobile("mail123@mail.com", "+919685", context)
 				assertThat(result, `is`(SignUpErrors.SERR))
 			}
 		}
@@ -106,7 +111,8 @@ class AuthRepositoryTest {
 		authRemoteDataSource.updateEmailsAndMobiles("mail123@mail.com", "+919999988888")
 		runOnUiThread {
 			runBlockingTest {
-				val result = authRepository.checkEmailAndMobile("mail999@mail.com", "+919999988888")
+				val result =
+					authRepository.checkEmailAndMobile("mail999@mail.com", "+919999988888", context)
 				assertThat(result, `is`(SignUpErrors.SERR))
 			}
 		}
@@ -117,7 +123,8 @@ class AuthRepositoryTest {
 		authRemoteDataSource.updateEmailsAndMobiles("mail123@mail.com", "+919999988888")
 		runOnUiThread {
 			runBlockingTest {
-				val result = authRepository.checkEmailAndMobile("mail123@mail.com", "+919999988888")
+				val result =
+					authRepository.checkEmailAndMobile("mail123@mail.com", "+919999988888", context)
 				assertThat(result, `is`(SignUpErrors.SERR))
 			}
 		}
@@ -129,7 +136,11 @@ class AuthRepositoryTest {
 		runOnUiThread {
 			runBlockingTest {
 				val result =
-					authRepository.checkEmailAndMobile("somemail123@mail.com", "+919999977777")
+					authRepository.checkEmailAndMobile(
+						"somemail123@mail.com",
+						"+919999977777",
+						context
+					)
 				assertThat(result, `is`(SignUpErrors.NONE))
 			}
 		}

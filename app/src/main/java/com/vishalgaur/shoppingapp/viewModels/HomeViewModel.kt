@@ -20,7 +20,7 @@ private const val TAG = "HomeViewModel"
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 	private val productsRepository = ProductsRepository.getRepository(application)
-	private val authRepository = (application as ShoppingApplication).authRepository
+	private val authRepository = (application.applicationContext as ShoppingApplication).authRepository
 
 	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 	private val currentUser = sessionManager.getUserIdFromSession()

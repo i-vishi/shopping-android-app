@@ -25,8 +25,8 @@ import kotlinx.coroutines.supervisorScope
 class AuthRepository(
 	private val userLocalDataSource: UserDataSource,
 	private val authRemoteDataSource: UserDataSource,
-	private var sessionManager : ShoppingAppSessionManager
-) {
+	private var sessionManager: ShoppingAppSessionManager
+) : AuthRepoInterface {
 
 	private var firebaseAuth: FirebaseAuth = Firebase.auth
 
@@ -34,11 +34,11 @@ class AuthRepository(
 		private const val TAG = "AuthRepository"
 	}
 
-	fun getFirebaseAuth() = firebaseAuth
+	override fun getFirebaseAuth() = firebaseAuth
 
-	fun isRememberMeOn() = sessionManager.isRememberMeOn()
+	override fun isRememberMeOn() = sessionManager.isRememberMeOn()
 
-	suspend fun refreshData() {
+	override suspend fun refreshData() {
 		Log.d(TAG, "refreshing userdata")
 		if (sessionManager.isLoggedIn()) {
 			updateUserInLocalSource(sessionManager.getPhoneNumber())
@@ -48,7 +48,7 @@ class AuthRepository(
 		}
 	}
 
-	suspend fun signUp(userData: UserData) {
+	override suspend fun signUp(userData: UserData) {
 		val isSeller = userData.userType == UserType.SELLER.name
 		sessionManager.createLoginSession(
 			userData.userId,
@@ -64,7 +64,7 @@ class AuthRepository(
 		authRemoteDataSource.updateEmailsAndMobiles(userData.email, userData.mobile)
 	}
 
-	fun login(userData: UserData, rememberMe: Boolean) {
+	override fun login(userData: UserData, rememberMe: Boolean) {
 		val isSeller = userData.userType == UserType.SELLER.name
 		sessionManager.createLoginSession(
 			userData.userId,
@@ -75,7 +75,11 @@ class AuthRepository(
 		)
 	}
 
-	suspend fun checkEmailAndMobile(email: String, mobile: String, context: Context): SignUpErrors? {
+	override suspend fun checkEmailAndMobile(
+		email: String,
+		mobile: String,
+		context: Context
+	): SignUpErrors? {
 		Log.d(TAG, "on SignUp: Checking email and mobile")
 		var sErr: SignUpErrors? = null
 		val queryResult = authRemoteDataSource.getEmailsAndMobiles()
@@ -96,7 +100,7 @@ class AuthRepository(
 		return sErr
 	}
 
-	suspend fun checkLogin(mobile: String, password: String): UserData? {
+	override suspend fun checkLogin(mobile: String, password: String): UserData? {
 		Log.d(TAG, "on Login: checking mobile and password")
 		val queryResult =
 			authRemoteDataSource.getUserByMobileAndPassword(mobile, password)
@@ -107,7 +111,7 @@ class AuthRepository(
 		}
 	}
 
-	fun signInWithPhoneAuthCredential(
+	override fun signInWithPhoneAuthCredential(
 		credential: PhoneAuthCredential,
 		isUserLoggedIn: MutableLiveData<Boolean>, context: Context
 	) {
@@ -132,7 +136,7 @@ class AuthRepository(
 			}
 	}
 
-	suspend fun signOut() {
+	override suspend fun signOut() {
 		sessionManager.logoutFromSession()
 		firebaseAuth.signOut()
 		userLocalDataSource.clearUser()
@@ -163,7 +167,7 @@ class AuthRepository(
 		}
 	}
 
-	suspend fun hardRefreshUserData() {
+	override suspend fun hardRefreshUserData() {
 		userLocalDataSource.clearUser()
 		val mobile = sessionManager.getPhoneNumber()
 		if (mobile != null) {
@@ -174,7 +178,7 @@ class AuthRepository(
 		}
 	}
 
-	suspend fun insertProductToLikes(productId: String, userId: String): Result<Boolean> {
+	override suspend fun insertProductToLikes(productId: String, userId: String): Result<Boolean> {
 		return supervisorScope {
 			val remoteRes = async {
 				Log.d(TAG, "onLikeProduct: adding product to remote source")
@@ -200,7 +204,10 @@ class AuthRepository(
 		}
 	}
 
-	suspend fun removeProductFromLikes(productId: String, userId: String): Result<Boolean> {
+	override suspend fun removeProductFromLikes(
+		productId: String,
+		userId: String
+	): Result<Boolean> {
 		return supervisorScope {
 			val remoteRes = async {
 				Log.d(TAG, "onDislikeProduct: deleting product from remote source")
@@ -227,7 +234,10 @@ class AuthRepository(
 		}
 	}
 
-	suspend fun insertAddress(newAddress: UserData.Address, userId: String): Result<Boolean> {
+	override suspend fun insertAddress(
+		newAddress: UserData.Address,
+		userId: String
+	): Result<Boolean> {
 		return supervisorScope {
 			val remoteRes = async {
 				Log.d(TAG, "onInsertAddress: adding address to remote source")
@@ -253,7 +263,10 @@ class AuthRepository(
 		}
 	}
 
-	suspend fun updateAddress(newAddress: UserData.Address, userId: String): Result<Boolean> {
+	override suspend fun updateAddress(
+		newAddress: UserData.Address,
+		userId: String
+	): Result<Boolean> {
 		return supervisorScope {
 			val remoteRes = async {
 				Log.d(TAG, "onUpdateAddress: updating address on remote source")
@@ -280,7 +293,7 @@ class AuthRepository(
 		}
 	}
 
-	suspend fun deleteAddressById(addressId: String, userId: String): Result<Boolean> {
+	override suspend fun deleteAddressById(addressId: String, userId: String): Result<Boolean> {
 		return supervisorScope {
 			val remoteRes = async {
 				Log.d(TAG, "onDelete: deleting address from remote source")
@@ -307,7 +320,7 @@ class AuthRepository(
 		}
 	}
 
-	suspend fun insertCartItemByUserId(
+	override suspend fun insertCartItemByUserId(
 		cartItem: UserData.CartItem,
 		userId: String
 	): Result<Boolean> {
@@ -336,7 +349,7 @@ class AuthRepository(
 		}
 	}
 
-	suspend fun updateCartItemByUserId(
+	override suspend fun updateCartItemByUserId(
 		cartItem: UserData.CartItem,
 		userId: String
 	): Result<Boolean> {
@@ -366,7 +379,7 @@ class AuthRepository(
 		}
 	}
 
-	suspend fun deleteCartItemByUserId(itemId: String, userId: String): Result<Boolean> {
+	override suspend fun deleteCartItemByUserId(itemId: String, userId: String): Result<Boolean> {
 		return supervisorScope {
 			val remoteRes = async {
 				Log.d(TAG, "onDelete: deleting cart item from remote source")
@@ -393,15 +406,15 @@ class AuthRepository(
 		}
 	}
 
-	suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?> {
+	override suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?> {
 		return userLocalDataSource.getAddressesByUserId(userId)
 	}
 
-	suspend fun getLikesByUserId(userId: String): Result<List<String>?> {
+	override suspend fun getLikesByUserId(userId: String): Result<List<String>?> {
 		return userLocalDataSource.getLikesByUserId(userId)
 	}
 
-	suspend fun getUserData(userId: String): Result<UserData?> {
+	override suspend fun getUserData(userId: String): Result<UserData?> {
 		return userLocalDataSource.getUserById(userId)
 	}
 

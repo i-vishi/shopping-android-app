@@ -84,12 +84,15 @@ class AppDatabaseTest {
 			"Vishal",
 			"+919999988888",
 			"vishal@somemail.com",
-			"dh94328hd"
+			"dh94328hd",
+			ArrayList(),
+			ArrayList(),
+			ArrayList()
 		)
 		runBlocking {
 			userDao.insert(user)
 			val result = userDao.getById("sdjm43892yfh948ehod")
-			assertEquals(user, result)
+			assertThat(result?.userId, `is`(user.userId))
 		}
 
 	}
@@ -109,7 +112,10 @@ class AppDatabaseTest {
 			"Vishal",
 			"+919999988888",
 			"vishal@somemail.com",
-			"dh94328hd"
+			"dh94328hd",
+			emptyList(),
+			emptyList(),
+			emptyList()
 		)
 		runBlocking {
 			userDao.insert(user)

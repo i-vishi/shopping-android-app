@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.getOrAwaitValue
 import org.hamcrest.Matchers.`is`
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class HomeViewModelTest {
 	private lateinit var homeViewModel: HomeViewModel
+	private lateinit var authRepository: AuthRepository
 
 	@get:Rule
 	var instantTaskExecutorRule = InstantTaskExecutorRule()
