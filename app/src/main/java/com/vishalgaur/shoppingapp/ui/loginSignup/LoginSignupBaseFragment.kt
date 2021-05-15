@@ -6,15 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
+import com.vishalgaur.shoppingapp.ShoppingApplication
 import com.vishalgaur.shoppingapp.ui.MyOnFocusChangeListener
 import com.vishalgaur.shoppingapp.viewModels.AuthViewModel
 import com.vishalgaur.shoppingapp.viewModels.AuthViewModelFactory
 
 abstract class LoginSignupBaseFragment<VBinding : ViewBinding> : Fragment() {
 
-	protected lateinit var viewModel: AuthViewModel
+	protected val viewModel: AuthViewModel by activityViewModels()
 
 	protected lateinit var binding: VBinding
 	protected abstract fun setViewBinding(): VBinding
@@ -50,11 +52,6 @@ abstract class LoginSignupBaseFragment<VBinding : ViewBinding> : Fragment() {
 
 	private fun init() {
 		binding = setViewBinding()
-		if (this.activity != null) {
-			val viewModelFactory = AuthViewModelFactory(this.requireActivity().application)
-			viewModel =
-				ViewModelProvider(this, viewModelFactory).get(AuthViewModel::class.java)
-		}
 	}
 
 	interface OnClickListener : View.OnClickListener

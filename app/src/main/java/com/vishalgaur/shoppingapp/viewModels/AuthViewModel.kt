@@ -22,7 +22,7 @@ private const val TAG = "AuthViewModel"
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
-	private val authRepository = AuthRepository.getRepository(application)
+	private val authRepository = (application as ShoppingApplication).authRepository
 	private val productsRepository = ProductsRepository.getRepository(application)
 
 	private val _userData = MutableLiveData<UserData>()

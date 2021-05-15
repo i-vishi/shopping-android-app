@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.vishalgaur.shoppingapp.ShoppingApplication
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
 import com.vishalgaur.shoppingapp.ui.OTPStatus
@@ -27,7 +28,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 	private val _otpStatus = MutableLiveData<OTPStatus>()
 	val otpStatus: LiveData<OTPStatus> get() = _otpStatus
 
-	val authRepository = AuthRepository.getRepository(application)
+	private val authRepository = (application as ShoppingApplication).authRepository
 
 	var isUserLoggedIn = MutableLiveData(false)
 	var storedVerificationId: String? = ""

@@ -1,6 +1,7 @@
 package com.vishalgaur.shoppingapp.data.source.repository
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
@@ -28,30 +29,30 @@ import kotlinx.coroutines.supervisorScope
 class AuthRepository(
 	private val userLocalDataSource: UserDataSource,
 	private val authRemoteDataSource: UserDataSource,
-	private val application: Application
+	private val context: Context
 ) {
 
 	private var firebaseAuth: FirebaseAuth = Firebase.auth
-	private var sessionManager = ShoppingAppSessionManager(application.applicationContext)
+	private var sessionManager = ShoppingAppSessionManager(context.applicationContext)
 
 	companion object {
 		private const val TAG = "AuthRepository"
 
-		@Volatile
-		private var INSTANCE: AuthRepository? = null
-
-		fun getRepository(app: Application): AuthRepository {
-			return INSTANCE ?: synchronized(this) {
-				val database = ShoppingAppDatabase.getInstance(app)
-				AuthRepository(
-					UserLocalDataSource(database.userDao()),
-					AuthRemoteDataSource(),
-					app
-				).also {
-					INSTANCE = it
-				}
-			}
-		}
+//		@Volatile
+//		private var INSTANCE: AuthRepository? = null
+//
+//		fun getRepository(app: Application): AuthRepository {
+//			return INSTANCE ?: synchronized(this) {
+//				val database = ShoppingAppDatabase.getInstance(app)
+//				AuthRepository(
+//					UserLocalDataSource(database.userDao()),
+//					AuthRemoteDataSource(),
+//					app.applicationContext
+//				).also {
+//					INSTANCE = it
+//				}
+//			}
+//		}
 	}
 
 	fun getFirebaseAuth() = firebaseAuth
@@ -159,7 +160,7 @@ class AuthRepository(
 	}
 
 	private fun makeErrToast(text: String) {
-		Toast.makeText(application.applicationContext, text, Toast.LENGTH_LONG).show()
+		Toast.makeText(context.applicationContext, text, Toast.LENGTH_LONG).show()
 	}
 
 	private suspend fun deleteUserFromLocalSource() {

@@ -3,6 +3,7 @@ package com.vishalgaur.shoppingapp.viewModels
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
+import com.vishalgaur.shoppingapp.ShoppingApplication
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.Result
 import com.vishalgaur.shoppingapp.data.Result.Error
@@ -19,7 +20,7 @@ private const val TAG = "HomeViewModel"
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 	private val productsRepository = ProductsRepository.getRepository(application)
-	private val authRepository = AuthRepository.getRepository(application)
+	private val authRepository = (application as ShoppingApplication).authRepository
 
 	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 	private val currentUser = sessionManager.getUserIdFromSession()

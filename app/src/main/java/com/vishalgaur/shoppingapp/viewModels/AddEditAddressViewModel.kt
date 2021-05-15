@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.vishalgaur.shoppingapp.ShoppingApplication
 import com.vishalgaur.shoppingapp.data.Result.Error
 import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 
 class AddEditAddressViewModel(application: Application) : AndroidViewModel(application) {
 
-	private val authRepository = AuthRepository.getRepository(application)
+	private val authRepository = (application as ShoppingApplication).authRepository
 
 	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 	private val currentUser = sessionManager.getUserIdFromSession()

@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.ShoppingApplication
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.utils.ProductCategories
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
@@ -42,7 +43,7 @@ class HomeFragment : Fragment() {
 		// Inflate the layout for this fragment
 		binding = FragmentHomeBinding.inflate(layoutInflater)
 		if (activity != null) {
-			val viewModelFactory = HomeViewModelFactory(requireActivity().application)
+			val viewModelFactory = HomeViewModelFactory(requireContext().applicationContext as ShoppingApplication)
 			viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 		}
 

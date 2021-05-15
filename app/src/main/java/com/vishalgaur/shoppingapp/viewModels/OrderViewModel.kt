@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.vishalgaur.shoppingapp.ShoppingApplication
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.Result.Error
 import com.vishalgaur.shoppingapp.data.Result.Success
@@ -24,7 +25,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 	private val currentUser = sessionManager.getUserIdFromSession()
 
-	private val authRepository = AuthRepository.getRepository(application)
+	private val authRepository = (application as ShoppingApplication).authRepository
 	private val productsRepository = ProductsRepository.getRepository(application)
 
 	private val _userAddresses = MutableLiveData<List<UserData.Address>>()

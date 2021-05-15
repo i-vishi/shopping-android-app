@@ -6,12 +6,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.vishalgaur.shoppingapp.ShoppingApplication
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.Result.Error
 import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.UserData
-import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
 import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepository
 import com.vishalgaur.shoppingapp.data.utils.AddObjectStatus
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
@@ -44,7 +44,7 @@ class ProductViewModel(private val productId: String, application: Application) 
 	val isItemInCart: LiveData<Boolean> get() = _isItemInCart
 
 	private val productsRepository = ProductsRepository.getRepository(application)
-	private val authRepository = AuthRepository.getRepository(application)
+	private val authRepository = (application as ShoppingApplication).authRepository
 	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 	private val currentUserId = sessionManager.getUserIdFromSession()
 
