@@ -5,9 +5,9 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.vishalgaur.shoppingapp.ServiceLocator
+import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.source.FakeAuthRepository
 import com.vishalgaur.shoppingapp.data.source.repository.AuthRepoInterface
-import com.vishalgaur.shoppingapp.data.source.repository.AuthRepository
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.getOrAwaitValue
 import org.hamcrest.Matchers.`is`
@@ -27,7 +27,8 @@ class HomeViewModelTest {
 
 	@Before
 	fun setUp() {
-		authRepository = FakeAuthRepository()
+		val sessionManager = ShoppingAppSessionManager(ApplicationProvider.getApplicationContext())
+		authRepository = FakeAuthRepository(sessionManager)
 		ServiceLocator.authRepository = authRepository
 		homeViewModel = HomeViewModel(ApplicationProvider.getApplicationContext())
 	}

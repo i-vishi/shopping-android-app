@@ -48,6 +48,7 @@ class ProductViewModel(private val productId: String, application: Application) 
 	private val currentUserId = sessionManager.getUserIdFromSession()
 
 	init {
+		_isLiked.value = false
 		_errorStatus.value = emptyList()
 		viewModelScope.launch {
 			authRepository.hardRefreshUserData()
