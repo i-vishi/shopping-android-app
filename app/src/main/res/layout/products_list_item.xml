@@ -113,5 +113,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_edit_24"
             app:tint="@color/gray" />
+
+<!--        <Button-->
+<!--            android:id="@+id/product_buy_now_btn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:backgroundTint="@color/blue_accent_300"-->
+<!--            android:text="@string/buy_now_btn_text"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:textSize="12sp"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

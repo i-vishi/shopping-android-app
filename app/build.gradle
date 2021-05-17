@@ -93,6 +93,9 @@ dependencies {
     // espresso for intents
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0'
 
+    //espresso for recyclerview
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
+
     // AndroidX Test - JVM testing
     testImplementation "androidx.test.ext:junit-ktx:1.1.2"
     testImplementation "androidx.arch.core:core-testing:2.1.0"

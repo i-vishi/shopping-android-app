@@ -40,7 +40,7 @@ class LoginFragmentTest {
 		navController = TestNavHostController(ApplicationProvider.getApplicationContext())
 
 		runOnUiThread {
-			navController.setGraph((R.navigation.signup_nav_graph))
+			navController.setGraph(R.navigation.signup_nav_graph)
 			loginScenario.onFragment {
 				Navigation.setViewNavController(it.requireView(), navController)
 			}
