@@ -13,15 +13,15 @@ import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
-import com.vishalgaur.shoppingapp.R
-import com.vishalgaur.shoppingapp.RecyclerViewItemAction
-import com.vishalgaur.shoppingapp.ServiceLocator
-import com.vishalgaur.shoppingapp.ShoppingApplication
+import com.vishalgaur.shoppingapp.*
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.UserData
@@ -30,6 +30,8 @@ import com.vishalgaur.shoppingapp.data.source.FakeProductsRepository
 import com.vishalgaur.shoppingapp.data.source.repository.AuthRepoInterface
 import com.vishalgaur.shoppingapp.data.source.repository.ProductsRepoInterface
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.Matchers.`is`
 import org.junit.After
@@ -122,9 +124,7 @@ class HomeFragmentTest {
 	@Test
 	fun userCustomer_hideFABandEditDeleteButtons() = runBlockingTest {
 		insertProducts()
-		authRepository.login(userCustomer, true)
-		ServiceLocator.authRepository = authRepository
-		setScenarioAndNav()
+		loginCustomer()
 
 		onView(withId(R.id.home_fab_add_product)).check(matches(withEffectiveVisibility(Visibility.GONE)))
 
@@ -148,9 +148,7 @@ class HomeFragmentTest {
 	@Test
 	fun userSeller_showFABandEditDeleteButtons() = runBlockingTest {
 		insertProducts()
-		authRepository.login(userSeller, true)
-		ServiceLocator.authRepository = authRepository
-		setScenarioAndNav()
+		loginSeller()
 
 		onView(withId(R.id.home_fab_add_product)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 		//testing recyclerview items
@@ -168,6 +166,70 @@ class HomeFragmentTest {
 						}
 					})
 			)
+	}
+
+	@Test
+	fun onFABClick_openCategoryDialog() {
+		loginSeller()
+
+		onView(withId(R.id.home_fab_add_product)).perform(click())
+		onView(withText(R.string.pro_cat_dialog_title)).inRoot(isDialog())
+			.check(matches(isDisplayed()))
+	}
+
+	@Test
+	fun onSelectCategory_openAddProductFragment() {
+		loginSeller()
+
+		onView(withId(R.id.home_fab_add_product)).perform(click())
+		onView(withText(R.string.pro_cat_dialog_ok_btn)).inRoot(isDialog())
+			.check(matches(isDisplayed())).perform(click())
+
+		assertThat(navController.currentDestination?.id, `is`(R.id.addEditProductFragment))
+	}
+
+	@Test
+	fun onFilterClick_openFilterDialog() = runBlockingTest{
+		insertProducts()
+		loginCustomer()
+		onView(withId(R.id.home_filter)).perform(click())
+		onView(withText("Shoes")).inRoot(isDialog())
+			.perform(click())
+		onView(withText(R.string.pro_cat_dialog_ok_btn)).inRoot(isDialog())
+			.perform(click())
+		onView(withId(R.id.products_recycler_view)).check(RecyclerViewItemCountAssertion(1))
+
+	}
+
+	@Test
+	fun onFilter_filterResults() {
+		loginCustomer()
+		onView(withId(R.id.home_filter)).perform(click())
+		onView(withText(R.string.pro_cat_dialog_title)).inRoot(isDialog())
+			.check(matches(isDisplayed()))
+	}
+
+	@Test
+	fun enterSearch_filtersResults() {
+		runBlocking {
+			insertProducts()
+			loginCustomer()
+			onView(withId(R.id.home_search_edit_text)).perform(typeText("slipper"))
+			delay(500)
+			onView(withId(R.id.products_recycler_view)).check(RecyclerViewItemCountAssertion(1))
+		}
+	}
+
+	private fun loginSeller() {
+		authRepository.login(userSeller, true)
+		ServiceLocator.authRepository = authRepository
+		setScenarioAndNav()
+	}
+
+	private fun loginCustomer() {
+		authRepository.login(userCustomer, true)
+		ServiceLocator.authRepository = authRepository
+		setScenarioAndNav()
 	}
 
 	private fun setScenarioAndNav() {
