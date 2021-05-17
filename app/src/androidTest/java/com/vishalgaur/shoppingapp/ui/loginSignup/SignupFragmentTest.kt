@@ -22,7 +22,6 @@ import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.clickClickableSpan
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.not
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
