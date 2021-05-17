@@ -42,6 +42,7 @@ class AddressAdapter(private val context: Context, addresses: List<UserData.Addr
 			}
 			binding.addressDeleteBtn.setOnClickListener {
 				onClickListener.onDeleteClick(address.addressId)
+				notifyDataSetChanged()
 			}
 		}
 	}

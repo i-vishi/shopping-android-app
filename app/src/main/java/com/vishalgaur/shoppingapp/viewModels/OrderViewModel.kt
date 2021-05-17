@@ -121,7 +121,16 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 		viewModelScope.launch {
 			val delRes = async { authRepository.deleteAddressById(addressId, currentUser!!) }
 			when (val res = delRes.await()) {
-				is Success -> Log.d(TAG, "onDeleteAddress: Success")
+				is Success -> {
+					Log.d(TAG, "onDeleteAddress: Success")
+					val addresses = _userAddresses.value?.toMutableList()
+					addresses?.let {
+						val pos = addresses.indexOfFirst { it.addressId == addressId }
+						if (pos >= 0)
+							it.removeAt(pos)
+						_userAddresses.value = it
+					}
+				}
 				is Error -> Log.d(TAG, "onDeleteAddress: Error, ${res.exception}")
 				else -> Log.d(TAG, "onDeleteAddress: Some error occurred!")
 			}
