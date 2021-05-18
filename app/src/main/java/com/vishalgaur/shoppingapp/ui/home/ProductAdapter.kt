@@ -57,14 +57,16 @@ class ProductAdapter(proList: List<Product>, private val context: Context) :
 				R.string.pro_offer_precent_text,
 				getOfferPercentage(productData.mrp, productData.price).toString()
 			)
+			if (productData.images.isNotEmpty()) {
+				val imgUrl = productData.images[0].toUri().buildUpon().scheme("https").build()
+				Glide.with(context)
+					.asBitmap()
+					.load(imgUrl)
+					.into(productImage)
 
-			val imgUrl = productData.images[0].toUri().buildUpon().scheme("https").build()
-			Glide.with(context)
-				.asBitmap()
-				.load(imgUrl)
-				.into(productImage)
+				productImage.clipToOutline = true
+			}
 
-			productImage.clipToOutline = true
 
 			if (sessionManager.isUserSeller()) {
 				proLikeButton.visibility = View.GONE
@@ -118,8 +120,8 @@ class ProductAdapter(proList: List<Product>, private val context: Context) :
 	interface OnClickListener {
 		fun onClick(productData: Product)
 		fun onDeleteClick(productData: Product)
-		fun onEditClick(productId: String){}
-		fun onLikeClick(productId: String){}
-		fun onAddToCartClick(productData: Product){}
+		fun onEditClick(productId: String) {}
+		fun onLikeClick(productId: String) {}
+		fun onAddToCartClick(productData: Product) {}
 	}
 }

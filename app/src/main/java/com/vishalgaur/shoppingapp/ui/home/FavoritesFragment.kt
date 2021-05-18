@@ -35,11 +35,12 @@ class FavoritesFragment : Fragment() {
 	}
 
 	private fun setViews() {
+		viewModel.getLikedProducts()
 		binding.favTopAppBar.topAppBar.title = "Favorite Products"
 		binding.favTopAppBar.topAppBar.setNavigationOnClickListener {
 			findNavController().navigateUp()
 		}
-		viewModel.getLikedProducts()
+		binding.favEmptyTextView.visibility = View.GONE
 		if (context != null) {
 			val proList = viewModel.likedProducts.value ?: emptyList()
 			productsAdapter = LikedProductAdapter(proList, requireContext())
@@ -57,7 +58,6 @@ class FavoritesFragment : Fragment() {
 				}
 			}
 			binding.favProductsRecyclerView.apply {
-				adapter = productsAdapter
 				val itemDecoration = RecyclerViewPaddingItemDecoration(requireContext())
 				if (itemDecorationCount == 0) {
 					addItemDecoration(itemDecoration)
@@ -69,13 +69,22 @@ class FavoritesFragment : Fragment() {
 	private fun setObservers() {
 		viewModel.userLikes.observe(viewLifecycleOwner) {
 			if (it.isNotEmpty()) {
+				viewModel.getLikedProducts()
+				if (viewModel.likedProducts.value != null) {
+					Log.d("FavoriesFragment", "likes = ${viewModel.likedProducts.value}")
+					productsAdapter.data = viewModel.likedProducts.value!!
+					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.circularLoader.hideAnimationBehavior
+					binding.favProductsRecyclerView.adapter = productsAdapter
+					binding.favProductsRecyclerView.adapter?.apply {
+						notifyDataSetChanged()
+					}
+				}
+			} else if (it.isEmpty()) {
+				binding.favEmptyTextView.visibility = View.VISIBLE
+				binding.favProductsRecyclerView.visibility = View.GONE
 				binding.loaderLayout.circularLoader.visibility = View.GONE
 				binding.loaderLayout.circularLoader.hideAnimationBehavior
-				binding.favProductsRecyclerView.adapter?.apply {
-					viewModel.getLikedProducts()
-					productsAdapter.data = viewModel.likedProducts.value ?: emptyList()
-					notifyDataSetChanged()
-				}
 			}
 		}
 	}

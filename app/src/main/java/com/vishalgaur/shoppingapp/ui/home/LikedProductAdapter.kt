@@ -40,12 +40,14 @@ class LikedProductAdapter(proList: List<Product>, private val context: Context) 
 				R.string.pro_offer_precent_text,
 				getOfferPercentage(productData.mrp, productData.price).toString()
 			)
-			val imgUrl = productData.images[0].toUri().buildUpon().scheme("https").build()
-			Glide.with(context)
-				.asBitmap()
-				.load(imgUrl)
-				.into(binding.productImageView)
-			binding.productImageView.clipToOutline = true
+			if (productData.images.isNotEmpty()) {
+				val imgUrl = productData.images[0].toUri().buildUpon().scheme("https").build()
+				Glide.with(context)
+					.asBitmap()
+					.load(imgUrl)
+					.into(binding.productImageView)
+				binding.productImageView.clipToOutline = true
+			}
 
 			//hiding unnecessary button
 			binding.productAddToCartButton.visibility = View.GONE

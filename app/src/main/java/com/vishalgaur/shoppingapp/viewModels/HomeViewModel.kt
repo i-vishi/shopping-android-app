@@ -126,7 +126,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 		viewModelScope.launch {
 			val res = authRepository.getLikesByUserId(currentUser!!)
 			if (res is Success) {
-				_userLikes.value = res.data ?: emptyList()
+				val data = res.data ?: emptyList()
+				if (data[0] != "") {
+					_userLikes.value = data
+				} else {
+					_userLikes.value = emptyList()
+				}
 				Log.d(TAG, "Getting Likes: Success")
 			} else {
 				_userLikes.value = emptyList()
@@ -137,9 +142,19 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	}
 
 	fun getLikedProducts() {
-		val res = _userLikes.value?.map { proId ->
-			_allProducts.value?.find { it.productId == proId } ?: Product()
-		} ?: emptyList()
+		val res: List<Product> = if (_userLikes.value != null) {
+			val allLikes = _userLikes.value ?: emptyList()
+			if (!allLikes.isNullOrEmpty()) {
+				Log.d(TAG, "alllikes = ${allLikes.size}")
+				allLikes.map { proId ->
+					_allProducts.value?.find { it.productId == proId } ?: Product()
+				}
+			} else {
+				emptyList()
+			}
+		} else {
+			emptyList()
+		}
 		_likedProducts.value = res
 	}
 

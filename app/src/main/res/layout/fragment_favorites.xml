@@ -18,6 +18,23 @@
         android:layout_height="match_parent"
         android:layout_below="@id/fav_top_app_bar">
 
+        <TextView
+            android:id="@+id/fav_empty_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/nunito_sans"
+            android:text="@string/no_likes_text"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.MyTheme.Headline3"
+            android:textColor="@color/blue_accent_300"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <include
             android:id="@+id/loader_layout"
             layout="@layout/layout_circular_loader"
