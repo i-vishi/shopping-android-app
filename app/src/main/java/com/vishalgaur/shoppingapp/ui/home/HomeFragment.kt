@@ -36,6 +36,7 @@ class HomeFragment : Fragment() {
 	private lateinit var binding: FragmentHomeBinding
 	private val viewModel: HomeViewModel by activityViewModels()
 	private val focusChangeListener = MyOnFocusChangeListener()
+	private lateinit var productAdapter: ProductAdapter
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -53,61 +54,65 @@ class HomeFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		if (context != null) {
+			val productsList = viewModel.products.value
+			 productAdapter = ProductAdapter(productsList ?: emptyList(), requireContext())
+			productAdapter.onClickListener = object : ProductAdapter.OnClickListener {
+				override fun onClick(productData: Product) {
+					Log.d(TAG, "Product: ${productData.productId} clicked")
+					findNavController().navigate(
+						R.id.action_seeProduct,
+						bundleOf("productId" to productData.productId)
+					)
+				}
 
+				override fun onDeleteClick(productData: Product) {
+					Log.d(TAG, "onDeleteProduct: initiated for ${productData.productId}")
+					showDeleteDialog(productData.name, productData.productId)
+				}
+
+				override fun onEditClick(productId: String) {
+					Log.d(TAG, "onEditProduct: initiated for $productId")
+					navigateToAddEditProductFragment(isEdit = true, productId = productId)
+				}
+
+				override fun onLikeClick(productId: String) {
+					Log.d(TAG, "onToggleLike: initiated for $productId")
+					viewModel.toggleLikeByProductId(productId)
+				}
+
+				override fun onAddToCartClick(productData: Product) {
+					Log.d(TAG, "onToggleCartAddition: initiated")
+					viewModel.toggleProductInCart(productData)
+				}
+			}
+			productAdapter.bindImageButtons = object : ProductAdapter.BindImageButtons {
+				@SuppressLint("ResourceAsColor")
+				override fun setLikeButton(productId: String, button: CheckBox) {
+					button.isChecked = viewModel.isProductLiked(productId)
+				}
+
+				override fun setCartButton(productId: String, imgView: ImageView) {
+					if (viewModel.isProductInCart(productId)) {
+						imgView.setImageResource(R.drawable.ic_remove_shopping_cart_24)
+					} else {
+						imgView.setImageResource(R.drawable.ic_add_shopping_cart_24)
+					}
+				}
+
+			}
+			binding.productsRecyclerView.apply {
+				adapter = productAdapter
+				val itemDecoration = RecyclerViewPaddingItemDecoration(requireContext())
+				if (itemDecorationCount == 0) {
+					addItemDecoration(itemDecoration)
+				}
+			}
+		}
 		viewModel.products.observe(viewLifecycleOwner) { productsList ->
-			if (context != null) {
-				val productAdapter = ProductAdapter(productsList ?: emptyList(), requireContext())
-				productAdapter.onClickListener = object : ProductAdapter.OnClickListener {
-					override fun onClick(productData: Product) {
-						Log.d(TAG, "Product: ${productData.productId} clicked")
-						findNavController().navigate(
-							R.id.action_seeProduct,
-							bundleOf("productId" to productData.productId)
-						)
-					}
-
-					override fun onDeleteClick(productData: Product) {
-						Log.d(TAG, "onDeleteProduct: initiated for ${productData.productId}")
-						showDeleteDialog(productData.name, productData.productId)
-					}
-
-					override fun onEditClick(productId: String) {
-						Log.d(TAG, "onEditProduct: initiated for $productId")
-						navigateToAddEditProductFragment(isEdit = true, productId = productId)
-					}
-
-					override fun onLikeClick(productId: String) {
-						Log.d(TAG, "onToggleLike: initiated for $productId")
-						viewModel.toggleLikeByProductId(productId)
-					}
-
-					override fun onAddToCartClick(productData: Product) {
-						Log.d(TAG, "onToggleCartAddition: initiated")
-						viewModel.toggleProductInCart(productData)
-					}
-				}
-				productAdapter.bindImageButtons = object : ProductAdapter.BindImageButtons {
-					@SuppressLint("ResourceAsColor")
-					override fun setLikeButton(productId: String, button: CheckBox) {
-						button.isChecked = viewModel.isProductLiked(productId)
-					}
-
-					override fun setCartButton(productId: String, imgView: ImageView) {
-						if (viewModel.isProductInCart(productId)) {
-							imgView.setImageResource(R.drawable.ic_remove_shopping_cart_24)
-						} else {
-							imgView.setImageResource(R.drawable.ic_add_shopping_cart_24)
-						}
-					}
-
-				}
-				binding.productsRecyclerView.apply {
-					adapter = productAdapter
-					val itemDecoration = RecyclerViewPaddingItemDecoration(requireContext())
-					if (itemDecorationCount == 0) {
-						addItemDecoration(itemDecoration)
-					}
-				}
+			binding.productsRecyclerView.adapter?.apply {
+				productAdapter.data = productsList
+				notifyDataSetChanged()
 			}
 		}
 	}

@@ -16,8 +16,10 @@ import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.databinding.ProductsListItemBinding
 import com.vishalgaur.shoppingapp.getOfferPercentage
 
-class ProductAdapter(private val data: List<Product>, private val context: Context) :
+class ProductAdapter(proList: List<Product>, private val context: Context) :
 	RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+
+	var data = proList
 
 	lateinit var onClickListener: OnClickListener
 	lateinit var bindImageButtons: BindImageButtons
@@ -116,8 +118,8 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
 	interface OnClickListener {
 		fun onClick(productData: Product)
 		fun onDeleteClick(productData: Product)
-		fun onEditClick(productId: String)
-		fun onLikeClick(productId: String)
-		fun onAddToCartClick(productData: Product)
+		fun onEditClick(productId: String){}
+		fun onLikeClick(productId: String){}
+		fun onAddToCartClick(productData: Product){}
 	}
 }

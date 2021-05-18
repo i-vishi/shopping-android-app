@@ -47,12 +47,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	init {
 		viewModelScope.launch {
 			authRepository.hardRefreshUserData()
+			getUserLikes()
 		}
+
 		if (isUserASeller)
 			getProductsByOwner()
 		else
 			getProducts()
-		getUserLikes()
 	}
 
 	fun setDataLoaded() {
@@ -77,14 +78,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 	private fun getProducts() {
 		_allProducts = Transformations.switchMap(productsRepository.observeProducts()) {
-			Log.d(TAG, it.toString())
 			getProductsLiveData(it)
 		} as MutableLiveData<List<Product>>
 		viewModelScope.launch {
 			_storeDataStatus.value = StoreDataStatus.LOADING
 			val res = async { productsRepository.refreshProducts() }
 			res.await()
-			Log.d(TAG, "getProductsByOwner: status = ${_storeDataStatus.value}")
+			Log.d(TAG, "getAllProducts: status = ${_storeDataStatus.value}")
 		}
 	}
 
@@ -100,6 +100,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 					Log.d(TAG, "Getting Likes: Error, ${res.exception}")
 			}
 		}
+	}
+
+	fun getLikedProducts(): List<Product> {
+		return _userLikes.value?.map { proId ->
+			_allProducts.value?.find { it.productId == proId } ?: Product()
+		} ?: emptyList()
 	}
 
 	private fun getProductsLiveData(result: Result<List<Product>?>?): LiveData<List<Product>> {
