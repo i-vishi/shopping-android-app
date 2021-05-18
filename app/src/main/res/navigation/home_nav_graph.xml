@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_seeProduct"
             app:destination="@id/productDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment" />
     </fragment>
     <fragment
         android:id="@+id/addEditProductFragment"
@@ -93,4 +96,9 @@
             app:popUpTo="@id/selectAddressFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.home.FavoritesFragment"
+        android:label="fragment_favorites"
+        tools:layout="@layout/fragment_favorites" />
 </navigation>

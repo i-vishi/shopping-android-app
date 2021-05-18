@@ -119,5 +119,6 @@
     <string name="minus_btn_desc">Decrease Button</string>
     <string name="delete_cart_item_message_text">On Proceeding, selected Item will be deleted from your Cart.</string>
     <string name="buy_now_btn_text">Buy Now</string>
+    <string name="home_app_bar_favorites_label">Favorites</string>
 
 </resources>

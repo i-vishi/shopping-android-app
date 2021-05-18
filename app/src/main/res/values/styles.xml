@@ -33,6 +33,6 @@
     </style>
 
     <style name="AppBarTitleStyle" parent="TextAppearance.MyTheme.Headline6">
-        <item name="fontFamily">@font/nunito_sans_extrabold</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>
