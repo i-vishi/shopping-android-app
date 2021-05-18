@@ -2,7 +2,6 @@ package com.vishalgaur.shoppingapp.ui.home
 
 import android.content.Context
 import android.graphics.Paint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,6 +56,7 @@ class LikedProductAdapter(proList: List<Product>, private val context: Context) 
 			binding.productEditButton.setImageResource(R.drawable.ic_delete_24)
 			binding.productEditButton.setOnClickListener {
 				onClickListener.onDeleteClick(productData.productId)
+				notifyDataSetChanged()
 			}
 		}
 	}

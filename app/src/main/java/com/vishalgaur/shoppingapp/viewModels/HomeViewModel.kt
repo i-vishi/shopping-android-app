@@ -35,6 +35,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	private var _userProducts = MutableLiveData<List<Product>>()
 	val userProducts: LiveData<List<Product>> get() = _userProducts
 
+	private var _likedProducts = MutableLiveData<List<Product>>()
+	val likedProducts: LiveData<List<Product>> get() = _likedProducts
+
 	private var _userLikes = MutableLiveData<List<String>>()
 	val userLikes: LiveData<List<String>> get() = _userLikes
 
@@ -65,7 +68,38 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	}
 
 	fun toggleLikeByProductId(productId: String) {
-
+		Log.d(TAG, "Toggling Like")
+		viewModelScope.launch {
+			val isLiked = isProductLiked(productId)
+			val allLikes = _userLikes.value?.toMutableList() ?: mutableListOf()
+			val deferredRes = async {
+				if (isLiked) {
+					authRepository.removeProductFromLikes(productId, currentUser!!)
+				} else {
+					authRepository.insertProductToLikes(productId, currentUser!!)
+				}
+			}
+			val res = deferredRes.await()
+			if (res is Success) {
+				if (isLiked) {
+					allLikes.remove(productId)
+				} else {
+					allLikes.add(productId)
+				}
+				_userLikes.value = allLikes
+				val proList = _likedProducts.value?.toMutableList() ?: mutableListOf()
+				val pro = proList.find { it.productId == productId }
+				if (pro != null) {
+					proList.remove(pro)
+				}
+				_likedProducts.value = proList
+				Log.d(TAG, "onToggleLike: Success")
+			} else {
+				if (res is Error) {
+					Log.d(TAG, "onToggleLike: Error, ${res.exception}")
+				}
+			}
+		}
 	}
 
 	fun isProductInCart(productId: String): Boolean {
@@ -102,10 +136,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 		}
 	}
 
-	fun getLikedProducts(): List<Product> {
-		return _userLikes.value?.map { proId ->
+	fun getLikedProducts() {
+		val res = _userLikes.value?.map { proId ->
 			_allProducts.value?.find { it.productId == proId } ?: Product()
 		} ?: emptyList()
+		_likedProducts.value = res
 	}
 
 	private fun getProductsLiveData(result: Result<List<Product>?>?): LiveData<List<Product>> {

@@ -39,8 +39,9 @@ class FavoritesFragment : Fragment() {
 		binding.favTopAppBar.topAppBar.setNavigationOnClickListener {
 			findNavController().navigateUp()
 		}
-		val proList = viewModel.getLikedProducts()
+		viewModel.getLikedProducts()
 		if (context != null) {
+			val proList = viewModel.likedProducts.value ?: emptyList()
 			productsAdapter = LikedProductAdapter(proList, requireContext())
 			productsAdapter.onClickListener = object : LikedProductAdapter.OnClickListener {
 				override fun onClick(productData: Product) {
@@ -52,7 +53,7 @@ class FavoritesFragment : Fragment() {
 				}
 
 				override fun onDeleteClick(productId: String) {
-					TODO("Not yet implemented")
+					viewModel.toggleLikeByProductId(productId)
 				}
 			}
 			binding.favProductsRecyclerView.apply {
@@ -67,11 +68,12 @@ class FavoritesFragment : Fragment() {
 
 	private fun setObservers() {
 		viewModel.userLikes.observe(viewLifecycleOwner) {
-			if(it.isNotEmpty()) {
+			if (it.isNotEmpty()) {
 				binding.loaderLayout.circularLoader.visibility = View.GONE
 				binding.loaderLayout.circularLoader.hideAnimationBehavior
 				binding.favProductsRecyclerView.adapter?.apply {
-					productsAdapter.data = viewModel.getLikedProducts()
+					viewModel.getLikedProducts()
+					productsAdapter.data = viewModel.likedProducts.value ?: emptyList()
 					notifyDataSetChanged()
 				}
 			}
