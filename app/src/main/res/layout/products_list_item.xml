@@ -41,6 +41,19 @@
             app:srcCompat="@drawable/ic_delete_24"
             app:tint="@color/gray" />
 
+        <CheckBox
+            android:id="@+id/product_like_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/sl_favourite_24dp"
+            android:gravity="end|top"
+            android:layoutDirection="rtl"
+            app:buttonTint="@color/gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/product_name_tv"
             android:layout_width="0dp"
@@ -114,16 +127,17 @@
             app:srcCompat="@drawable/ic_edit_24"
             app:tint="@color/gray" />
 
-<!--        <Button-->
-<!--            android:id="@+id/product_buy_now_btn"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:backgroundTint="@color/blue_accent_300"-->
-<!--            android:text="@string/buy_now_btn_text"-->
-<!--            android:textAllCaps="false"-->
-<!--            android:textSize="12sp"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent" />-->
+        <ImageView
+            android:id="@+id/product_add_to_cart_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_button"
+            android:contentDescription="@string/add_img_close_btn_desc"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_add_shopping_cart_24"
+            app:tint="@color/gray" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

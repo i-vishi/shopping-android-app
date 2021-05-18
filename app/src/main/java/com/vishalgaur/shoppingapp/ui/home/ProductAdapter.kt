@@ -5,6 +5,8 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,6 +20,7 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
 	RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
 	lateinit var onClickListener: OnClickListener
+	lateinit var bindImageButtons: BindImageButtons
 	private val sessionManager = ShoppingAppSessionManager(context)
 
 	inner class ViewHolder(binding: ProductsListItemBinding) :
@@ -31,6 +34,8 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
 		private val proMrp = binding.productActualPriceTv
 		private val proOffer = binding.productOfferValueTv
 		private val proRatingBar = binding.productRatingBar
+		private val proLikeButton = binding.productLikeCheckbox
+		private val proCartButton = binding.productAddToCartButton
 
 		fun bind(productData: Product) {
 			productCard.setOnClickListener {
@@ -60,6 +65,8 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
 			productImage.clipToOutline = true
 
 			if (sessionManager.isUserSeller()) {
+				proLikeButton.visibility = View.GONE
+				proCartButton.visibility = View.GONE
 				proEditBtn.setOnClickListener {
 					onClickListener.onEditClick(productData.productId)
 				}
@@ -70,6 +77,16 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
 			} else {
 				proEditBtn.visibility = View.GONE
 				proDeleteButton.visibility = View.GONE
+				bindImageButtons.setLikeButton(productData.productId, proLikeButton)
+				bindImageButtons.setCartButton(productData.productId, proCartButton)
+				proLikeButton
+				proLikeButton.setOnCheckedChangeListener { _, _ ->
+					onClickListener.onLikeClick(productData.productId)
+
+				}
+				proCartButton.setOnClickListener {
+					onClickListener.onAddToCartClick(productData)
+				}
 			}
 		}
 	}
@@ -91,9 +108,16 @@ class ProductAdapter(private val data: List<Product>, private val context: Conte
 
 	override fun getItemCount(): Int = data.size
 
+	interface BindImageButtons {
+		fun setLikeButton(productId: String, button: CheckBox)
+		fun setCartButton(productId: String, imgView: ImageView)
+	}
+
 	interface OnClickListener {
 		fun onClick(productData: Product)
 		fun onDeleteClick(productData: Product)
 		fun onEditClick(productId: String)
+		fun onLikeClick(productId: String)
+		fun onAddToCartClick(productData: Product)
 	}
 }

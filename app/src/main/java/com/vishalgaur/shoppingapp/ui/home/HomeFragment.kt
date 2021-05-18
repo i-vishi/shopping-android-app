@@ -1,6 +1,10 @@
 package com.vishalgaur.shoppingapp.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.CheckBox
+import android.widget.ImageView
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -72,6 +78,31 @@ class HomeFragment : Fragment() {
 						Log.d(TAG, "onEditProduct: initiated for $productId")
 						navigateToAddEditProductFragment(isEdit = true, productId = productId)
 					}
+
+					override fun onLikeClick(productId: String) {
+						Log.d(TAG, "onToggleLike: initiated for $productId")
+						viewModel.toggleLikeByProductId(productId)
+					}
+
+					override fun onAddToCartClick(productData: Product) {
+						Log.d(TAG, "onToggleCartAddition: initiated")
+						viewModel.toggleProductInCart(productData)
+					}
+				}
+				productAdapter.bindImageButtons = object : ProductAdapter.BindImageButtons {
+					@SuppressLint("ResourceAsColor")
+					override fun setLikeButton(productId: String, button: CheckBox) {
+						button.isChecked = viewModel.isProductLiked(productId)
+					}
+
+					override fun setCartButton(productId: String, imgView: ImageView) {
+						if (viewModel.isProductInCart(productId)) {
+							imgView.setImageResource(R.drawable.ic_remove_shopping_cart_24)
+						} else {
+							imgView.setImageResource(R.drawable.ic_add_shopping_cart_24)
+						}
+					}
+
 				}
 				binding.productsRecyclerView.apply {
 					adapter = productAdapter

@@ -17,8 +17,10 @@ private const val TAG = "HomeViewModel"
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-	private val productsRepository = (application.applicationContext as ShoppingApplication).productsRepository
-	private val authRepository = (application.applicationContext as ShoppingApplication).authRepository
+	private val productsRepository =
+		(application.applicationContext as ShoppingApplication).productsRepository
+	private val authRepository =
+		(application.applicationContext as ShoppingApplication).authRepository
 
 	private val sessionManager = ShoppingAppSessionManager(application.applicationContext)
 	private val currentUser = sessionManager.getUserIdFromSession()
@@ -32,6 +34,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 	private var _userProducts = MutableLiveData<List<Product>>()
 	val userProducts: LiveData<List<Product>> get() = _userProducts
+
+	private var _userLikes = MutableLiveData<List<String>>()
+	val userLikes: LiveData<List<String>> get() = _userLikes
 
 	private var _filterCategory = MutableLiveData("All")
 	val filterCategory: LiveData<String> get() = _filterCategory
@@ -47,10 +52,27 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 			getProductsByOwner()
 		else
 			getProducts()
+		getUserLikes()
 	}
 
 	fun setDataLoaded() {
 		_storeDataStatus.value = StoreDataStatus.DONE
+	}
+
+	fun isProductLiked(productId: String): Boolean {
+		return _userLikes.value?.contains(productId) == true
+	}
+
+	fun toggleLikeByProductId(productId: String) {
+
+	}
+
+	fun isProductInCart(productId: String): Boolean {
+		return false
+	}
+
+	fun toggleProductInCart(product: Product) {
+
 	}
 
 	private fun getProducts() {
@@ -63,6 +85,20 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 			val res = async { productsRepository.refreshProducts() }
 			res.await()
 			Log.d(TAG, "getProductsByOwner: status = ${_storeDataStatus.value}")
+		}
+	}
+
+	private fun getUserLikes() {
+		viewModelScope.launch {
+			val res = authRepository.getLikesByUserId(currentUser!!)
+			if (res is Success) {
+				_userLikes.value = res.data ?: emptyList()
+				Log.d(TAG, "Getting Likes: Success")
+			} else {
+				_userLikes.value = emptyList()
+				if (res is Error)
+					Log.d(TAG, "Getting Likes: Error, ${res.exception}")
+			}
 		}
 	}
 
