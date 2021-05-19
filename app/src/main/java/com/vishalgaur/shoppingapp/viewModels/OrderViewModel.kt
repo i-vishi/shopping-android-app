@@ -48,7 +48,6 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 		viewModelScope.launch {
 			authRepository.hardRefreshUserData()
 			getUserLikes()
-			getCartItems()
 		}
 	}
 
