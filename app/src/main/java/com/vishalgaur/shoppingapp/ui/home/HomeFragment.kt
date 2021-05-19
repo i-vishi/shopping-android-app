@@ -17,6 +17,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.Product
@@ -56,7 +57,7 @@ class HomeFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		if (context != null) {
 			val productsList = viewModel.products.value
-			 productAdapter = ProductAdapter(productsList ?: emptyList(), requireContext())
+			productAdapter = ProductAdapter(productsList ?: emptyList(), requireContext())
 			productAdapter.onClickListener = object : ProductAdapter.OnClickListener {
 				override fun onClick(productData: Product) {
 					Log.d(TAG, "Product: ${productData.productId} clicked")
@@ -102,6 +103,18 @@ class HomeFragment : Fragment() {
 
 			}
 			binding.productsRecyclerView.apply {
+				val gridLayoutManager = GridLayoutManager(context, 2)
+				gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+					override fun getSpanSize(position: Int): Int {
+						return when (productAdapter.getItemViewType(position)) {
+							//ad
+							2 -> 2
+							// product
+							else -> 1
+						}
+					}
+				}
+				layoutManager = gridLayoutManager
 				adapter = productAdapter
 				val itemDecoration = RecyclerViewPaddingItemDecoration(requireContext())
 				if (itemDecorationCount == 0) {
@@ -111,7 +124,7 @@ class HomeFragment : Fragment() {
 		}
 		viewModel.products.observe(viewLifecycleOwner) { productsList ->
 			binding.productsRecyclerView.adapter?.apply {
-				productAdapter.data = productsList
+				productAdapter.data = getMixedDataList(productsList, getAdsList())
 				notifyDataSetChanged()
 			}
 		}
@@ -275,5 +288,23 @@ class HomeFragment : Fragment() {
 			R.id.action_goto_addProduct,
 			bundleOf("isEdit" to isEdit, "categoryName" to catName, "productId" to productId)
 		)
+	}
+
+	private fun getMixedDataList(data: List<Product>, ad: List<Int>): List<Any> {
+		val itemsList = mutableListOf<Any>()
+		itemsList.addAll(data)
+		if (data.size >= 6) {
+			itemsList.add(0, ad[0])
+			itemsList.add(5, ad[1])
+			itemsList.add(10, ad[2])
+		} else {
+			if (data.size > 2)
+				itemsList.add(2, ad[0])
+		}
+		return itemsList
+	}
+
+	private fun getAdsList(): List<Int> {
+		return listOf(R.drawable.ad_ex_1, R.drawable.ad_ex_2, R.drawable.ad_ex_3)
 	}
 }

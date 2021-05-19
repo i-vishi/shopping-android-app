@@ -13,11 +13,12 @@ import com.bumptech.glide.Glide
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.Product
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
+import com.vishalgaur.shoppingapp.databinding.LayoutHomeAdBinding
 import com.vishalgaur.shoppingapp.databinding.ProductsListItemBinding
 import com.vishalgaur.shoppingapp.getOfferPercentage
 
-class ProductAdapter(proList: List<Product>, private val context: Context) :
-	RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+class ProductAdapter(proList: List<Any>, private val context: Context) :
+	RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 	var data = proList
 
@@ -25,7 +26,7 @@ class ProductAdapter(proList: List<Product>, private val context: Context) :
 	lateinit var bindImageButtons: BindImageButtons
 	private val sessionManager = ShoppingAppSessionManager(context)
 
-	inner class ViewHolder(binding: ProductsListItemBinding) :
+	inner class ItemViewHolder(binding: ProductsListItemBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 		private val proName = binding.productNameTv
 		private val proPrice = binding.productPriceTv
@@ -95,22 +96,50 @@ class ProductAdapter(proList: List<Product>, private val context: Context) :
 		}
 	}
 
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-		return ViewHolder(
-			ProductsListItemBinding.inflate(
-				LayoutInflater.from(parent.context),
-				parent,
-				false
-			)
-		)
+	inner class AdViewHolder(binding: LayoutHomeAdBinding) : RecyclerView.ViewHolder(binding.root) {
+		val adImageView: ImageView = binding.adImageView
 	}
 
-	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		val proData = data[position]
-		holder.bind(proData)
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+		return when (viewType) {
+			VIEW_TYPE_AD -> AdViewHolder(
+				LayoutHomeAdBinding.inflate(
+					LayoutInflater.from(parent.context),
+					parent,
+					false
+				)
+			)
+			else -> ItemViewHolder(
+				ProductsListItemBinding.inflate(
+					LayoutInflater.from(parent.context),
+					parent,
+					false
+				)
+			)
+		}
+	}
+
+	override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+		when (val proData = data[position]) {
+			is Int -> (holder as AdViewHolder).adImageView.setImageResource(proData)
+			is Product -> (holder as ItemViewHolder).bind(proData)
+		}
 	}
 
 	override fun getItemCount(): Int = data.size
+
+	companion object {
+		const val VIEW_TYPE_PRODUCT = 1
+		const val VIEW_TYPE_AD = 2
+	}
+
+	override fun getItemViewType(position: Int): Int {
+		return when (data[position]) {
+			is Int -> VIEW_TYPE_AD
+			is Product -> VIEW_TYPE_PRODUCT
+			else -> VIEW_TYPE_PRODUCT
+		}
+	}
 
 	interface BindImageButtons {
 		fun setLikeButton(productId: String, button: CheckBox)

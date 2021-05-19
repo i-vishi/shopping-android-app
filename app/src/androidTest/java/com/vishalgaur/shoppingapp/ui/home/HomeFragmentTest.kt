@@ -131,7 +131,7 @@ class HomeFragmentTest {
 		//testing recyclerview items
 		onView(withId(R.id.products_recycler_view))
 			.perform(
-				RecyclerViewActions.actionOnItemAtPosition<ProductAdapter.ViewHolder>(
+				RecyclerViewActions.actionOnItemAtPosition<ProductAdapter.ItemViewHolder>(
 					0,
 					object : RecyclerViewItemAction() {
 						override fun perform(uiController: UiController?, view: View) {
@@ -154,7 +154,7 @@ class HomeFragmentTest {
 		//testing recyclerview items
 		onView(withId(R.id.products_recycler_view))
 			.perform(
-				RecyclerViewActions.actionOnItemAtPosition<ProductAdapter.ViewHolder>(
+				RecyclerViewActions.actionOnItemAtPosition<ProductAdapter.ItemViewHolder>(
 					0,
 					object : RecyclerViewItemAction() {
 						override fun perform(uiController: UiController?, view: View) {

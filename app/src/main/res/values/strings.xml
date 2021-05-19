@@ -121,5 +121,6 @@
     <string name="buy_now_btn_text">Buy Now</string>
     <string name="home_app_bar_favorites_label">Favorites</string>
     <string name="no_likes_text">No Products Liked Yet!</string>
+    <string name="home_ad_image_desc">Advertisement</string>
 
 </resources>
