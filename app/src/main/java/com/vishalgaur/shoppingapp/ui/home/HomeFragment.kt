@@ -290,16 +290,17 @@ class HomeFragment : Fragment() {
 		)
 	}
 
-	private fun getMixedDataList(data: List<Product>, ad: List<Int>): List<Any> {
+	private fun getMixedDataList(data: List<Product>, adsList: List<Int>): List<Any> {
 		val itemsList = mutableListOf<Any>()
 		itemsList.addAll(data)
-		if (data.size >= 6) {
-			itemsList.add(0, ad[0])
-			itemsList.add(5, ad[1])
-			itemsList.add(10, ad[2])
-		} else {
-			if (data.size > 2)
-				itemsList.add(2, ad[0])
+		var currPos = 0
+		adsList.forEach label@{ ad ->
+			if (itemsList.size > currPos) {
+				itemsList.add(currPos, ad)
+			} else {
+				return@label
+			}
+			currPos += 5
 		}
 		return itemsList
 	}

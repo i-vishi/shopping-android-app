@@ -122,5 +122,8 @@
     <string name="home_app_bar_favorites_label">Favorites</string>
     <string name="no_likes_text">No Products Liked Yet!</string>
     <string name="home_ad_image_desc">Advertisement</string>
+    <string name="bottom_nav_home_label">Home</string>
+    <string name="bottom_nav_cart_label">Cart</string>
+    <string name="bottom_nav_account_label">Account</string>
 
 </resources>
