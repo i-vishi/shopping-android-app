@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.vishalgaur.shoppingapp.R
+import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity"
@@ -36,6 +37,13 @@ class MainActivity : AppCompatActivity() {
 				R.id.cartFragment -> setBottomNavVisibility(View.VISIBLE)
 				else -> setBottomNavVisibility(View.GONE)
 			}
+		}
+
+		val sessionManager = ShoppingAppSessionManager(this.applicationContext)
+		if (sessionManager.isUserSeller()) {
+			binding.homeBottomNavigation.menu.removeItem(R.id.cartFragment)
+		}else {
+			binding.homeBottomNavigation.menu.removeItem(R.id.page_orders)
 		}
 	}
 
