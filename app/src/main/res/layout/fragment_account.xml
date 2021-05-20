@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".ui.home.AccountFragment">
+
+    <include
+        android:id="@+id/account_top_app_bar"
+        layout="@layout/layout_no_icon_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/account_top_app_bar">
+
+        <TextView
+            android:id="@+id/account_profile_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="16dp"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:padding="16dp"
+            android:text="@string/account_profile_label"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/person_account_drawable"
+            app:drawableTint="@color/blue_accent_300"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/account_orders_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="16dp"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:padding="16dp"
+            android:text="@string/account_orders_label"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/orders_account_drawable"
+            app:drawableTint="@color/blue_accent_300"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/account_profile_tv" />
+
+        <TextView
+            android:id="@+id/account_address_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="16dp"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:padding="16dp"
+            android:text="@string/account_address_label"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/address_account_drawable"
+            app:drawableTint="@color/blue_accent_300"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/account_orders_tv" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

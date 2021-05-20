@@ -134,5 +134,9 @@
     <string name="order_success_message_text">thank you for shopping</string>
     <string name="no_items_in_cart_text">No Products Added Yet!</string>
     <string name="bottom_nav_orders_label">Orders</string>
+    <string name="account_profile_label">Profile</string>
+    <string name="account_orders_label">Orders</string>
+    <string name="account_address_label">Address</string>
+    <string name="account_fragment_title">Account</string>
 
 </resources>

@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 			when (destination.id) {
 				R.id.homeFragment -> setBottomNavVisibility(View.VISIBLE)
 				R.id.cartFragment -> setBottomNavVisibility(View.VISIBLE)
+				R.id.accountFragment -> setBottomNavVisibility(View.VISIBLE)
 				else -> setBottomNavVisibility(View.GONE)
 			}
 		}

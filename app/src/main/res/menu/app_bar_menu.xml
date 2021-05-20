@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item
-        android:id="@+id/search"
-        android:icon="@drawable/ic_search_24"
-        android:title="@string/search_app_bar_title"
-        android:contentDescription="@string/content_description_search"
-        app:showAsAction="ifRoom" />
-
     <item
         android:id="@+id/more"
         android:title="@string/more_app_bar_title"

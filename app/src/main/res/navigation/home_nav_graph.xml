@@ -126,4 +126,9 @@
             android:id="@+id/action_orderSuccessFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.home.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" />
 </navigation>
