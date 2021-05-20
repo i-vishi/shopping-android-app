@@ -112,5 +112,18 @@
         android:id="@+id/selectPaymentFragment"
         android:name="com.vishalgaur.shoppingapp.ui.home.SelectPaymentFragment"
         android:label="fragment_select_payment"
-        tools:layout="@layout/fragment_select_payment" />
+        tools:layout="@layout/fragment_select_payment" >
+        <action
+            android:id="@+id/action_selectPaymentFragment_to_orderSuccessFragment"
+            app:destination="@id/orderSuccessFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderSuccessFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.home.OrderSuccessFragment"
+        android:label="fragment_order_success"
+        tools:layout="@layout/fragment_order_success" >
+        <action
+            android:id="@+id/action_orderSuccessFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

@@ -50,6 +50,10 @@ class SelectPaymentFragment : Fragment() {
 			orderViewModel.setSelectedPaymentMethod(method)
 			Log.d(TAG, "navigate to order Success")
 			binding.payByErrorTextView.visibility = View.GONE
+			// save order
+			// wait for save add observer
+			// if success, navigate
+			findNavController().navigate(R.id.action_selectPaymentFragment_to_orderSuccessFragment)
 		} else {
 			Log.d(TAG, "Error: Select a payment method!")
 			binding.payByErrorTextView.visibility = View.VISIBLE
