@@ -128,5 +128,9 @@
     <string name="pay_by_title">Choose Payment Method</string>
     <string name="pay_by_next_btn_text">Pay %s</string>
     <string name="pay_by_error_empty">Select a payment method!</string>
+    <string name="back_to_home_text">Back To Home</string>
+    <string name="success_img_desc">Success Tick Image</string>
+    <string name="success_label">Success</string>
+    <string name="order_success_message_text">thank you for shopping</string>
 
 </resources>
