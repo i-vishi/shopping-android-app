@@ -71,7 +71,6 @@ class FavoritesFragment : Fragment() {
 			if (it.isNotEmpty()) {
 				viewModel.getLikedProducts()
 				if (viewModel.likedProducts.value != null) {
-					Log.d("FavoriesFragment", "likes = ${viewModel.likedProducts.value}")
 					productsAdapter.data = viewModel.likedProducts.value!!
 					binding.loaderLayout.circularLoader.visibility = View.GONE
 					binding.loaderLayout.circularLoader.hideAnimationBehavior

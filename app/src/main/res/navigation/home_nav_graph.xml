@@ -77,6 +77,9 @@
         <action
             android:id="@+id/action_selectAddressFragment_to_addEditAddressFragment"
             app:destination="@id/addEditAddressFragment" />
+        <action
+            android:id="@+id/action_selectAddressFragment_to_selectPaymentFragment"
+            app:destination="@id/selectPaymentFragment" />
     </fragment>
     <fragment
         android:id="@+id/addEditAddressFragment"
@@ -105,4 +108,9 @@
             android:id="@+id/action_favoritesFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/selectPaymentFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.home.SelectPaymentFragment"
+        android:label="fragment_select_payment"
+        tools:layout="@layout/fragment_select_payment" />
 </navigation>

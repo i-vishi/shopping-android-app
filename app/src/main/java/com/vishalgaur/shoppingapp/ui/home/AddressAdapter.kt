@@ -1,8 +1,6 @@
 package com.vishalgaur.shoppingapp.ui.home
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.ColorStateList
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -68,11 +66,10 @@ class AddressAdapter(private val context: Context, addresses: List<UserData.Addr
 		fun onDeleteClick(addressId: String)
 	}
 
-	@SuppressLint("ResourceAsColor")
 	private fun onCardClick(position: Int, addressTd: String, card: MaterialCardView) {
 		if (addressTd != lastCheckedAddress) {
 			card.apply {
-				setStrokeColor(ColorStateList.valueOf(R.color.blue_accent_300))
+				strokeColor = context.getColor(R.color.blue_accent_300)
 				isChecked = true
 				strokeWidth = TypedValue.applyDimension(
 					TypedValue.COMPLEX_UNIT_DIP,
@@ -81,7 +78,7 @@ class AddressAdapter(private val context: Context, addresses: List<UserData.Addr
 				).toInt()
 			}
 			lastCheckedCard?.apply {
-				setStrokeColor(ColorStateList.valueOf(R.color.light_gray))
+				strokeColor = context.getColor(R.color.light_gray)
 				isChecked = false
 				strokeWidth = TypedValue.applyDimension(
 					TypedValue.COMPLEX_UNIT_DIP,

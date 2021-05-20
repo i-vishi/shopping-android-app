@@ -96,7 +96,7 @@ class SelectAddressFragment : Fragment() {
 
 		binding.loaderLayout.circularLoader.visibility = View.GONE
 		binding.shipToNextBtn.setOnClickListener {
-			navigateToPaymentAddress(addressAdapter.lastCheckedAddress)
+			navigateToPaymentFragment(addressAdapter.lastCheckedAddress)
 		}
 	}
 
@@ -116,10 +116,11 @@ class SelectAddressFragment : Fragment() {
 		}
 	}
 
-	private fun navigateToPaymentAddress(addressId: String?) {
+	private fun navigateToPaymentFragment(addressId: String?) {
 		if (addressId != null) {
 			Log.d(TAG, "navigate to Payment")
 			binding.shipToErrorTextView.visibility = View.GONE
+			findNavController().navigate(R.id.action_selectAddressFragment_to_selectPaymentFragment)
 
 		} else {
 			Log.d(TAG, "error = select one address")

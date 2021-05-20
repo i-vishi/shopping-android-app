@@ -6,9 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    android:checkable="true"
     android:clickable="true"
     android:focusable="true"
     app:cardElevation="0dp"
+    app:checkedIcon="@null"
     app:strokeColor="@color/light_gray"
     app:strokeWidth="1dp">
 

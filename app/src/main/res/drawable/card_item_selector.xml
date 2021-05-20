@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:state_checked="true" app:strokeColor="@color/blue_accent_300" app:strokeWidth="2dp" />
+    <item app:strokeColor="@color/light_gray" app:strokeWidth="1dp" />
+</selector>
