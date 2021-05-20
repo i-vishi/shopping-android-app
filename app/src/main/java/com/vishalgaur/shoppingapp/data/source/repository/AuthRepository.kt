@@ -406,6 +406,32 @@ class AuthRepository(
 		}
 	}
 
+	override suspend fun placeOrder(newOrder: UserData.OrderItem, userId: String): Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
+				Log.d(TAG, "onPlaceOrder: adding item to remote source")
+				authRemoteDataSource.placeOrder(newOrder, userId)
+			}
+			val localRes = async {
+				Log.d(TAG, "onPlaceOrder: adding item to local source")
+				val userRes = authRemoteDataSource.getUserById(userId)
+				if (userRes is Success) {
+					userLocalDataSource.clearUser()
+					userLocalDataSource.addUser(userRes.data!!)
+				} else if (userRes is Error) {
+					throw userRes.exception
+				}
+			}
+			try {
+				remoteRes.await()
+				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
+			}
+		}
+	}
+
 	override suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?> {
 		return userLocalDataSource.getAddressesByUserId(userId)
 	}

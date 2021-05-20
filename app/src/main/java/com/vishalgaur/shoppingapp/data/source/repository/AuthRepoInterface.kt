@@ -24,6 +24,7 @@ interface AuthRepoInterface {
 	suspend fun insertCartItemByUserId(cartItem: UserData.CartItem, userId: String): Result<Boolean>
 	suspend fun updateCartItemByUserId(cartItem: UserData.CartItem, userId: String): Result<Boolean>
 	suspend fun deleteCartItemByUserId(itemId: String, userId: String): Result<Boolean>
+	suspend fun placeOrder(newOrder: UserData.OrderItem, userId: String): Result<Boolean>
 	suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?>
 	suspend fun getLikesByUserId(userId: String): Result<List<String>?>
 	suspend fun getUserData(userId: String): Result<UserData?>

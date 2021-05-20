@@ -38,6 +38,8 @@ interface UserDataSource {
 
 	suspend fun deleteCartItem(itemId: String, userId: String) {}
 
+	suspend fun placeOrder(newOrder: UserData.OrderItem, userId: String) {}
+
 	suspend fun clearUser() {}
 
 	suspend fun getUserByMobile(phoneNumber: String): UserData? {

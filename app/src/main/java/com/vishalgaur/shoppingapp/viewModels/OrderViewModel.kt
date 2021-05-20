@@ -15,6 +15,10 @@ import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 private const val TAG = "OrderViewModel"
 
@@ -44,9 +48,12 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 	private val _dataStatus = MutableLiveData<StoreDataStatus>()
 	val dataStatus: LiveData<StoreDataStatus> get() = _dataStatus
 
-	private val _selectedAddress = MutableLiveData<String>()
+	private val _orderStatus = MutableLiveData<StoreDataStatus>()
+	val orderStatus: LiveData<StoreDataStatus> get() = _orderStatus
 
+	private val _selectedAddress = MutableLiveData<String>()
 	private val _selectedPaymentMethod = MutableLiveData<String>()
+	private val newOrderData = MutableLiveData<UserData.OrderItem>()
 
 	init {
 		viewModelScope.launch {
@@ -246,6 +253,57 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 
 	fun setSelectedPaymentMethod(method: String) {
 		_selectedPaymentMethod.value = method
+	}
+
+	fun finalizeOrder() {
+		_orderStatus.value = StoreDataStatus.LOADING
+		val deliveryAddress =
+			_userAddresses.value?.find { it.addressId == _selectedAddress.value }
+		val paymentMethod = _selectedPaymentMethod.value
+		val orderId = currentUser!! + UUID.randomUUID().toString()
+		val items = _cartItems.value
+		val itemPrices = _priceList.value
+		val shippingCharges = 0.0
+		if (deliveryAddress != null && paymentMethod != null && !items.isNullOrEmpty() && !itemPrices.isNullOrEmpty()) {
+			val newOrder = UserData.OrderItem(
+				orderId,
+				items,
+				itemPrices,
+				deliveryAddress,
+				shippingCharges,
+				paymentMethod,
+				Date(),
+			)
+			newOrderData.value = newOrder
+			insertOrder()
+		} else {
+			Log.d(TAG, "orFinalizeOrder: Error, data null or empty")
+			_orderStatus.value = StoreDataStatus.ERROR
+		}
+	}
+
+	private fun insertOrder() {
+		viewModelScope.launch {
+			if (newOrderData.value != null) {
+				_orderStatus.value = StoreDataStatus.LOADING
+				val deferredRes = async {
+					authRepository.placeOrder(newOrderData.value!!, currentUser!!)
+				}
+				val res = deferredRes.await()
+				if (res is Success) {
+					Log.d(TAG, "onInsertOrder: Success")
+					_orderStatus.value = StoreDataStatus.DONE
+				} else {
+					_orderStatus.value = StoreDataStatus.ERROR
+					if (res is Error) {
+						Log.d(TAG, "onInsertOrder: Error, ${res.exception}")
+					}
+				}
+			} else {
+				Log.d(TAG, "orInsertOrder: Error, newProduct Null")
+				_orderStatus.value = StoreDataStatus.ERROR
+			}
+		}
 	}
 
 	private suspend fun getAllProductsInCart() {

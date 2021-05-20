@@ -8,6 +8,9 @@ import com.vishalgaur.shoppingapp.data.utils.ObjectListTypeConvertor
 import com.vishalgaur.shoppingapp.data.utils.OrderStatus
 import com.vishalgaur.shoppingapp.data.utils.UserType
 import kotlinx.android.parcel.Parcelize
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 @Parcelize
 @Entity(tableName = "users")
@@ -48,6 +51,7 @@ data class UserData(
 		var deliveryAddress: Address = Address(),
 		var shippingCharges: Double = 0.0,
 		var paymentMethod: String = "",
+		var orderDate: Date = Date(),
 		var status: String = OrderStatus.PACKAGING.name
 	) : Parcelable {
 		fun toHashMap(): HashMap<String, Any> {
@@ -58,6 +62,7 @@ data class UserData(
 				"deliveryAddress" to deliveryAddress.toHashMap(),
 				"shippingCharges" to shippingCharges,
 				"paymentMethod" to paymentMethod,
+				"orderDate" to orderDate,
 				"status" to status
 			)
 		}
