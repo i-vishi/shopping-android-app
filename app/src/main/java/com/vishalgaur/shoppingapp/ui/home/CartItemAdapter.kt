@@ -13,12 +13,13 @@ import com.vishalgaur.shoppingapp.databinding.CartListItemBinding
 
 class CartItemAdapter(
 	private val context: Context, items: List<UserData.CartItem>,
-	private val proList: List<Product>, private val likesList: List<String>
-) :
-	RecyclerView.Adapter<CartItemAdapter.ViewHolder>() {
+	products: List<Product>, userLikes: List<String>
+) : RecyclerView.Adapter<CartItemAdapter.ViewHolder>() {
 
 	lateinit var onClickListener: OnClickListener
-	private val data: List<UserData.CartItem> = items
+	var data: List<UserData.CartItem> = items
+	var proList: List<Product> = products
+	var likesList: List<String> = userLikes
 
 	inner class ViewHolder(private val binding: CartListItemBinding) :
 		RecyclerView.ViewHolder(binding.root) {

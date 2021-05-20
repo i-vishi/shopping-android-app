@@ -25,6 +25,7 @@ class CartFragment : Fragment() {
 	private lateinit var binding: FragmentCartBinding
 	private val orderViewModel: OrderViewModel by activityViewModels()
 	private lateinit var itemsAdapter: CartItemAdapter
+	private lateinit var concatAdapter: ConcatAdapter
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -43,19 +44,19 @@ class CartFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 
 		orderViewModel.getCartItems()
+	}
 
-		orderViewModel.cartProducts.observe(viewLifecycleOwner) { itemList ->
-			if (context != null) {
-				if (itemList.isNotEmpty()) {
-					val cartItems = orderViewModel.cartItems.value
-					setItemsAdapter(cartItems)
-					val concatAdapter = ConcatAdapter(
-						itemsAdapter,
-						PriceCardAdapter()
-					)
-					binding.cartProductsRecyclerView.adapter = concatAdapter
-				}
-			}
+	private fun setViews() {
+		binding.loaderLayout.circularLoader.visibility = View.GONE
+		binding.cartAppBar.topAppBar.title = getString(R.string.cart_fragment_label)
+		binding.cartEmptyTextView.visibility = View.GONE
+		binding.cartCheckOutBtn.setOnClickListener {
+			navigateToSelectAddress()
+		}
+		if (context != null) {
+			setItemsAdapter(orderViewModel.cartItems.value)
+			concatAdapter = ConcatAdapter(itemsAdapter, PriceCardAdapter())
+			binding.cartProductsRecyclerView.adapter = concatAdapter
 		}
 	}
 
@@ -66,54 +67,57 @@ class CartFragment : Fragment() {
 					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 					binding.cartProductsRecyclerView.visibility = View.GONE
-					binding.cartCheckOutBtn.isEnabled = false
+					binding.cartCheckOutBtn.visibility = View.GONE
 				}
 				else -> {
-					binding.cartProductsRecyclerView.visibility = View.VISIBLE
-					binding.cartCheckOutBtn.isEnabled = true
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
 					binding.loaderLayout.circularLoader.visibility = View.GONE
 				}
 			}
 		}
+
+		orderViewModel.cartProducts.observe(viewLifecycleOwner) { itemList ->
+			if (itemList.isNotEmpty()) {
+				updateAdapter()
+			}
+		}
 		orderViewModel.cartItems.observe(viewLifecycleOwner) { items ->
-			setItemsAdapter(items)
-			val concatAdapter = ConcatAdapter(
-				itemsAdapter,
-				PriceCardAdapter()
-			)
-			binding.cartProductsRecyclerView.adapter = concatAdapter
+			if (items.isNotEmpty()) {
+				binding.cartProductsRecyclerView.visibility = View.VISIBLE
+				binding.cartCheckOutBtn.visibility = View.VISIBLE
+				updateAdapter()
+			} else if (items.isEmpty()) {
+				binding.loaderLayout.circularLoader.visibility = View.GONE
+				binding.loaderLayout.circularLoader.hideAnimationBehavior
+				binding.cartProductsRecyclerView.visibility = View.GONE
+				binding.cartCheckOutBtn.visibility = View.GONE
+				binding.cartEmptyTextView.visibility = View.VISIBLE
+			}
 		}
 		orderViewModel.priceList.observe(viewLifecycleOwner) {
 			if (it.isNotEmpty()) {
-				orderViewModel.cartItems.value?.let { items ->
-					setItemsAdapter(items)
-					val concatAdapter = ConcatAdapter(
-						itemsAdapter,
-						PriceCardAdapter()
-					)
-					binding.cartProductsRecyclerView.adapter = concatAdapter
-				}
+				updateAdapter()
 			}
 		}
 		orderViewModel.userLikes.observe(viewLifecycleOwner) {
-			orderViewModel.cartItems.value?.let { items ->
-				setItemsAdapter(items)
-				val concatAdapter = ConcatAdapter(
-					itemsAdapter,
-					PriceCardAdapter()
-				)
-				binding.cartProductsRecyclerView.adapter = concatAdapter
+			if (it.isNotEmpty()) {
+				updateAdapter()
 			}
 		}
 	}
 
-	private fun setViews() {
-		binding.loaderLayout.circularLoader.visibility = View.GONE
-		binding.cartAppBar.topAppBar.title = getString(R.string.cart_fragment_label)
-		binding.cartCheckOutBtn.setOnClickListener {
-			navigateToSelectAddress()
+	private fun updateAdapter() {
+		val items = orderViewModel.cartItems.value ?: emptyList()
+		val likeList = orderViewModel.userLikes.value ?: emptyList()
+		val prosList = orderViewModel.cartProducts.value ?: emptyList()
+		itemsAdapter.apply {
+			data = items
+			proList = prosList
+			likesList = likeList
 		}
+		concatAdapter = ConcatAdapter(itemsAdapter, PriceCardAdapter())
+		binding.cartProductsRecyclerView.adapter = concatAdapter
+		binding.cartProductsRecyclerView.adapter?.notifyDataSetChanged()
 	}
 
 	private fun setItemsAdapter(itemList: List<UserData.CartItem>?) {

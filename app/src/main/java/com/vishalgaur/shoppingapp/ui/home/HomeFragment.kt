@@ -124,7 +124,7 @@ class HomeFragment : Fragment() {
 		}
 		viewModel.products.observe(viewLifecycleOwner) { productsList ->
 			binding.productsRecyclerView.adapter?.apply {
-				productAdapter.data = getMixedDataList(productsList, getAdsList())
+				productAdapter.data = getMixedDataList(productsList, getAdsList().shuffled())
 				notifyDataSetChanged()
 			}
 		}
