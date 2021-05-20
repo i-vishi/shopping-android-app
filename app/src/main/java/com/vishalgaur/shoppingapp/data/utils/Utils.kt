@@ -12,6 +12,8 @@ enum class AddObjectStatus { DONE, ERR_ADD, ADDING }
 
 enum class UserType { CUSTOMER, SELLER }
 
+enum class OrderStatus { CONFIRMED, PACKAGING, PACKED, SHIPPING, SHIPPED, ARRIVING, DELIVERED }
+
 enum class StoreDataStatus { LOADING, ERROR, DONE }
 
 fun getISOCountriesMap(): Map<String, String> {

@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.vishalgaur.shoppingapp.data.utils.ObjectListTypeConvertor
+import com.vishalgaur.shoppingapp.data.utils.OrderStatus
 import com.vishalgaur.shoppingapp.data.utils.UserType
 import kotlinx.android.parcel.Parcelize
 
@@ -22,6 +23,8 @@ data class UserData(
 	var addresses: List<Address> = ArrayList(),
 	@TypeConverters(ObjectListTypeConvertor::class)
 	var cart: List<CartItem> = ArrayList(),
+	@TypeConverters(ObjectListTypeConvertor::class)
+	var orders: List<OrderItem> = ArrayList(),
 	var userType: String = UserType.CUSTOMER.name
 ) : Parcelable {
 	fun toHashMap(): HashMap<String, Any> {
@@ -37,6 +40,28 @@ data class UserData(
 		)
 	}
 
+	@Parcelize
+	data class OrderItem(
+		var orderId: String = "",
+		var items: List<CartItem> = ArrayList(),
+		var itemsPrices: Map<String, Double> = mapOf(),
+		var deliveryAddress: Address = Address(),
+		var shippingCharges: Double = 0.0,
+		var paymentMethod: String = "",
+		var status: String = OrderStatus.PACKAGING.name
+	) : Parcelable {
+		fun toHashMap(): HashMap<String, Any> {
+			return hashMapOf(
+				"orderId" to orderId,
+				"items" to items.map { it.toHashMap() },
+				"itemsPrices" to itemsPrices,
+				"deliveryAddress" to deliveryAddress.toHashMap(),
+				"shippingCharges" to shippingCharges,
+				"paymentMethod" to paymentMethod,
+				"status" to status
+			)
+		}
+	}
 
 	@Parcelize
 	data class Address(
