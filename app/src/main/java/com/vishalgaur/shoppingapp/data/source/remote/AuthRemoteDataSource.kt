@@ -172,13 +172,7 @@ class AuthRemoteDataSource : UserDataSource {
 	override suspend fun placeOrder(newOrder: UserData.OrderItem, userId: String) {
 		// add order to customer and
 		// specific items to their owners
-		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
-		if (!userRef.isEmpty) {
-			val docId = userRef.documents[0].id
-			usersCollectionRef().document(docId)
-				.update(USERS_ORDERS_FIELD, FieldValue.arrayUnion(newOrder.toHashMap()))
-		}
-
+		// empty customers cart
 		val ownerProducts: MutableMap<String, MutableList<UserData.CartItem>> = mutableMapOf()
 		for (item in newOrder.items) {
 			if (!ownerProducts.containsKey(item.ownerId)) {
@@ -210,6 +204,14 @@ class AuthRemoteDataSource : UserDataSource {
 						.update(USERS_ORDERS_FIELD, FieldValue.arrayUnion(ownerOrder.toHashMap()))
 				}
 			}
+		}
+
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		if (!userRef.isEmpty) {
+			val docId = userRef.documents[0].id
+			usersCollectionRef().document(docId)
+				.update(USERS_ORDERS_FIELD, FieldValue.arrayUnion(newOrder.toHashMap()))
+			usersCollectionRef().document(docId).update(USERS_CART_FIELD, ArrayList<UserData.CartItem>())
 		}
 	}
 

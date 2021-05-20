@@ -292,6 +292,9 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 				val res = deferredRes.await()
 				if (res is Success) {
 					Log.d(TAG, "onInsertOrder: Success")
+					_cartItems.value = emptyList()
+					_cartProducts.value = emptyList()
+					_priceList.value = emptyMap()
 					_orderStatus.value = StoreDataStatus.DONE
 				} else {
 					_orderStatus.value = StoreDataStatus.ERROR
