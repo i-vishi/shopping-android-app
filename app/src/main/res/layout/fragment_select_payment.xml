@@ -19,18 +19,6 @@
         android:layout_below="@id/pay_by_app_bar"
         android:layout_marginBottom="72dp">
 
-        <!--        <ListView-->
-        <!--            android:id="@+id/pay_by_methods_list_view"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginStart="16dp"-->
-        <!--            android:layout_marginTop="16dp"-->
-        <!--            android:layout_marginEnd="16dp"-->
-        <!--            android:choiceMode="singleChoice"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pay_by_payments_recycler_view"
             android:layout_width="match_parent"

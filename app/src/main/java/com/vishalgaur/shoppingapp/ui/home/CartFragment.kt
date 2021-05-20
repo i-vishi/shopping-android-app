@@ -66,9 +66,11 @@ class CartFragment : Fragment() {
 					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 					binding.cartProductsRecyclerView.visibility = View.GONE
+					binding.cartCheckOutBtn.isEnabled = false
 				}
 				else -> {
 					binding.cartProductsRecyclerView.visibility = View.VISIBLE
+					binding.cartCheckOutBtn.isEnabled = true
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
 					binding.loaderLayout.circularLoader.visibility = View.GONE
 				}

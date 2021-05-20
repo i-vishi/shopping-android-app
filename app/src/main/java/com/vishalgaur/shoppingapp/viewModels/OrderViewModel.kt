@@ -44,6 +44,10 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 	private val _dataStatus = MutableLiveData<StoreDataStatus>()
 	val dataStatus: LiveData<StoreDataStatus> get() = _dataStatus
 
+	private val _selectedAddress = MutableLiveData<String>()
+
+	private val _selectedPaymentMethod = MutableLiveData<String>()
+
 	init {
 		viewModelScope.launch {
 			authRepository.hardRefreshUserData()
@@ -124,7 +128,8 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 					Log.d(TAG, "onDeleteAddress: Success")
 					val addresses = _userAddresses.value?.toMutableList()
 					addresses?.let {
-						val pos = addresses.indexOfFirst { it.addressId == addressId }
+						val pos =
+							addresses.indexOfFirst { address -> address.addressId == addressId }
 						if (pos >= 0)
 							it.removeAt(pos)
 						_userAddresses.value = it
@@ -137,7 +142,11 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 	}
 
 	fun getItemsPriceTotal(): Double {
-		return _priceList.value?.values?.sum() ?: 0.0
+		var totalPrice = 0.0
+		_priceList.value?.forEach { (itemId, price) ->
+			totalPrice += price * (_cartItems.value?.find { it.itemId == itemId }?.quantity ?: 1)
+		}
+		return totalPrice
 	}
 
 	fun toggleLikeProduct(productId: String) {
@@ -170,7 +179,13 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 		}
 	}
 
-	fun getItemsCount() = _cartItems.value?.size
+	fun getItemsCount(): Int {
+		var totalCount = 0
+		_cartItems.value?.forEach {
+			totalCount += it.quantity
+		}
+		return totalCount
+	}
 
 	fun setQuantityOfItem(itemId: String, value: Int) {
 		viewModelScope.launch {
@@ -223,6 +238,14 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 				}
 			}
 		}
+	}
+
+	fun setSelectedAddress(addressId: String) {
+		_selectedAddress.value = addressId
+	}
+
+	fun setSelectedPaymentMethod(method: String) {
+		_selectedPaymentMethod.value = method
 	}
 
 	private suspend fun getAllProductsInCart() {
