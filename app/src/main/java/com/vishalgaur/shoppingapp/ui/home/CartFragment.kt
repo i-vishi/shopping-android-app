@@ -64,10 +64,11 @@ class CartFragment : Fragment() {
 		orderViewModel.dataStatus.observe(viewLifecycleOwner) { status ->
 			when (status) {
 				StoreDataStatus.LOADING -> {
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
-					binding.loaderLayout.circularLoader.showAnimationBehavior
 					binding.cartProductsRecyclerView.visibility = View.GONE
 					binding.cartCheckOutBtn.visibility = View.GONE
+					binding.cartEmptyTextView.visibility = View.GONE
+					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.circularLoader.showAnimationBehavior
 				}
 				else -> {
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
@@ -75,23 +76,24 @@ class CartFragment : Fragment() {
 				}
 			}
 		}
-
-		orderViewModel.cartProducts.observe(viewLifecycleOwner) { itemList ->
-			if (itemList.isNotEmpty()) {
-				updateAdapter()
+		orderViewModel.dataStatus.observe(viewLifecycleOwner) { status ->
+			if (status != null && status != StoreDataStatus.LOADING) {
+				orderViewModel.cartProducts.observe(viewLifecycleOwner) { itemList ->
+					if (itemList.isNotEmpty()) {
+						updateAdapter()
+						binding.cartProductsRecyclerView.visibility = View.VISIBLE
+						binding.cartCheckOutBtn.visibility = View.VISIBLE
+					} else if (itemList.isEmpty()) {
+						binding.loaderLayout.circularLoader.visibility = View.GONE
+						binding.loaderLayout.circularLoader.hideAnimationBehavior
+						binding.cartEmptyTextView.visibility = View.VISIBLE
+					}
+				}
 			}
 		}
 		orderViewModel.cartItems.observe(viewLifecycleOwner) { items ->
 			if (items.isNotEmpty()) {
-				binding.cartProductsRecyclerView.visibility = View.VISIBLE
-				binding.cartCheckOutBtn.visibility = View.VISIBLE
 				updateAdapter()
-			} else if (items.isEmpty()) {
-				binding.loaderLayout.circularLoader.visibility = View.GONE
-				binding.loaderLayout.circularLoader.hideAnimationBehavior
-				binding.cartProductsRecyclerView.visibility = View.GONE
-				binding.cartCheckOutBtn.visibility = View.GONE
-				binding.cartEmptyTextView.visibility = View.VISIBLE
 			}
 		}
 		orderViewModel.priceList.observe(viewLifecycleOwner) {
