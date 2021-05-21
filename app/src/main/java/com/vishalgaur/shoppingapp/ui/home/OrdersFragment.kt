@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentOrdersBinding
@@ -41,6 +42,9 @@ class OrdersFragment : Fragment() {
 	private fun setViews() {
 		binding.loaderLayout.circularLoader.visibility = View.GONE
 		binding.ordersAppBar.topAppBar.title = getString(R.string.orders_fragment_title)
+		binding.ordersAppBar.topAppBar.setNavigationOnClickListener {
+			findNavController().navigateUp()
+		}
 		binding.ordersEmptyTextView.visibility = View.GONE
 		if (context != null) {
 			ordersAdapter = OrdersAdapter(emptyList(), requireContext())
