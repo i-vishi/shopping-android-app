@@ -80,5 +80,33 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/account_orders_tv" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/account_address_tv"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:id="@+id/account_sign_out_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="16dp"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:padding="16dp"
+            android:text="@string/account_sign_out_label"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textSize="16sp"
+            app:drawableStartCompat="@drawable/signout_account_drawable"
+            android:textStyle="bold"
+            app:drawableTint="@color/blue_accent_300"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>

@@ -138,5 +138,6 @@
     <string name="account_orders_label">Orders</string>
     <string name="account_address_label">Address</string>
     <string name="account_fragment_title">Account</string>
+    <string name="account_sign_out_label">Sign Out</string>
 
 </resources>
