@@ -142,5 +142,7 @@
     <string name="sign_out_dialog_title_text">Sign Out?</string>
     <string name="sign_out_dialog_message_text">On proceeding, you will be signed out of the app.</string>
     <string name="dialog_sign_out_btn_text">Sign Out</string>
+    <string name="order_summary_items_label">Items</string>
+    <string name="no_orders_placed_text">Nothing To Show</string>
 
 </resources>
