@@ -222,4 +222,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 			}
 		}
 	}
+
+	fun signOut() {
+		viewModelScope.launch {
+			val deferredRes = async { authRepository.signOut() }
+			deferredRes.await()
+		}
+	}
 }

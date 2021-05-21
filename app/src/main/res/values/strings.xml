@@ -139,5 +139,8 @@
     <string name="account_address_label">Address</string>
     <string name="account_fragment_title">Account</string>
     <string name="account_sign_out_label">Sign Out</string>
+    <string name="sign_out_dialog_title_text">Sign Out?</string>
+    <string name="sign_out_dialog_message_text">On proceeding, you will be signed out of the app.</string>
+    <string name="dialog_sign_out_btn_text">Sign Out</string>
 
 </resources>
