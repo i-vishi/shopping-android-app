@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.databinding.LayoutOrderSummaryCardBinding
+import java.time.Month
+import java.util.*
 
 class OrdersAdapter(ordersList: List<UserData.OrderItem>, private val context: Context) :
 	RecyclerView.Adapter<OrdersAdapter.ViewHolder>() {
@@ -19,8 +21,15 @@ class OrdersAdapter(ordersList: List<UserData.OrderItem>, private val context: C
 		fun bind(orderData: UserData.OrderItem) {
 			binding.orderSummaryCard.setOnClickListener { onClickListener.onCardClick(orderData.orderId) }
 			binding.orderSummaryIdTv.text = orderData.orderId
+			val calendar = Calendar.getInstance()
+			calendar.time = orderData.orderDate
 			binding.orderSummaryDateTv.text =
-				context.getString(R.string.order_date_text, orderData.orderDate.toString())
+				context.getString(
+					R.string.order_date_text,
+					Month.values()[(calendar.get(Calendar.MONTH))].name,
+					calendar.get(Calendar.DAY_OF_MONTH).toString(),
+					calendar.get(Calendar.YEAR).toString()
+				)
 			binding.orderSummaryStatusValueTv.text = orderData.status
 			val totalItems = orderData.items.map { it.quantity }.sum()
 			binding.orderSummaryItemsCountTv.text =

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.databinding.FragmentAccountBinding
@@ -39,6 +40,7 @@ class AccountFragment : Fragment() {
 		}
 		binding.accountOrdersTv.setOnClickListener {
 			Log.d(TAG, "Orders Selected")
+			findNavController().navigate(R.id.action_accountFragment_to_ordersFragment)
 		}
 		binding.accountAddressTv.setOnClickListener {
 			Log.d(TAG, "Address Selected")

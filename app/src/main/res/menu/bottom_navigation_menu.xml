@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_outlined_shopping_cart_24"
         android:title="@string/bottom_nav_cart_label"/>
     <item
-        android:id="@+id/page_orders"
+        android:id="@+id/ordersFragment"
         android:enabled="true"
         android:icon="@drawable/ic_outline_library_books_24"
         android:title="@string/bottom_nav_orders_label" />

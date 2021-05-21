@@ -13,11 +13,9 @@ import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
+import com.vishalgaur.shoppingapp.getRandomString
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 private const val TAG = "OrderViewModel"
@@ -260,7 +258,8 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 		val deliveryAddress =
 			_userAddresses.value?.find { it.addressId == _selectedAddress.value }
 		val paymentMethod = _selectedPaymentMethod.value
-		val orderId = currentUser!! + UUID.randomUUID().toString()
+		val currDate = Date()
+		val orderId = getRandomString(6, currDate.time.toString(), 1)
 		val items = _cartItems.value
 		val itemPrices = _priceList.value
 		val shippingCharges = 0.0
@@ -272,7 +271,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 				deliveryAddress,
 				shippingCharges,
 				paymentMethod,
-				Date(),
+				currDate,
 			)
 			newOrderData.value = newOrder
 			insertOrder()

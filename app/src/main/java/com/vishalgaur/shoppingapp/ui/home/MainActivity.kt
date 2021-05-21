@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 				R.id.homeFragment -> setBottomNavVisibility(View.VISIBLE)
 				R.id.cartFragment -> setBottomNavVisibility(View.VISIBLE)
 				R.id.accountFragment -> setBottomNavVisibility(View.VISIBLE)
+				R.id.orderSuccessFragment -> setBottomNavVisibility(View.VISIBLE)
 				else -> setBottomNavVisibility(View.GONE)
 			}
 		}
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 		if (sessionManager.isUserSeller()) {
 			binding.homeBottomNavigation.menu.removeItem(R.id.cartFragment)
 		}else {
-			binding.homeBottomNavigation.menu.removeItem(R.id.page_orders)
+			binding.homeBottomNavigation.menu.removeItem(R.id.ordersFragment)
 		}
 	}
 
