@@ -144,5 +144,8 @@
     <string name="dialog_sign_out_btn_text">Sign Out</string>
     <string name="order_summary_items_label">Items</string>
     <string name="no_orders_placed_text">Nothing To Show</string>
+    <string name="orders_fragment_title">Orders</string>
+    <string name="order_date_text">Ordered On : %s</string>
+    <string name="order_items_count_text">%s items purchased</string>
 
 </resources>
