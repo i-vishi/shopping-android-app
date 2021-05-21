@@ -8,10 +8,11 @@ import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.databinding.LayoutOrderSummaryCardBinding
 
-class OrdersAdapter(private val data: List<UserData.OrderItem>, private val context: Context) :
+class OrdersAdapter(ordersList: List<UserData.OrderItem>, private val context: Context) :
 	RecyclerView.Adapter<OrdersAdapter.ViewHolder>() {
 
 	lateinit var onClickListener: OnClickListener
+	var data: List<UserData.OrderItem> = ordersList
 
 	inner class ViewHolder(private val binding: LayoutOrderSummaryCardBinding) :
 		RecyclerView.ViewHolder(binding.root) {

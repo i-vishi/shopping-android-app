@@ -432,6 +432,10 @@ class AuthRepository(
 		}
 	}
 
+	override suspend fun getOrdersByUserId(userId: String): Result<List<UserData.OrderItem>?> {
+		return userLocalDataSource.getOrdersByUserId(userId)
+	}
+
 	override suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?> {
 		return userLocalDataSource.getAddressesByUserId(userId)
 	}

@@ -46,6 +46,8 @@ interface UserDataSource {
 		return null
 	}
 
+	suspend fun getOrdersByUserId(userId: String): Result<List<UserData.OrderItem>?>
+
 	suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?>
 
 	suspend fun getLikesByUserId(userId: String): Result<List<String>?>

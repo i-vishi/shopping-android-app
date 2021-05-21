@@ -9,6 +9,7 @@ import com.vishalgaur.shoppingapp.data.Result
 import com.vishalgaur.shoppingapp.data.Result.Error
 import com.vishalgaur.shoppingapp.data.Result.Success
 import com.vishalgaur.shoppingapp.data.ShoppingAppSessionManager
+import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -34,6 +35,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 	private var _userProducts = MutableLiveData<List<Product>>()
 	val userProducts: LiveData<List<Product>> get() = _userProducts
+
+	private var _userOrders = MutableLiveData<List<UserData.OrderItem>>()
+	val userOrders: LiveData<List<UserData.OrderItem>> get() = _userOrders
 
 	private var _likedProducts = MutableLiveData<List<Product>>()
 	val likedProducts: LiveData<List<Product>> get() = _likedProducts
@@ -227,6 +231,24 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 		viewModelScope.launch {
 			val deferredRes = async { authRepository.signOut() }
 			deferredRes.await()
+		}
+	}
+
+	fun getAllOrders() {
+		viewModelScope.launch {
+			_storeDataStatus.value = StoreDataStatus.LOADING
+			val deferredRes = async { authRepository.getOrdersByUserId(currentUser!!) }
+			val res = deferredRes.await()
+			if (res is Success) {
+				_userOrders.value = res.data ?: emptyList()
+				_storeDataStatus.value = StoreDataStatus.DONE
+				Log.d(TAG, "Getting Orders: Success")
+			} else {
+				_userOrders.value = emptyList()
+				_storeDataStatus.value = StoreDataStatus.ERROR
+				if (res is Error)
+					Log.d(TAG, "Getting Orders: Error, ${res.exception}")
+			}
 		}
 	}
 }

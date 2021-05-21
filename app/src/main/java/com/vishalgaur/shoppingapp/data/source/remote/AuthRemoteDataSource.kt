@@ -46,6 +46,16 @@ class AuthRemoteDataSource : UserDataSource {
 		usersCollectionRef().whereEqualTo(USERS_MOBILE_FIELD, phoneNumber).get().await()
 			.toObjects(UserData::class.java)[0]
 
+	override suspend fun getOrdersByUserId(userId: String): Result<List<UserData.OrderItem>?> {
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		return if (!userRef.isEmpty) {
+			val userData = userRef.documents[0].toObject(UserData::class.java)
+			Success(userData!!.orders)
+		} else {
+			Error(Exception("User Not Found!"))
+		}
+	}
+
 	override suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?> {
 		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
 		return if (!userRef.isEmpty) {
@@ -211,7 +221,8 @@ class AuthRemoteDataSource : UserDataSource {
 			val docId = userRef.documents[0].id
 			usersCollectionRef().document(docId)
 				.update(USERS_ORDERS_FIELD, FieldValue.arrayUnion(newOrder.toHashMap()))
-			usersCollectionRef().document(docId).update(USERS_CART_FIELD, ArrayList<UserData.CartItem>())
+			usersCollectionRef().document(docId)
+				.update(USERS_CART_FIELD, ArrayList<UserData.CartItem>())
 		}
 	}
 

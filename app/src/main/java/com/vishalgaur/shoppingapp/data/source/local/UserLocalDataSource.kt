@@ -50,6 +50,23 @@ class UserLocalDataSource internal constructor(
 			}
 		}
 
+	override suspend fun getOrdersByUserId(userId: String): Result<List<UserData.OrderItem>?> =
+		withContext(ioDispatcher) {
+			try {
+				val uData = userDao.getById(userId)
+				if (uData != null) {
+					val ordersList = uData.orders
+					return@withContext Success(ordersList)
+				} else {
+					return@withContext Error(Exception("User Not Found"))
+				}
+
+			} catch (e: Exception) {
+				Log.d("UserLocalSource", "onGetOrders: Error Occurred, ${e.message}")
+				return@withContext Error(e)
+			}
+		}
+
 	override suspend fun getAddressesByUserId(userId: String): Result<List<UserData.Address>?> =
 		withContext(ioDispatcher) {
 			try {
