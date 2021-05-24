@@ -42,6 +42,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	private var _selectedOrder = MutableLiveData<UserData.OrderItem?>()
 	val selectedOrder: LiveData<UserData.OrderItem?> get() = _selectedOrder
 
+	private var _orderProducts = MutableLiveData<List<Product>>()
+	val orderProducts: LiveData<List<Product>> get() = _orderProducts
+
 	private var _likedProducts = MutableLiveData<List<Product>>()
 	val likedProducts: LiveData<List<Product>> get() = _likedProducts
 
@@ -262,6 +265,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 				val orderData = _userOrders.value!!.find { it.orderId == orderId }
 				if (orderData != null) {
 					_selectedOrder.value = orderData
+					_orderProducts.value =
+						orderData.items.map {
+							_allProducts.value?.find { pro -> pro.productId == it.productId }
+								?: Product()
+						}
 					_storeDataStatus.value = StoreDataStatus.DONE
 				} else {
 					_selectedOrder.value = null

@@ -1,7 +1,6 @@
 package com.vishalgaur.shoppingapp.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +21,7 @@ class OrderDetailsFragment : Fragment() {
 	private lateinit var binding: FragmentOrderDetailsBinding
 	private val viewModel: HomeViewModel by activityViewModels()
 	private lateinit var orderId: String
+	private lateinit var productsAdapter: OrderProductsAdapter
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -41,6 +41,11 @@ class OrderDetailsFragment : Fragment() {
 		binding.orderDetailAppBar.topAppBar.setNavigationOnClickListener { findNavController().navigateUp() }
 		binding.loaderLayout.circularLoader.visibility = View.GONE
 		binding.orderDetailsConstraintGroup.visibility = View.GONE
+
+		if (context != null) {
+			setProductsAdapter(viewModel.selectedOrder.value?.items)
+			binding.orderDetailsProRecyclerView.adapter = productsAdapter
+		}
 	}
 
 	private fun setObservers() {
@@ -61,6 +66,16 @@ class OrderDetailsFragment : Fragment() {
 			if (orderData != null) {
 				binding.orderDetailsConstraintGroup.visibility = View.VISIBLE
 				setAllViews(orderData)
+				val items = orderData.items
+				val likeList = viewModel.userLikes.value ?: emptyList()
+				val prosList = viewModel.orderProducts.value ?: emptyList()
+				productsAdapter.apply {
+					data = items
+					proList = prosList
+					likesList = likeList
+				}
+				binding.orderDetailsProRecyclerView.adapter = productsAdapter
+				binding.orderDetailsProRecyclerView.adapter?.notifyDataSetChanged()
 			}
 		}
 	}
@@ -106,6 +121,13 @@ class OrderDetailsFragment : Fragment() {
 			getString(R.string.price_text, "0")
 		binding.orderDetailsPaymentLayout.priceTotalAmountTv.text =
 			getString(R.string.price_text, (itemsPriceTotal + orderData.shippingCharges).toString())
+	}
+
+	private fun setProductsAdapter(itemsList: List<UserData.CartItem>?) {
+		val items = itemsList ?: emptyList()
+		val likesList = viewModel.userLikes.value ?: emptyList()
+		val proList = viewModel.orderProducts.value ?: emptyList()
+		productsAdapter = OrderProductsAdapter(requireContext(), items, proList, likesList)
 	}
 
 	private fun getItemsCount(cartItems: List<UserData.CartItem>): Int {

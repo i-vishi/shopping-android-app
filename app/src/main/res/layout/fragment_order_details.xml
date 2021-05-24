@@ -23,7 +23,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/order_detail_app_bar">
+            android:layout_below="@id/order_detail_app_bar"
+            android:paddingBottom="72dp">
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/order_details_constraint_group"
@@ -84,6 +85,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/shipping_details_label_text"
                 android:textAlignment="viewStart"
@@ -125,7 +127,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/payment_details_label_text"
                 android:textAlignment="viewStart"
