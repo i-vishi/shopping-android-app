@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".ui.home.OrderDetailFragment">
+    tools:context=".ui.home.OrderDetailsFragment">
 
     <include
         android:id="@+id/order_detail_app_bar"
@@ -84,6 +84,20 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/order_details_pro_recycler_view" />
+
+            <ImageButton
+                android:id="@+id/order_change_status_btn"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@color/blue_accent_300"
+                android:contentDescription="@string/change_status_label_text"
+                android:scaleType="centerCrop"
+                android:tint="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/order_details_ship_label_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/order_details_ship_label_tv"
+                app:srcCompat="@drawable/ic_edit_24" />
 
             <include
                 android:id="@+id/order_details_shipping_add_layout"
