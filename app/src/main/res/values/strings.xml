@@ -147,5 +147,11 @@
     <string name="orders_fragment_title">Orders</string>
     <string name="order_date_text">Ordered On : %s %s, %s</string>
     <string name="order_items_count_text">%s items purchased</string>
+    <string name="products_label_text">Products</string>
+    <string name="shipping_details_label_text">Shipping Details</string>
+    <string name="payment_details_label_text">Payment Details</string>
+    <string name="ship_date_text">Date Shipping</string>
+    <string name="shipping_address_label_string">Address</string>
+    <string name="ship_curr_status_label_text">Current Status</string>
 
 </resources>
