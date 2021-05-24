@@ -37,6 +37,7 @@ class AccountFragment : Fragment() {
 		binding.accountTopAppBar.topAppBar.title = getString(R.string.account_fragment_title)
 		binding.accountProfileTv.setOnClickListener {
 			Log.d(TAG, "Profile Selected")
+			findNavController().navigate(R.id.action_accountFragment_to_profileFragment)
 		}
 		binding.accountOrdersTv.setOnClickListener {
 			Log.d(TAG, "Orders Selected")

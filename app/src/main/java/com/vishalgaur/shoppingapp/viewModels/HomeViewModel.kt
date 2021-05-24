@@ -63,6 +63,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	private val _dataStatus = MutableLiveData<StoreDataStatus>()
 	val dataStatus: LiveData<StoreDataStatus> get() = _dataStatus
 
+	private val _userData = MutableLiveData<UserData?>()
+	val userData: LiveData<UserData?> get() = _userData
+
 	init {
 		viewModelScope.launch {
 			authRepository.hardRefreshUserData()
@@ -320,6 +323,22 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 				}
 				is Error -> Log.d(TAG, "onDeleteAddress: Error, ${res.exception}")
 				else -> Log.d(TAG, "onDeleteAddress: Some error occurred!")
+			}
+		}
+	}
+
+	fun getUserData() {
+		viewModelScope.launch {
+			_dataStatus.value = StoreDataStatus.LOADING
+			val deferredRes = async { authRepository.getUserData(currentUser!!) }
+			val res = deferredRes.await()
+			if (res is Success) {
+				val uData = res.data
+				_userData.value = uData
+				_dataStatus.value = StoreDataStatus.DONE
+			} else {
+				_dataStatus.value = StoreDataStatus.ERROR
+				_userData.value = null
 			}
 		}
 	}

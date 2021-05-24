@@ -5,7 +5,7 @@
     android:thicknessRatio="2.0"
     android:useLevel="false">
     <stroke
-        android:width="8dp"
-        android:color="@color/light_gray" />
+        android:width="4dp"
+        android:color="@color/blue_accent_300" />
     <solid android:color="@color/white" />
 </shape>

@@ -132,6 +132,9 @@
         <action
             android:id="@+id/action_accountFragment_to_addressFragment"
             app:destination="@id/addressFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/ordersFragment"
@@ -160,4 +163,9 @@
             android:id="@+id/action_addressFragment_to_addEditAddressFragment"
             app:destination="@id/addEditAddressFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.home.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>
