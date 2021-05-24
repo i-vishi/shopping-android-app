@@ -84,7 +84,6 @@ class ProductAdapter(proList: List<Any>, private val context: Context) :
 				proDeleteButton.visibility = View.GONE
 				bindImageButtons.setLikeButton(productData.productId, proLikeButton)
 				bindImageButtons.setCartButton(productData.productId, proCartButton)
-				proLikeButton
 				proLikeButton.setOnCheckedChangeListener { _, _ ->
 					onClickListener.onLikeClick(productData.productId)
 

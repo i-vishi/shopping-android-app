@@ -45,72 +45,22 @@ class HomeFragment : Fragment() {
 	): View? {
 		// Inflate the layout for this fragment
 		binding = FragmentHomeBinding.inflate(layoutInflater)
-
 		setViews()
-
 		setObservers()
-
 		return binding.root
 	}
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
+	private fun setViews() {
+		setHomeTopAppBar()
 		if (context != null) {
-			val productsList = viewModel.products.value
-			productAdapter = ProductAdapter(productsList ?: emptyList(), requireContext())
-			productAdapter.onClickListener = object : ProductAdapter.OnClickListener {
-				override fun onClick(productData: Product) {
-					Log.d(TAG, "Product: ${productData.productId} clicked")
-					findNavController().navigate(
-						R.id.action_seeProduct,
-						bundleOf("productId" to productData.productId)
-					)
-				}
-
-				override fun onDeleteClick(productData: Product) {
-					Log.d(TAG, "onDeleteProduct: initiated for ${productData.productId}")
-					showDeleteDialog(productData.name, productData.productId)
-				}
-
-				override fun onEditClick(productId: String) {
-					Log.d(TAG, "onEditProduct: initiated for $productId")
-					navigateToAddEditProductFragment(isEdit = true, productId = productId)
-				}
-
-				override fun onLikeClick(productId: String) {
-					Log.d(TAG, "onToggleLike: initiated for $productId")
-					viewModel.toggleLikeByProductId(productId)
-				}
-
-				override fun onAddToCartClick(productData: Product) {
-					Log.d(TAG, "onToggleCartAddition: initiated")
-					viewModel.toggleProductInCart(productData)
-				}
-			}
-			productAdapter.bindImageButtons = object : ProductAdapter.BindImageButtons {
-				@SuppressLint("ResourceAsColor")
-				override fun setLikeButton(productId: String, button: CheckBox) {
-					button.isChecked = viewModel.isProductLiked(productId)
-				}
-
-				override fun setCartButton(productId: String, imgView: ImageView) {
-					if (viewModel.isProductInCart(productId)) {
-						imgView.setImageResource(R.drawable.ic_remove_shopping_cart_24)
-					} else {
-						imgView.setImageResource(R.drawable.ic_add_shopping_cart_24)
-					}
-				}
-
-			}
+			setProductsAdapter(viewModel.products.value)
 			binding.productsRecyclerView.apply {
 				val gridLayoutManager = GridLayoutManager(context, 2)
 				gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
 					override fun getSpanSize(position: Int): Int {
 						return when (productAdapter.getItemViewType(position)) {
-							//ad
-							2 -> 2
-							// product
-							else -> 1
+							2 -> 2 //ad
+							else -> 1 // product
 						}
 					}
 				}
@@ -122,15 +72,73 @@ class HomeFragment : Fragment() {
 				}
 			}
 		}
-		viewModel.products.observe(viewLifecycleOwner) { productsList ->
-			binding.productsRecyclerView.adapter?.apply {
-				productAdapter.data = getMixedDataList(productsList, getAdsList().shuffled())
-				notifyDataSetChanged()
+
+		if (!viewModel.isUserASeller) {
+			binding.homeFabAddProduct.visibility = View.GONE
+		}
+		binding.homeFabAddProduct.setOnClickListener {
+			showDialogWithItems(ProductCategories, 0, false)
+		}
+		binding.loaderLayout.circularLoader.visibility = View.GONE
+	}
+
+	private fun setObservers() {
+		viewModel.storeDataStatus.observe(viewLifecycleOwner) { status ->
+			when (status) {
+				StoreDataStatus.LOADING -> {
+					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.circularLoader.showAnimationBehavior
+					binding.productsRecyclerView.visibility = View.GONE
+				}
+				else -> {
+					binding.loaderLayout.circularLoader.hideAnimationBehavior
+					binding.loaderLayout.circularLoader.visibility = View.GONE
+				}
+			}
+			if (status != null && status != StoreDataStatus.LOADING) {
+				viewModel.products.observe(viewLifecycleOwner) { productsList ->
+					if (productsList.isNotEmpty()) {
+						binding.productsRecyclerView.visibility = View.VISIBLE
+						binding.productsRecyclerView.adapter?.apply {
+							productAdapter.data =
+								getMixedDataList(productsList, getAdsList())
+							notifyDataSetChanged()
+						}
+					}
+				}
+			}
+		}
+		viewModel.allProducts.observe(viewLifecycleOwner) {
+			if (it.isNotEmpty()) {
+				viewModel.setDataLoaded()
+				viewModel.filterProducts("All")
 			}
 		}
 	}
 
-	private fun setViews() {
+	private fun performSearch(query: String) {
+		viewModel.filterBySearch(query)
+	}
+
+	private fun setAppBarItemClicks(menuItem: MenuItem): Boolean {
+		return when (menuItem.itemId) {
+			R.id.home_filter -> {
+				val extraFilters = arrayOf("All", "None")
+				val categoryList = ProductCategories.plus(extraFilters)
+				val checkedItem = categoryList.indexOf(viewModel.filterCategory.value)
+				showDialogWithItems(categoryList, checkedItem, true)
+				true
+			}
+			R.id.home_favorites -> {
+				// show favorite products list
+				findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
+				true
+			}
+			else -> false
+		}
+	}
+
+	private fun setHomeTopAppBar() {
 		var lastInput = ""
 		val debounceJob: Job? = null
 		val uiScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -169,63 +177,57 @@ class HomeFragment : Fragment() {
 			val inputManager =
 				requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 			inputManager.hideSoftInputFromWindow(it.windowToken, 0)
-			viewModel.filterProducts("All")
+//			viewModel.filterProducts("All")
 		}
 		binding.homeTopAppBar.topAppBar.setOnMenuItemClickListener { menuItem ->
 			setAppBarItemClicks(menuItem)
 		}
-		if (!viewModel.isUserASeller) {
-			binding.homeFabAddProduct.visibility = View.GONE
-		}
-		binding.homeFabAddProduct.setOnClickListener {
-			showDialogWithItems(ProductCategories, 0, false)
-		}
-		binding.loaderLayout.circularLoader.visibility = View.GONE
 	}
 
-	private fun performSearch(query: String) {
-		Log.d(TAG, "query = $query")
-		viewModel.filterBySearch(query)
-	}
-
-	private fun setAppBarItemClicks(menuItem: MenuItem): Boolean {
-		return when (menuItem.itemId) {
-			R.id.home_filter -> {
-				val extraFilters = arrayOf("All", "None")
-				val categoryList = ProductCategories.plus(extraFilters)
-				val checkedItem = categoryList.indexOf(viewModel.filterCategory.value)
-				showDialogWithItems(categoryList, checkedItem, true)
-				true
+	private fun setProductsAdapter(productsList: List<Product>?) {
+		productAdapter = ProductAdapter(productsList ?: emptyList(), requireContext())
+		productAdapter.onClickListener = object : ProductAdapter.OnClickListener {
+			override fun onClick(productData: Product) {
+				findNavController().navigate(
+					R.id.action_seeProduct,
+					bundleOf("productId" to productData.productId)
+				)
 			}
-			R.id.home_favorites -> {
-				// show favorite products list
-				findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
-				true
-			}
-			else -> false
-		}
-	}
 
-	private fun setObservers() {
-		viewModel.storeDataStatus.observe(viewLifecycleOwner) { status ->
-			when (status) {
-				StoreDataStatus.LOADING -> {
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
-					binding.loaderLayout.circularLoader.showAnimationBehavior
-					binding.productsRecyclerView.visibility = View.GONE
+			override fun onDeleteClick(productData: Product) {
+				Log.d(TAG, "onDeleteProduct: initiated for ${productData.productId}")
+				showDeleteDialog(productData.name, productData.productId)
+			}
+
+			override fun onEditClick(productId: String) {
+				Log.d(TAG, "onEditProduct: initiated for $productId")
+				navigateToAddEditProductFragment(isEdit = true, productId = productId)
+			}
+
+			override fun onLikeClick(productId: String) {
+				Log.d(TAG, "onToggleLike: initiated for $productId")
+				viewModel.toggleLikeByProductId(productId)
+			}
+
+			override fun onAddToCartClick(productData: Product) {
+				Log.d(TAG, "onToggleCartAddition: initiated")
+				viewModel.toggleProductInCart(productData)
+			}
+		}
+		productAdapter.bindImageButtons = object : ProductAdapter.BindImageButtons {
+			@SuppressLint("ResourceAsColor")
+			override fun setLikeButton(productId: String, button: CheckBox) {
+				button.isChecked = viewModel.isProductLiked(productId)
+			}
+
+			override fun setCartButton(productId: String, imgView: ImageView) {
+				if (viewModel.isProductInCart(productId)) {
+					imgView.setImageResource(R.drawable.ic_remove_shopping_cart_24)
+				} else {
+					imgView.setImageResource(R.drawable.ic_add_shopping_cart_24)
 				}
-				else -> {
-					binding.productsRecyclerView.visibility = View.VISIBLE
-					binding.loaderLayout.circularLoader.hideAnimationBehavior
-					binding.loaderLayout.circularLoader.visibility = View.GONE
-				}
 			}
-		}
-		viewModel.allProducts.observe(viewLifecycleOwner) {
-			if (it != null) {
-				viewModel.setDataLoaded()
-				viewModel.filterProducts("All")
-			}
+
 		}
 	}
 
@@ -294,18 +296,20 @@ class HomeFragment : Fragment() {
 		val itemsList = mutableListOf<Any>()
 		itemsList.addAll(data)
 		var currPos = 0
-		adsList.forEach label@{ ad ->
-			if (itemsList.size > currPos) {
-				itemsList.add(currPos, ad)
-			} else {
-				return@label
+		if(itemsList.size > 4){
+			adsList.forEach label@{ ad ->
+				if (itemsList.size > currPos) {
+					itemsList.add(currPos, ad)
+				} else {
+					return@label
+				}
+				currPos += 5
 			}
-			currPos += 5
 		}
 		return itemsList
 	}
 
 	private fun getAdsList(): List<Int> {
-		return listOf(R.drawable.ad_ex_1, R.drawable.ad_ex_2, R.drawable.ad_ex_3)
+		return listOf(R.drawable.ad_ex_2, R.drawable.ad_ex_1, R.drawable.ad_ex_3)
 	}
 }
