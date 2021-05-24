@@ -156,5 +156,8 @@
     <string name="order_details_fragment_title">Order Details</string>
     <string name="change_status_label_text">Change Order Status Button</string>
     <string name="no_addresses_text">No Address added Yet!</string>
+    <string name="profile_img_desc">Profile Image</string>
+    <string name="profile_email_label_text">Email</string>
+    <string name="profile_mobile_label_text">Mobile Number</string>
 
 </resources>

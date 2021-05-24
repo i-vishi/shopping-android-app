@@ -20,7 +20,7 @@ private const val TAG = "AddressFragment"
 class AddressFragment : Fragment() {
 	private lateinit var binding: FragmentAddressBinding
 	private lateinit var addressAdapter: AddressAdapter
-	private val orderViewModel: HomeViewModel by activityViewModels()
+	private val viewModel: HomeViewModel by activityViewModels()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -35,7 +35,7 @@ class AddressFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		orderViewModel.getUserAddresses()
+		viewModel.getUserAddresses()
 	}
 
 	private fun setViews() {
@@ -48,7 +48,7 @@ class AddressFragment : Fragment() {
 		}
 		binding.addressEmptyTextView.visibility = View.GONE
 		if (context != null) {
-			val addressList = orderViewModel.userAddresses.value ?: emptyList()
+			val addressList = viewModel.userAddresses.value ?: emptyList()
 			addressAdapter = AddressAdapter(requireContext(), addressList, false)
 			addressAdapter.onClickListener = object : AddressAdapter.OnClickListener {
 				override fun onEditClick(addressId: String) {
@@ -66,7 +66,7 @@ class AddressFragment : Fragment() {
 	}
 
 	private fun setObservers() {
-		orderViewModel.dataStatus.observe(viewLifecycleOwner) { status ->
+		viewModel.dataStatus.observe(viewLifecycleOwner) { status ->
 			when (status) {
 				StoreDataStatus.LOADING -> {
 					binding.addressEmptyTextView.visibility = View.GONE
@@ -81,7 +81,7 @@ class AddressFragment : Fragment() {
 			}
 
 			if (status != null && status != StoreDataStatus.LOADING) {
-				orderViewModel.userAddresses.observe(viewLifecycleOwner) { addressList ->
+				viewModel.userAddresses.observe(viewLifecycleOwner) { addressList ->
 					if (addressList.isNotEmpty()) {
 						addressAdapter.data = addressList
 						binding.addressAddressesRecyclerView.adapter = addressAdapter
@@ -107,7 +107,7 @@ class AddressFragment : Fragment() {
 					dialog.cancel()
 				}
 				.setPositiveButton(getString(R.string.delete_dialog_delete_btn_text)) { dialog, _ ->
-					orderViewModel.deleteAddress(addressId)
+					viewModel.deleteAddress(addressId)
 					dialog.cancel()
 				}
 				.show()
