@@ -11,6 +11,7 @@ import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.getISOCountriesMap
 import com.vishalgaur.shoppingapp.databinding.LayoutAddressCardBinding
+import com.vishalgaur.shoppingapp.ui.getCompleteAddress
 
 private const val TAG = "AddressAdapter"
 
@@ -91,14 +92,6 @@ class AddressAdapter(private val context: Context, addresses: List<UserData.Addr
 			lastCheckedCard = card
 			selectedAddressPos = position
 			Log.d(TAG, "onCardClick: selected address = $addressTd")
-		}
-	}
-
-	private fun getCompleteAddress(address: UserData.Address): String {
-		return if (address.streetAddress2.isBlank()) {
-			"${address.streetAddress}, ${address.city}, ${address.state} - ${address.zipCode}, ${getISOCountriesMap()[address.countryISOCode]}"
-		} else {
-			"${address.streetAddress}, ${address.streetAddress2}, ${address.city}, ${address.state} - ${address.zipCode}, ${getISOCountriesMap()[address.countryISOCode]}"
 		}
 	}
 }

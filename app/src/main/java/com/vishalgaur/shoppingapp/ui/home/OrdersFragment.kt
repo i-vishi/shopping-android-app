@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -51,8 +52,10 @@ class OrdersFragment : Fragment() {
 			ordersAdapter.onClickListener = object : OrdersAdapter.OnClickListener {
 				override fun onCardClick(orderId: String) {
 					Log.d(TAG, "onOrderSummaryClick: Getting order details")
-
-					// add navigation to order details
+					findNavController().navigate(
+						R.id.action_ordersFragment_to_orderDetailsFragment,
+						bundleOf("orderId" to orderId)
+					)
 				}
 			}
 			binding.orderAllOrdersRecyclerView.adapter = ordersAdapter

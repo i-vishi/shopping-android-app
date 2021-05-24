@@ -39,6 +39,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	private var _userOrders = MutableLiveData<List<UserData.OrderItem>>()
 	val userOrders: LiveData<List<UserData.OrderItem>> get() = _userOrders
 
+	private var _selectedOrder = MutableLiveData<UserData.OrderItem?>()
+	val selectedOrder: LiveData<UserData.OrderItem?> get() = _selectedOrder
+
 	private var _likedProducts = MutableLiveData<List<Product>>()
 	val likedProducts: LiveData<List<Product>> get() = _likedProducts
 
@@ -248,6 +251,22 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 				_storeDataStatus.value = StoreDataStatus.ERROR
 				if (res is Error)
 					Log.d(TAG, "Getting Orders: Error, ${res.exception}")
+			}
+		}
+	}
+
+	fun getOrderDetailsByOrderId(orderId: String) {
+		viewModelScope.launch {
+			_storeDataStatus.value = StoreDataStatus.LOADING
+			if (_userOrders.value != null) {
+				val orderData = _userOrders.value!!.find { it.orderId == orderId }
+				if (orderData != null) {
+					_selectedOrder.value = orderData
+					_storeDataStatus.value = StoreDataStatus.DONE
+				} else {
+					_selectedOrder.value = null
+					_storeDataStatus.value = StoreDataStatus.ERROR
+				}
 			}
 		}
 	}

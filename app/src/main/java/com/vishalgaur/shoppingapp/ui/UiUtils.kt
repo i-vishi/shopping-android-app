@@ -11,6 +11,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.vishalgaur.shoppingapp.data.UserData
+import com.vishalgaur.shoppingapp.data.utils.getISOCountriesMap
 import com.vishalgaur.shoppingapp.ui.home.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -183,4 +185,12 @@ internal fun launchHome(context: Context) {
 		.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
 		.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 	context.startActivity(homeIntent)
+}
+
+internal fun getCompleteAddress(address: UserData.Address): String {
+	return if (address.streetAddress2.isBlank()) {
+		"${address.streetAddress}, ${address.city}, ${address.state} - ${address.zipCode}, ${getISOCountriesMap()[address.countryISOCode]}"
+	} else {
+		"${address.streetAddress}, ${address.streetAddress2}, ${address.city}, ${address.state} - ${address.zipCode}, ${getISOCountriesMap()[address.countryISOCode]}"
+	}
 }

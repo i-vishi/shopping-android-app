@@ -41,7 +41,6 @@ class OrderSuccessFragment : Fragment() {
 		orderViewModel.orderStatus.observe(viewLifecycleOwner) { status ->
 			when (status) {
 				StoreDataStatus.LOADING -> {
-
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
 				}
