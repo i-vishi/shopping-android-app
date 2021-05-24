@@ -13,14 +13,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentAddressBinding
-import com.vishalgaur.shoppingapp.viewModels.OrderViewModel
+import com.vishalgaur.shoppingapp.viewModels.HomeViewModel
 
 private const val TAG = "AddressFragment"
 
 class AddressFragment : Fragment() {
 	private lateinit var binding: FragmentAddressBinding
 	private lateinit var addressAdapter: AddressAdapter
-	private val orderViewModel: OrderViewModel by activityViewModels()
+	private val orderViewModel: HomeViewModel by activityViewModels()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -87,6 +87,7 @@ class AddressFragment : Fragment() {
 						binding.addressAddressesRecyclerView.adapter = addressAdapter
 						binding.addressAddressesRecyclerView.adapter?.notifyDataSetChanged()
 					} else if (addressList.isEmpty()) {
+						binding.addressAddressesRecyclerView.visibility = View.GONE
 						binding.loaderLayout.circularLoader.visibility = View.GONE
 						binding.loaderLayout.circularLoader.hideAnimationBehavior
 						binding.addressEmptyTextView.visibility = View.VISIBLE

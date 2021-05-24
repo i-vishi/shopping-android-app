@@ -39,6 +39,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 	private var _userOrders = MutableLiveData<List<UserData.OrderItem>>()
 	val userOrders: LiveData<List<UserData.OrderItem>> get() = _userOrders
 
+	private var _userAddresses = MutableLiveData<List<UserData.Address>>()
+	val userAddresses: LiveData<List<UserData.Address>> get() = _userAddresses
+
 	private var _selectedOrder = MutableLiveData<UserData.OrderItem?>()
 	val selectedOrder: LiveData<UserData.OrderItem?> get() = _selectedOrder
 
@@ -56,6 +59,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 	private val _storeDataStatus = MutableLiveData<StoreDataStatus>()
 	val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
+
+	private val _dataStatus = MutableLiveData<StoreDataStatus>()
+	val dataStatus: LiveData<StoreDataStatus> get() = _dataStatus
 
 	init {
 		viewModelScope.launch {
@@ -275,6 +281,45 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 					_selectedOrder.value = null
 					_storeDataStatus.value = StoreDataStatus.ERROR
 				}
+			}
+		}
+	}
+
+	fun getUserAddresses() {
+		Log.d(TAG, "Getting Addresses")
+		_dataStatus.value = StoreDataStatus.LOADING
+		viewModelScope.launch {
+			val res = authRepository.getAddressesByUserId(currentUser!!)
+			if (res is Success) {
+				_userAddresses.value = res.data ?: emptyList()
+				_dataStatus.value = StoreDataStatus.DONE
+				Log.d(TAG, "Getting Addresses: Success")
+			} else {
+				_userAddresses.value = emptyList()
+				_dataStatus.value = StoreDataStatus.ERROR
+				if (res is Error)
+					Log.d(TAG, "Getting Addresses: Error Occurred, ${res.exception.message}")
+			}
+		}
+	}
+
+	fun deleteAddress(addressId: String) {
+		viewModelScope.launch {
+			val delRes = async { authRepository.deleteAddressById(addressId, currentUser!!) }
+			when (val res = delRes.await()) {
+				is Success -> {
+					Log.d(TAG, "onDeleteAddress: Success")
+					val addresses = _userAddresses.value?.toMutableList()
+					addresses?.let {
+						val pos =
+							addresses.indexOfFirst { address -> address.addressId == addressId }
+						if (pos >= 0)
+							it.removeAt(pos)
+						_userAddresses.value = it
+					}
+				}
+				is Error -> Log.d(TAG, "onDeleteAddress: Error, ${res.exception}")
+				else -> Log.d(TAG, "onDeleteAddress: Some error occurred!")
 			}
 		}
 	}
