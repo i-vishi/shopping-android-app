@@ -93,11 +93,6 @@
             android:name="addressId"
             app:argType="string"
             app:nullable="true" />
-        <action
-            android:id="@+id/action_addEditAddressFragment_to_selectAddressFragment"
-            app:destination="@id/selectAddressFragment"
-            app:popUpTo="@id/selectAddressFragment"
-            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
@@ -134,6 +129,9 @@
         <action
             android:id="@+id/action_accountFragment_to_ordersFragment"
             app:destination="@id/ordersFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_addressFragment"
+            app:destination="@id/addressFragment" />
     </fragment>
     <fragment
         android:id="@+id/ordersFragment"
@@ -152,5 +150,14 @@
         <argument
             android:name="orderId"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="com.vishalgaur.shoppingapp.ui.home.AddressFragment"
+        android:label="fragment_address"
+        tools:layout="@layout/fragment_address" >
+        <action
+            android:id="@+id/action_addressFragment_to_addEditAddressFragment"
+            app:destination="@id/addEditAddressFragment" />
     </fragment>
 </navigation>

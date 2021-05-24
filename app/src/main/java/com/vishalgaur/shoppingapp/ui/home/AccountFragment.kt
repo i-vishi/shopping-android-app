@@ -44,6 +44,7 @@ class AccountFragment : Fragment() {
 		}
 		binding.accountAddressTv.setOnClickListener {
 			Log.d(TAG, "Address Selected")
+			findNavController().navigate(R.id.action_accountFragment_to_addressFragment)
 		}
 		binding.accountSignOutTv.setOnClickListener {
 			Log.d(TAG, "Sign Out Selected")

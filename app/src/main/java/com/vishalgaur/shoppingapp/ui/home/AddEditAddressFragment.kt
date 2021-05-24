@@ -84,7 +84,7 @@ class AddEditAddressFragment : Fragment() {
 			if (viewModel.errorStatus.value?.isEmpty() == true) {
 				viewModel.addAddressStatus.observe(viewLifecycleOwner) { status ->
 					if (status == AddObjectStatus.DONE) {
-						findNavController().navigate(R.id.action_addEditAddressFragment_to_selectAddressFragment)
+						findNavController().navigateUp()
 					}
 				}
 			}

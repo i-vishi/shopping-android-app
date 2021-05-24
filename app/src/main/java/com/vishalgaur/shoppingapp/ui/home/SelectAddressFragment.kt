@@ -43,7 +43,7 @@ class SelectAddressFragment : Fragment() {
 
 		orderViewModel.userAddresses.observe(viewLifecycleOwner) { addressList ->
 			if (context != null) {
-				addressAdapter = AddressAdapter(requireContext(), addressList ?: emptyList())
+				addressAdapter = AddressAdapter(requireContext(), addressList ?: emptyList(), true)
 				addressAdapter.onClickListener = object : AddressAdapter.OnClickListener {
 					override fun onEditClick(addressId: String) {
 						Log.d(TAG, "onEditAddress: initiated")

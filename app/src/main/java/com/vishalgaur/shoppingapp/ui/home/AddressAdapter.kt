@@ -9,17 +9,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.UserData
-import com.vishalgaur.shoppingapp.data.utils.getISOCountriesMap
 import com.vishalgaur.shoppingapp.databinding.LayoutAddressCardBinding
 import com.vishalgaur.shoppingapp.ui.getCompleteAddress
 
 private const val TAG = "AddressAdapter"
 
-class AddressAdapter(private val context: Context, addresses: List<UserData.Address>) :
+class AddressAdapter(
+	private val context: Context,
+	addresses: List<UserData.Address>,
+	private val isSelect: Boolean
+) :
 	RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
 
 	lateinit var onClickListener: OnClickListener
-	private val data: List<UserData.Address> = addresses
+	var data: List<UserData.Address> = addresses
 
 	var lastCheckedAddress: String? = null
 	private var lastCheckedCard: MaterialCardView? = null
@@ -33,8 +36,10 @@ class AddressAdapter(private val context: Context, addresses: List<UserData.Addr
 				context.getString(R.string.person_name, address.fName, address.lName)
 			binding.addressCompleteAddressTv.text = getCompleteAddress(address)
 			binding.addressMobileTv.text = address.phoneNumber
-			binding.addressCard.setOnClickListener {
-				onCardClick(position, address.addressId, it as MaterialCardView)
+			if (isSelect) {
+				binding.addressCard.setOnClickListener {
+					onCardClick(position, address.addressId, it as MaterialCardView)
+				}
 			}
 			binding.addressEditBtn.setOnClickListener {
 				onClickListener.onEditClick(address.addressId)
