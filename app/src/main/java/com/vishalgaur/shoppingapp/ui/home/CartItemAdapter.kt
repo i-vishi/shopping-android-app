@@ -26,7 +26,7 @@ class CartItemAdapter(
 	inner class ViewHolder(private val binding: CartListItemBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 		fun bind(itemData: UserData.CartItem) {
-			binding.loaderLayout.circularLoader.visibility = View.GONE
+			binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 			val proData = proList.find { it.productId == itemData.productId } ?: Product()
 			binding.cartProductTitleTv.text = proData.name
 			binding.cartProductPriceTv.text =
@@ -48,7 +48,7 @@ class CartItemAdapter(
 			}
 
 			binding.cartProductLikeBtn.setOnClickListener {
-				binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+				binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 				if (!likesList.contains(proData.productId)) {
 					binding.cartProductLikeBtn.setImageResource(R.drawable.liked_heart_drawable)
 				} else {
@@ -57,15 +57,15 @@ class CartItemAdapter(
 				onClickListener.onLikeClick(proData.productId)
 			}
 			binding.cartProductDeleteBtn.setOnClickListener {
-				binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+				binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 				onClickListener.onDeleteClick(itemData.itemId, binding.loaderLayout)
 			}
 			binding.cartProductPlusBtn.setOnClickListener {
-				binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+				binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 				onClickListener.onPlusClick(itemData.itemId)
 			}
 			binding.cartProductMinusBtn.setOnClickListener {
-				binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+				binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 				onClickListener.onMinusClick(itemData.itemId, itemData.quantity, binding.loaderLayout)
 			}
 

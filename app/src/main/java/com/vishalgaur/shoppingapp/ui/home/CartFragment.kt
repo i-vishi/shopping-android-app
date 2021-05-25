@@ -166,11 +166,13 @@ class CartFragment : Fragment() {
 				.setMessage(getString(R.string.delete_cart_item_message_text))
 				.setNegativeButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
 					dialog.cancel()
-					itemBinding.circularLoader.visibility = View.GONE
+					itemBinding.loaderFrameLayout.visibility = View.GONE
 				}
 				.setPositiveButton(getString(R.string.delete_dialog_delete_btn_text)) { dialog, _ ->
 					orderViewModel.deleteItemFromCart(itemId)
 					dialog.cancel()
+				}.setOnCancelListener {
+					itemBinding.loaderFrameLayout.visibility = View.GONE
 				}
 				.show()
 		}
