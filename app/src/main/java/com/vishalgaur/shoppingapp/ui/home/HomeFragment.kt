@@ -60,7 +60,10 @@ class HomeFragment : Fragment() {
 					override fun getSpanSize(position: Int): Int {
 						return when (productAdapter.getItemViewType(position)) {
 							2 -> 2 //ad
-							else -> 1 // product
+							else -> {
+								// product, full for last item
+								if (position + 1 == productAdapter.data.size) 2 else 1
+							}
 						}
 					}
 				}
@@ -143,7 +146,7 @@ class HomeFragment : Fragment() {
 		val debounceJob: Job? = null
 		val uiScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 		binding.homeTopAppBar.topAppBar.inflateMenu(R.menu.home_app_bar_menu)
-		if(viewModel.isUserASeller){
+		if (viewModel.isUserASeller) {
 			binding.homeTopAppBar.topAppBar.menu.removeItem(R.id.home_favorites)
 		}
 		binding.homeTopAppBar.homeSearchEditText.onFocusChangeListener = focusChangeListener
@@ -299,9 +302,9 @@ class HomeFragment : Fragment() {
 		val itemsList = mutableListOf<Any>()
 		itemsList.addAll(data)
 		var currPos = 0
-		if(itemsList.size >= 4){
+		if (itemsList.size >= 4) {
 			adsList.forEach label@{ ad ->
-				if (itemsList.size > currPos+1) {
+				if (itemsList.size > currPos + 1) {
 					itemsList.add(currPos, ad)
 				} else {
 					return@label

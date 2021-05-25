@@ -38,41 +38,34 @@ class SelectAddressFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-
 		orderViewModel.getUserAddresses()
-
-		orderViewModel.userAddresses.observe(viewLifecycleOwner) { addressList ->
-			if (context != null) {
-				addressAdapter = AddressAdapter(requireContext(), addressList ?: emptyList(), true)
-				addressAdapter.onClickListener = object : AddressAdapter.OnClickListener {
-					override fun onEditClick(addressId: String) {
-						Log.d(TAG, "onEditAddress: initiated")
-						navigateToAddEditAddress(true, addressId)
-					}
-
-					override fun onDeleteClick(addressId: String) {
-						Log.d(TAG, "onDeleteAddress: initiated")
-						showDeleteDialog(addressId)
-					}
-				}
-
-				binding.shipToAddressesRecyclerView.apply {
-					adapter = addressAdapter
-				}
-			}
-		}
 	}
 
 	private fun setObservers() {
 		orderViewModel.dataStatus.observe(viewLifecycleOwner) { status ->
 			when (status) {
 				StoreDataStatus.LOADING -> {
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.addressEmptyTextView.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 				}
 				else -> {
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+				}
+			}
+			if(status != null && status != StoreDataStatus.LOADING) {
+				orderViewModel.userAddresses.observe(viewLifecycleOwner) { addressList ->
+					if (addressList.isNotEmpty()) {
+						addressAdapter.data = addressList
+						binding.shipToAddressesRecyclerView.adapter = addressAdapter
+						binding.shipToAddressesRecyclerView.adapter?.notifyDataSetChanged()
+					} else if (addressList.isEmpty()) {
+						binding.shipToAddressesRecyclerView.visibility = View.GONE
+						binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+						binding.loaderLayout.circularLoader.hideAnimationBehavior
+						binding.addressEmptyTextView.visibility = View.VISIBLE
+					}
 				}
 			}
 		}
@@ -84,7 +77,9 @@ class SelectAddressFragment : Fragment() {
 		binding.shipToAppBar.topAppBar.setNavigationOnClickListener {
 			findNavController().navigateUp()
 		}
+		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 		binding.shipToErrorTextView.visibility = View.GONE
+		binding.addressEmptyTextView.visibility = View.GONE
 		binding.shipToAppBar.topAppBar.setOnMenuItemClickListener { menuItem ->
 			if (menuItem.itemId == R.id.add_item) {
 				navigateToAddEditAddress(false)
@@ -94,7 +89,27 @@ class SelectAddressFragment : Fragment() {
 			}
 		}
 
-		binding.loaderLayout.circularLoader.visibility = View.GONE
+		if (context != null) {
+			addressAdapter = AddressAdapter(
+				requireContext(),
+				orderViewModel.userAddresses.value ?: emptyList(),
+				true
+			)
+			addressAdapter.onClickListener = object : AddressAdapter.OnClickListener {
+				override fun onEditClick(addressId: String) {
+					Log.d(TAG, "onEditAddress: initiated")
+					navigateToAddEditAddress(true, addressId)
+				}
+
+				override fun onDeleteClick(addressId: String) {
+					Log.d(TAG, "onDeleteAddress: initiated")
+					showDeleteDialog(addressId)
+				}
+			}
+
+			binding.shipToAddressesRecyclerView.adapter = addressAdapter
+		}
+
 		binding.shipToNextBtn.setOnClickListener {
 			navigateToPaymentFragment(addressAdapter.lastCheckedAddress)
 		}
