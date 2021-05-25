@@ -15,6 +15,7 @@ import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentCartBinding
+import com.vishalgaur.shoppingapp.databinding.LayoutCircularLoaderBinding
 import com.vishalgaur.shoppingapp.databinding.LayoutPriceCardBinding
 import com.vishalgaur.shoppingapp.viewModels.OrderViewModel
 
@@ -133,9 +134,9 @@ class CartFragment : Fragment() {
 				orderViewModel.toggleLikeProduct(productId)
 			}
 
-			override fun onDeleteClick(itemId: String) {
+			override fun onDeleteClick(itemId: String, itemBinding: LayoutCircularLoaderBinding) {
 				Log.d(TAG, "onDelete: initiated")
-				showDeleteDialog(itemId)
+				showDeleteDialog(itemId, itemBinding)
 			}
 
 			override fun onPlusClick(itemId: String) {
@@ -143,10 +144,10 @@ class CartFragment : Fragment() {
 				orderViewModel.setQuantityOfItem(itemId, 1)
 			}
 
-			override fun onMinusClick(itemId: String, currQuantity: Int) {
+			override fun onMinusClick(itemId: String, currQuantity: Int,itemBinding: LayoutCircularLoaderBinding) {
 				Log.d(TAG, "onMinus: decreasing quantity")
 				if (currQuantity == 1) {
-					showDeleteDialog(itemId)
+					showDeleteDialog(itemId, itemBinding)
 				} else {
 					orderViewModel.setQuantityOfItem(itemId, -1)
 				}
@@ -158,13 +159,14 @@ class CartFragment : Fragment() {
 		findNavController().navigate(R.id.action_cartFragment_to_selectAddressFragment)
 	}
 
-	private fun showDeleteDialog(itemId: String) {
+	private fun showDeleteDialog(itemId: String, itemBinding: LayoutCircularLoaderBinding) {
 		context?.let {
 			MaterialAlertDialogBuilder(it)
 				.setTitle(getString(R.string.delete_dialog_title_text))
 				.setMessage(getString(R.string.delete_cart_item_message_text))
 				.setNegativeButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
 					dialog.cancel()
+					itemBinding.circularLoader.visibility = View.GONE
 				}
 				.setPositiveButton(getString(R.string.delete_dialog_delete_btn_text)) { dialog, _ ->
 					orderViewModel.deleteItemFromCart(itemId)

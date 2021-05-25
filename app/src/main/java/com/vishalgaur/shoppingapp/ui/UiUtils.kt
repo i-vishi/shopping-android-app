@@ -1,5 +1,6 @@
 package com.vishalgaur.shoppingapp.ui
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
@@ -7,6 +8,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -193,4 +195,15 @@ internal fun getCompleteAddress(address: UserData.Address): String {
 	} else {
 		"${address.streetAddress}, ${address.streetAddress2}, ${address.city}, ${address.state} - ${address.zipCode}, ${getISOCountriesMap()[address.countryISOCode]}"
 	}
+}
+
+internal fun disableClickOnWindow(activity: Activity) {
+	activity.window.setFlags(
+		WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+		WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+	)
+}
+
+internal fun enableClickOnWindow(activity: Activity) {
+	activity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 }

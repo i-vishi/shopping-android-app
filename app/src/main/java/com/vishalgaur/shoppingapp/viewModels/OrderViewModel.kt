@@ -157,7 +157,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 	fun toggleLikeProduct(productId: String) {
 		Log.d(TAG, "toggling Like")
 		viewModelScope.launch {
-			_dataStatus.value = StoreDataStatus.LOADING
+//			_dataStatus.value = StoreDataStatus.LOADING
 			val isLiked = _userLikes.value?.contains(productId) == true
 			val allLikes = _userLikes.value?.toMutableList() ?: mutableListOf()
 			val deferredRes = async {
@@ -194,7 +194,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 
 	fun setQuantityOfItem(itemId: String, value: Int) {
 		viewModelScope.launch {
-			_dataStatus.value = StoreDataStatus.LOADING
+//			_dataStatus.value = StoreDataStatus.LOADING
 			var cartList: MutableList<UserData.CartItem>
 			_cartItems.value?.let { items ->
 				val item = items.find { it.itemId == itemId }
@@ -222,7 +222,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 
 	fun deleteItemFromCart(itemId: String) {
 		viewModelScope.launch {
-			_dataStatus.value = StoreDataStatus.LOADING
+//			_dataStatus.value = StoreDataStatus.LOADING
 			var cartList: MutableList<UserData.CartItem>
 			_cartItems.value?.let { items ->
 				val itemPos = items.indexOfFirst { it.itemId == itemId }
