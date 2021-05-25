@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,14 +12,16 @@
     <include
         android:id="@+id/loader_layout"
         layout="@layout/layout_circular_loader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/add_pro_app_bar"
         android:layout_gravity="center" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/pro_details_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/add_pro_app_bar"
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -28,6 +30,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="72dp">
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/layout_views_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="pro_details_images_recyclerview,
+                pro_details_title_tv,pro_details_like_btn,pro_details_rating_bar,
+                pro_details_price_tv,pro_details_select_size_label,pro_details_select_color_label,
+                pro_details_specifications_label" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/pro_details_images_recyclerview"
@@ -193,15 +204,15 @@
         android:id="@+id/pro_details_add_cart_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
+        android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
         android:backgroundTint="@color/blue_accent_300"
         android:padding="16dp"
         android:text="@string/pro_details_add_to_cart_btn_text"
         android:textAllCaps="false"
         android:textSize="16sp"
-        android:textStyle="bold" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:textStyle="bold"
+        android:translationY="-8dp" />
+</RelativeLayout>

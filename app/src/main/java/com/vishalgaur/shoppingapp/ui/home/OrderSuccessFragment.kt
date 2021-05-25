@@ -44,12 +44,12 @@ class OrderSuccessFragment : Fragment() {
 			when (status) {
 				StoreDataStatus.LOADING -> {
 					binding.loaderLayout.circularLoader.showAnimationBehavior
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 				}
 				else -> {
 					binding.orderConstraintGroup.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 				}
 			}
 		}

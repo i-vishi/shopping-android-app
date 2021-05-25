@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -83,6 +84,11 @@ class ProductDetailsFragment : Fragment() {
 				}
 			}
 		}
+
+		binding.loaderLayout.loaderFrameLayout.background = ResourcesCompat.getDrawable(resources, R.color.white, null)
+
+		binding.layoutViewsGroup.visibility = View.GONE
+		binding.proDetailsAddCartBtn.visibility = View.GONE
 		setObservers()
 		return binding.root
 	}
@@ -91,13 +97,13 @@ class ProductDetailsFragment : Fragment() {
 		viewModel.dataStatus.observe(viewLifecycleOwner) {
 			when (it) {
 				StoreDataStatus.DONE -> {
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 					binding.proDetailsLayout.visibility = View.VISIBLE
 					setViews()
 				}
 				else -> {
 					binding.proDetailsLayout.visibility = View.GONE
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 				}
 			}
 		}
@@ -141,6 +147,8 @@ class ProductDetailsFragment : Fragment() {
 	}
 
 	private fun setViews() {
+		binding.layoutViewsGroup.visibility = View.VISIBLE
+		binding.proDetailsAddCartBtn.visibility = View.VISIBLE
 		binding.addProAppBar.topAppBar.title = viewModel.productData.value?.name
 		binding.addProAppBar.topAppBar.setNavigationOnClickListener {
 			findNavController().navigateUp()
