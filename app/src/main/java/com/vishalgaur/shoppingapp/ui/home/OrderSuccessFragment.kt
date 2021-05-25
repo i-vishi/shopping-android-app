@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -24,6 +25,7 @@ class OrderSuccessFragment : Fragment() {
 	): View? {
 		binding = FragmentOrderSuccessBinding.inflate(layoutInflater)
 
+		binding.loaderLayout.loaderFrameLayout.background = ResourcesCompat.getDrawable(resources, R.color.white, null)
 		binding.orderConstraintGroup.visibility = View.GONE
 		setObservers()
 		return binding.root

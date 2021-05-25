@@ -94,17 +94,16 @@ class AddEditProductFragment : Fragment() {
 		viewModel.dataStatus.observe(viewLifecycleOwner) { status ->
 			when (status) {
 				StoreDataStatus.LOADING -> {
-					binding.loaderLayout.circularLoader.bringToFront()
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 				}
 				StoreDataStatus.DONE -> {
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
 					fillDataInAllViews()
 				}
 				else -> {
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
 					makeToast("Error getting Data, Try Again!")
 				}
@@ -113,8 +112,7 @@ class AddEditProductFragment : Fragment() {
 		viewModel.addProductErrors.observe(viewLifecycleOwner) { status ->
 			when (status) {
 				AddProductErrors.ADDING -> {
-					binding.loaderLayout.circularLoader.bringToFront()
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 				}
 				AddProductErrors.ERR_ADD_IMG -> {
@@ -124,7 +122,7 @@ class AddEditProductFragment : Fragment() {
 					setAddProductErrors(getString(R.string.add_product_insert_error))
 				}
 				AddProductErrors.NONE -> {
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
 				}
 			}
@@ -132,7 +130,7 @@ class AddEditProductFragment : Fragment() {
 	}
 
 	private fun setAddProductErrors(errText: String) {
-		binding.loaderLayout.circularLoader.visibility = View.GONE
+		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 		binding.loaderLayout.circularLoader.hideAnimationBehavior
 		binding.addProErrorTextView.visibility = View.VISIBLE
 		binding.addProErrorTextView.text = errText
@@ -178,7 +176,7 @@ class AddEditProductFragment : Fragment() {
 			findNavController().navigateUp()
 		}
 
-		binding.loaderLayout.circularLoader.visibility = View.GONE
+		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 
 		setShoeSizesChips()
 		setShoeColorsChips()
