@@ -137,6 +137,66 @@ class UserLocalDataSource internal constructor(
 			}
 		}
 
+	override suspend fun insertCartItem(newItem: UserData.CartItem, userId: String) =
+		withContext(ioDispatcher) {
+			try {
+				val uData = userDao.getById(userId)
+				if (uData != null) {
+					val cartItems = uData.cart.toMutableList()
+					cartItems.add(newItem)
+					uData.cart = cartItems
+					userDao.updateUser(uData)
+				} else {
+					throw Exception("User Not Found")
+				}
+			} catch (e: Exception) {
+				Log.d("UserLocalSource", "onInsertCartItem: Error Occurred, ${e.message}")
+				throw e
+			}
+		}
+
+	override suspend fun updateCartItem(item: UserData.CartItem, userId: String) =
+		withContext(ioDispatcher) {
+			try {
+				val uData = userDao.getById(userId)
+				if (uData != null) {
+					val cartItems = uData.cart.toMutableList()
+					val pos = cartItems.indexOfFirst { it.itemId == item.itemId }
+					if (pos >= 0) {
+						cartItems[pos] = item
+					}
+					uData.cart = cartItems
+					userDao.updateUser(uData)
+				} else {
+					throw Exception("User Not Found")
+				}
+			} catch (e: Exception) {
+				Log.d("UserLocalSource", "onInsertCartItem: Error Occurred, ${e.message}")
+				throw e
+			}
+		}
+
+	override suspend fun deleteCartItem(itemId: String, userId: String) =
+		withContext(ioDispatcher) {
+			try {
+				val uData = userDao.getById(userId)
+				if (uData != null) {
+					val cartItems = uData.cart.toMutableList()
+					val pos = cartItems.indexOfFirst { it.itemId == itemId }
+					if (pos >= 0) {
+						cartItems.removeAt(pos)
+					}
+					uData.cart = cartItems
+					userDao.updateUser(uData)
+				} else {
+					throw Exception("User Not Found")
+				}
+			} catch (e: Exception) {
+				Log.d("UserLocalSource", "onInsertCartItem: Error Occurred, ${e.message}")
+				throw e
+			}
+		}
+
 	override suspend fun clearUser() {
 		withContext(ioDispatcher) {
 			userDao.clear()

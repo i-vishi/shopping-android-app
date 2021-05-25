@@ -92,7 +92,6 @@ class ProductDetailsFragment : Fragment() {
 		binding.layoutViewsGroup.visibility = View.GONE
 		binding.proDetailsAddCartBtn.visibility = View.GONE
 		setObservers()
-		Log.d("ProductFragment", "oncreateview called")
 		return binding.root
 	}
 
@@ -100,7 +99,8 @@ class ProductDetailsFragment : Fragment() {
 		super.onResume()
 		viewModel.setLike()
 		viewModel.checkIfInCart()
-		Log.d("ProductFragment", "onviewcreated called")
+		selectedSize = null
+		selectedColor = null
 	}
 
 	private fun setObservers() {

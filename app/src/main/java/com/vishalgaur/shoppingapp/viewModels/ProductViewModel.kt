@@ -51,7 +51,6 @@ class ProductViewModel(private val productId: String, application: Application) 
 		_isLiked.value = false
 		_errorStatus.value = emptyList()
 		viewModelScope.launch {
-			authRepository.hardRefreshUserData()
 			Log.d(TAG, "init: productId: $productId")
 			getProductDetails()
 			checkIfInCart()
@@ -157,7 +156,6 @@ class ProductViewModel(private val productId: String, application: Application) 
 			}
 			val res = deferredRes.await()
 			if (res is Success) {
-				authRepository.hardRefreshUserData()
 				Log.d(TAG, "onAddItem: Success")
 				_addItemStatus.value = AddObjectStatus.DONE
 			} else {

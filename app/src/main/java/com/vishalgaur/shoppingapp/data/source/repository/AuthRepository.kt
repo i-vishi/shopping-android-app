@@ -318,13 +318,7 @@ class AuthRepository(
 			}
 			val localRes = async {
 				Log.d(TAG, "onInsertCartItem: updating item to local source")
-				val userRes = authRemoteDataSource.getUserById(userId)
-				if (userRes is Success) {
-					userLocalDataSource.clearUser()
-					userLocalDataSource.addUser(userRes.data!!)
-				} else if (userRes is Error) {
-					throw userRes.exception
-				}
+				userLocalDataSource.insertCartItem(cartItem, userId)
 			}
 			try {
 				remoteRes.await()
@@ -347,14 +341,7 @@ class AuthRepository(
 			}
 			val localRes = async {
 				Log.d(TAG, "onUpdateCartItem: updating cart item on local source")
-				val userRes =
-					authRemoteDataSource.getUserById(userId)
-				if (userRes is Success) {
-					userLocalDataSource.clearUser()
-					userLocalDataSource.addUser(userRes.data!!)
-				} else if (userRes is Error) {
-					throw userRes.exception
-				}
+				userLocalDataSource.updateCartItem(cartItem, userId)
 			}
 			try {
 				remoteRes.await()
@@ -374,14 +361,7 @@ class AuthRepository(
 			}
 			val localRes = async {
 				Log.d(TAG, "onDelete: deleting cart item from local source")
-				val userRes =
-					authRemoteDataSource.getUserById(userId)
-				if (userRes is Success) {
-					userLocalDataSource.clearUser()
-					userLocalDataSource.addUser(userRes.data!!)
-				} else if (userRes is Error) {
-					throw userRes.exception
-				}
+				userLocalDataSource.deleteCartItem(itemId, userId)
 			}
 			try {
 				remoteRes.await()
