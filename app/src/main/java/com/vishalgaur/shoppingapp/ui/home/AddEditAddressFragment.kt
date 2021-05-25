@@ -68,7 +68,7 @@ class AddEditAddressFragment : Fragment() {
 		binding.addAddressTopAppBar.topAppBar.setNavigationOnClickListener {
 			findNavController().navigateUp()
 		}
-		binding.loaderLayout.circularLoader.visibility = View.GONE
+		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 		binding.addressFirstNameEditText.onFocusChangeListener = focusChangeListener
 		binding.addressLastNameEditText.onFocusChangeListener = focusChangeListener
 		binding.addressStreetAddEditText.onFocusChangeListener = focusChangeListener
@@ -84,6 +84,7 @@ class AddEditAddressFragment : Fragment() {
 			if (viewModel.errorStatus.value?.isEmpty() == true) {
 				viewModel.addAddressStatus.observe(viewLifecycleOwner) { status ->
 					if (status == AddObjectStatus.DONE) {
+						makeToast("Address Saved!")
 						findNavController().navigateUp()
 					}
 				}
@@ -128,7 +129,6 @@ class AddEditAddressFragment : Fragment() {
 					makeToast(getString(R.string.save_address_error_text))
 				}
 				AddObjectStatus.ADDING -> {
-					binding.loaderLayout.circularLoader.bringToFront()
 					setLoaderState(View.VISIBLE)
 				}
 				else -> setLoaderState()
@@ -158,7 +158,7 @@ class AddEditAddressFragment : Fragment() {
 	}
 
 	private fun setLoaderState(isVisible: Int = View.GONE) {
-		binding.loaderLayout.circularLoader.visibility = isVisible
+		binding.loaderLayout.loaderFrameLayout.visibility = isVisible
 		if (isVisible == View.GONE) {
 			binding.loaderLayout.circularLoader.hideAnimationBehavior
 		} else {

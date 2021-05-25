@@ -13,6 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
+    <include
+        android:id="@+id/loader_layout"
+        layout="@layout/layout_circular_loader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/add_address_top_app_bar" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,16 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="80dp">
-
-            <include
-                android:id="@+id/loader_layout"
-                layout="@layout/layout_circular_loader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/add_address_country_label"
