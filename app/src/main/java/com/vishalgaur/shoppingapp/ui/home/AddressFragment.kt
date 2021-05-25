@@ -41,7 +41,7 @@ class AddressFragment : Fragment() {
 	private fun setViews() {
 		binding.addressAppBar.topAppBar.title = "Address"
 		binding.addressAppBar.topAppBar.setNavigationOnClickListener { findNavController().navigateUp() }
-		binding.loaderLayout.circularLoader.visibility = View.GONE
+		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 		binding.addressAddBtn.visibility = View.GONE
 		binding.addressAddBtn.setOnClickListener {
 			navigateToAddEditAddress(false)
@@ -70,13 +70,13 @@ class AddressFragment : Fragment() {
 			when (status) {
 				StoreDataStatus.LOADING -> {
 					binding.addressEmptyTextView.visibility = View.GONE
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 				}
 				else -> {
 					binding.addressAddBtn.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 				}
 			}
 
@@ -88,7 +88,7 @@ class AddressFragment : Fragment() {
 						binding.addressAddressesRecyclerView.adapter?.notifyDataSetChanged()
 					} else if (addressList.isEmpty()) {
 						binding.addressAddressesRecyclerView.visibility = View.GONE
-						binding.loaderLayout.circularLoader.visibility = View.GONE
+						binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 						binding.loaderLayout.circularLoader.hideAnimationBehavior
 						binding.addressEmptyTextView.visibility = View.VISIBLE
 					}

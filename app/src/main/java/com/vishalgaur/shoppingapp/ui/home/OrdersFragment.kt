@@ -41,7 +41,7 @@ class OrdersFragment : Fragment() {
 	}
 
 	private fun setViews() {
-		binding.loaderLayout.circularLoader.visibility = View.GONE
+		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 		binding.ordersAppBar.topAppBar.title = getString(R.string.orders_fragment_title)
 		binding.ordersAppBar.topAppBar.setNavigationOnClickListener {
 			findNavController().navigateUp()
@@ -68,12 +68,12 @@ class OrdersFragment : Fragment() {
 				StoreDataStatus.LOADING -> {
 					binding.orderAllOrdersRecyclerView.visibility = View.GONE
 					binding.ordersEmptyTextView.visibility = View.GONE
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 				}
 				else -> {
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 				}
 			}
 
@@ -84,8 +84,8 @@ class OrdersFragment : Fragment() {
 						binding.orderAllOrdersRecyclerView.adapter?.notifyDataSetChanged()
 						binding.orderAllOrdersRecyclerView.visibility = View.VISIBLE
 					} else if (orders.isEmpty()) {
-						binding.loaderLayout.circularLoader.visibility = View.GONE
 						binding.loaderLayout.circularLoader.hideAnimationBehavior
+						binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 						binding.ordersEmptyTextView.visibility = View.VISIBLE
 					}
 				}

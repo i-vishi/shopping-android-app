@@ -24,7 +24,7 @@ class OrderProductsAdapter(
 	inner class ViewHolder(private val binding: CartListItemBinding) :
 		RecyclerView.ViewHolder(binding.root) {
 		fun bind(itemData: UserData.CartItem) {
-			binding.loaderLayout.circularLoader.visibility = View.GONE
+			binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 			val proData = proList.find { it.productId == itemData.productId } ?: Product()
 			binding.cartProductTitleTv.text = proData.name
 			binding.cartProductPriceTv.text =
