@@ -141,7 +141,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 		}
 	}
 
-	private fun getUserLikes() {
+	fun getUserLikes() {
 		viewModelScope.launch {
 			val res = authRepository.getLikesByUserId(currentUser!!)
 			if (res is Success) {

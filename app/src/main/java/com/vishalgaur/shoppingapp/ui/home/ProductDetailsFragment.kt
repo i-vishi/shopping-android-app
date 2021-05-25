@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -85,12 +86,21 @@ class ProductDetailsFragment : Fragment() {
 			}
 		}
 
-		binding.loaderLayout.loaderFrameLayout.background = ResourcesCompat.getDrawable(resources, R.color.white, null)
+		binding.loaderLayout.loaderFrameLayout.background =
+			ResourcesCompat.getDrawable(resources, R.color.white, null)
 
 		binding.layoutViewsGroup.visibility = View.GONE
 		binding.proDetailsAddCartBtn.visibility = View.GONE
 		setObservers()
+		Log.d("ProductFragment", "oncreateview called")
 		return binding.root
+	}
+
+	override fun onResume() {
+		super.onResume()
+		viewModel.setLike()
+		viewModel.checkIfInCart()
+		Log.d("ProductFragment", "onviewcreated called")
 	}
 
 	private fun setObservers() {

@@ -79,13 +79,13 @@ class ProductViewModel(private val productId: String, application: Application) 
 		}
 	}
 
-	private fun setLike() {
+	fun setLike() {
 		viewModelScope.launch {
 			val res = authRepository.getLikesByUserId(currentUserId!!)
 			if (res is Success) {
 				val userLikes = res.data ?: emptyList()
 				_isLiked.value = userLikes.contains(productId)
-				Log.d(TAG, "Getting Likes: Success")
+				Log.d(TAG, "Setting Like: Success, value = ${_isLiked.value}, ${res.data?.size}")
 			} else {
 				if (res is Error)
 					Log.d(TAG, "Getting Likes: Error Occurred, ${res.exception.message}")
@@ -106,6 +106,9 @@ class ProductViewModel(private val productId: String, application: Application) 
 			val res = deferredRes.await()
 			if (res is Success) {
 				_isLiked.value = !_isLiked.value!!
+			} else{
+				if(res is Error)
+					Log.d(TAG, "Error toggling like, ${res.exception}")
 			}
 		}
 	}
@@ -122,6 +125,7 @@ class ProductViewModel(private val productId: String, application: Application) 
 					val cartList = uData.cart
 					val idx = cartList.indexOfFirst { it.productId == productId }
 					_isItemInCart.value = idx >= 0
+					Log.d(TAG, "Checking in Cart: Success, value = ${_isItemInCart.value}, ${cartList.size}")
 				} else {
 					_isItemInCart.value = false
 				}

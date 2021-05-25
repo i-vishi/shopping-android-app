@@ -186,13 +186,7 @@ class AuthRepository(
 			}
 			val localRes = async {
 				Log.d(TAG, "onLikeProduct: updating product to local source")
-				val userRes = authRemoteDataSource.getUserById(userId)
-				if (userRes is Success) {
-					userLocalDataSource.clearUser()
-					userLocalDataSource.addUser(userRes.data!!)
-				} else if (userRes is Error) {
-					throw userRes.exception
-				}
+				userLocalDataSource.likeProduct(productId, userId)
 			}
 			try {
 				remoteRes.await()
@@ -214,15 +208,8 @@ class AuthRepository(
 				authRemoteDataSource.dislikeProduct(productId, userId)
 			}
 			val localRes = async {
-				Log.d(TAG, "onDislikeProduct: deleting product from local source")
-				val userRes =
-					authRemoteDataSource.getUserById(userId)
-				if (userRes is Success) {
-					userLocalDataSource.clearUser()
-					userLocalDataSource.addUser(userRes.data!!)
-				} else if (userRes is Error) {
-					throw userRes.exception
-				}
+				Log.d(TAG, "onDislikeProduct: updating product to local source")
+				userLocalDataSource.dislikeProduct(productId, userId)
 			}
 			try {
 				remoteRes.await()

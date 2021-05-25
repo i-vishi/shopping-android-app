@@ -1,9 +1,6 @@
 package com.vishalgaur.shoppingapp.data.source.local
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.vishalgaur.shoppingapp.data.UserData
 
 @Dao
@@ -16,6 +13,9 @@ interface UserDao {
 
 	@Query("SELECT * FROM users WHERE mobile = :mobile")
 	suspend fun getByMobile(mobile: String): UserData?
+
+	@Update(entity = UserData::class)
+	suspend fun updateUser(obj: UserData)
 
 	@Query("DELETE FROM users")
 	suspend fun clear()

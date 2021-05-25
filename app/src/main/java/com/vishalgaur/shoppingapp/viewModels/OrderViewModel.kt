@@ -55,7 +55,6 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 
 	init {
 		viewModelScope.launch {
-			authRepository.hardRefreshUserData()
 			getUserLikes()
 		}
 	}
@@ -107,13 +106,18 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 		}
 	}
 
-	private fun getUserLikes() {
+	fun getUserLikes() {
 		Log.d(TAG, "Getting Likes")
-		_dataStatus.value = StoreDataStatus.LOADING
+//		_dataStatus.value = StoreDataStatus.LOADING
 		viewModelScope.launch {
 			val res = authRepository.getLikesByUserId(currentUser!!)
 			if (res is Success) {
-				_userLikes.value = res.data ?: emptyList()
+				val data = res.data ?: emptyList()
+				if (data[0] != "") {
+					_userLikes.value = data
+				} else {
+					_userLikes.value = emptyList()
+				}
 				_dataStatus.value = StoreDataStatus.DONE
 				Log.d(TAG, "Getting Likes: Success")
 			} else {
@@ -310,7 +314,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 
 	private suspend fun getAllProductsInCart() {
 		viewModelScope.launch {
-			_dataStatus.value = StoreDataStatus.LOADING
+//			_dataStatus.value = StoreDataStatus.LOADING
 			val priceMap = mutableMapOf<String, Double>()
 			val proList = mutableListOf<Product>()
 			var res = true

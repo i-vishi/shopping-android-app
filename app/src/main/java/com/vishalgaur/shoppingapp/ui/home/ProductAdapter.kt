@@ -17,10 +17,11 @@ import com.vishalgaur.shoppingapp.databinding.LayoutHomeAdBinding
 import com.vishalgaur.shoppingapp.databinding.ProductsListItemBinding
 import com.vishalgaur.shoppingapp.getOfferPercentage
 
-class ProductAdapter(proList: List<Any>, private val context: Context) :
+class ProductAdapter(proList: List<Any>, userLikes: List<String>, private val context: Context) :
 	RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 	var data = proList
+	var likesList = userLikes
 
 	lateinit var onClickListener: OnClickListener
 	lateinit var bindImageButtons: BindImageButtons
@@ -68,6 +69,7 @@ class ProductAdapter(proList: List<Any>, private val context: Context) :
 				productImage.clipToOutline = true
 			}
 
+			proLikeButton.isChecked = likesList.contains(productData.productId)
 
 			if (sessionManager.isUserSeller()) {
 				proLikeButton.visibility = View.GONE
@@ -85,8 +87,11 @@ class ProductAdapter(proList: List<Any>, private val context: Context) :
 				bindImageButtons.setLikeButton(productData.productId, proLikeButton)
 				bindImageButtons.setCartButton(productData.productId, proCartButton)
 				proLikeButton.setOnCheckedChangeListener { _, _ ->
-					onClickListener.onLikeClick(productData.productId)
 
+
+				}
+				proLikeButton.setOnClickListener {
+					onClickListener.onLikeClick(productData.productId)
 				}
 				proCartButton.setOnClickListener {
 					onClickListener.onAddToCartClick(productData)

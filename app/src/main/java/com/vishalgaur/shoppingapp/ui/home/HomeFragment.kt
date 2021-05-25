@@ -50,6 +50,16 @@ class HomeFragment : Fragment() {
 		return binding.root
 	}
 
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		viewModel.getUserLikes()
+	}
+
+//	override fun onResume() {
+//		super.onResume()
+//		viewModel.getLikedProducts()
+//	}
+
 	private fun setViews() {
 		setHomeTopAppBar()
 		if (context != null) {
@@ -115,6 +125,13 @@ class HomeFragment : Fragment() {
 			if (it.isNotEmpty()) {
 				viewModel.setDataLoaded()
 				viewModel.filterProducts("All")
+			}
+		}
+		viewModel.userLikes.observe(viewLifecycleOwner) {
+			if (it.isNotEmpty()) {
+				binding.productsRecyclerView.adapter?.apply {
+					notifyDataSetChanged()
+				}
 			}
 		}
 	}
@@ -191,7 +208,8 @@ class HomeFragment : Fragment() {
 	}
 
 	private fun setProductsAdapter(productsList: List<Product>?) {
-		productAdapter = ProductAdapter(productsList ?: emptyList(), requireContext())
+		val likesList = viewModel.userLikes.value ?: emptyList()
+		productAdapter = ProductAdapter(productsList ?: emptyList(), likesList, requireContext())
 		productAdapter.onClickListener = object : ProductAdapter.OnClickListener {
 			override fun onClick(productData: Product) {
 				findNavController().navigate(
@@ -300,7 +318,7 @@ class HomeFragment : Fragment() {
 
 	private fun getMixedDataList(data: List<Product>, adsList: List<Int>): List<Any> {
 		val itemsList = mutableListOf<Any>()
-		itemsList.addAll(data)
+		itemsList.addAll(data.sortedBy { it.productId })
 		var currPos = 0
 		if (itemsList.size >= 4) {
 			adsList.forEach label@{ ad ->

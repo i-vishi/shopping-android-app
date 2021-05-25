@@ -89,8 +89,8 @@ class UserLocalDataSource internal constructor(
 			try {
 				val uData = userDao.getById(userId)
 				if (uData != null) {
-					val addressList = uData.likes
-					return@withContext Success(addressList)
+					val likesList = uData.likes
+					return@withContext Success(likesList)
 				} else {
 					return@withContext Error(Exception("User Not Found"))
 				}
@@ -98,6 +98,42 @@ class UserLocalDataSource internal constructor(
 			} catch (e: Exception) {
 				Log.d("UserLocalSource", "onGetLikes: Error Occurred, ${e.message}")
 				return@withContext Error(e)
+			}
+		}
+
+	override suspend fun dislikeProduct(productId: String, userId: String) =
+		withContext(ioDispatcher) {
+			try {
+				val uData = userDao.getById(userId)
+				if (uData != null) {
+					val likesList = uData.likes.toMutableList()
+					likesList.remove(productId)
+					uData.likes = likesList
+					userDao.updateUser(uData)
+				} else {
+					throw Exception("User Not Found")
+				}
+			} catch (e: Exception) {
+				Log.d("UserLocalSource", "onGetLikes: Error Occurred, ${e.message}")
+				throw e
+			}
+		}
+
+	override suspend fun likeProduct(productId: String, userId: String) =
+		withContext(ioDispatcher) {
+			try {
+				val uData = userDao.getById(userId)
+				if (uData != null) {
+					val likesList = uData.likes.toMutableList()
+					likesList.add(productId)
+					uData.likes = likesList
+					userDao.updateUser(uData)
+				} else {
+					throw Exception("User Not Found")
+				}
+			} catch (e: Exception) {
+				Log.d("UserLocalSource", "onGetLikes: Error Occurred, ${e.message}")
+				throw e
 			}
 		}
 
