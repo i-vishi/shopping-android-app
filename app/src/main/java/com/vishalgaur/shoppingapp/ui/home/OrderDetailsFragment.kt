@@ -39,7 +39,7 @@ class OrderDetailsFragment : Fragment() {
 	private fun setViews() {
 		binding.orderDetailAppBar.topAppBar.title = getString(R.string.order_details_fragment_title)
 		binding.orderDetailAppBar.topAppBar.setNavigationOnClickListener { findNavController().navigateUp() }
-		binding.loaderLayout.circularLoader.visibility = View.GONE
+		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 		binding.orderDetailsConstraintGroup.visibility = View.GONE
 
 		if (context != null) {
@@ -52,13 +52,13 @@ class OrderDetailsFragment : Fragment() {
 		viewModel.storeDataStatus.observe(viewLifecycleOwner) { status ->
 			when (status) {
 				StoreDataStatus.LOADING -> {
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 					binding.orderDetailsConstraintGroup.visibility = View.GONE
 				}
 				else -> {
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 				}
 			}
 		}

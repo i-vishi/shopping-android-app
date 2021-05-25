@@ -143,6 +143,9 @@ class HomeFragment : Fragment() {
 		val debounceJob: Job? = null
 		val uiScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 		binding.homeTopAppBar.topAppBar.inflateMenu(R.menu.home_app_bar_menu)
+		if(viewModel.isUserASeller){
+			binding.homeTopAppBar.topAppBar.menu.removeItem(R.id.home_favorites)
+		}
 		binding.homeTopAppBar.homeSearchEditText.onFocusChangeListener = focusChangeListener
 		binding.homeTopAppBar.homeSearchEditText.doAfterTextChanged { editable ->
 			if (editable != null) {
@@ -296,9 +299,9 @@ class HomeFragment : Fragment() {
 		val itemsList = mutableListOf<Any>()
 		itemsList.addAll(data)
 		var currPos = 0
-		if(itemsList.size > 4){
+		if(itemsList.size >= 4){
 			adsList.forEach label@{ ad ->
-				if (itemsList.size > currPos) {
+				if (itemsList.size > currPos+1) {
 					itemsList.add(currPos, ad)
 				} else {
 					return@label
