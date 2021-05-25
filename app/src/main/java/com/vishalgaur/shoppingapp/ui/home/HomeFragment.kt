@@ -79,20 +79,20 @@ class HomeFragment : Fragment() {
 		binding.homeFabAddProduct.setOnClickListener {
 			showDialogWithItems(ProductCategories, 0, false)
 		}
-		binding.loaderLayout.circularLoader.visibility = View.GONE
+		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 	}
 
 	private fun setObservers() {
 		viewModel.storeDataStatus.observe(viewLifecycleOwner) { status ->
 			when (status) {
 				StoreDataStatus.LOADING -> {
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 					binding.productsRecyclerView.visibility = View.GONE
 				}
 				else -> {
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 				}
 			}
 			if (status != null && status != StoreDataStatus.LOADING) {

@@ -72,7 +72,7 @@ class FavoritesFragment : Fragment() {
 				viewModel.getLikedProducts()
 				if (viewModel.likedProducts.value != null) {
 					productsAdapter.data = viewModel.likedProducts.value!!
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
 					binding.favProductsRecyclerView.adapter = productsAdapter
 					binding.favProductsRecyclerView.adapter?.apply {
@@ -82,7 +82,7 @@ class FavoritesFragment : Fragment() {
 			} else if (it.isEmpty()) {
 				binding.favEmptyTextView.visibility = View.VISIBLE
 				binding.favProductsRecyclerView.visibility = View.GONE
-				binding.loaderLayout.circularLoader.visibility = View.GONE
+				binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 				binding.loaderLayout.circularLoader.hideAnimationBehavior
 			}
 		}

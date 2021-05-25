@@ -13,6 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
+    <include
+        android:id="@+id/loader_layout"
+        layout="@layout/layout_circular_loader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/cart_app_bar" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,16 +43,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <include
-            android:id="@+id/loader_layout"
-            layout="@layout/layout_circular_loader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cart_products_recycler_view"
             android:layout_width="match_parent"
@@ -61,17 +58,6 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:itemCount="2"
             tools:listitem="@layout/cart_list_item" />
-
-<!--        <include-->
-<!--            android:id="@+id/cart_price_card_layout"-->
-<!--            layout="@layout/layout_price_card"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="16dp"-->
-<!--            android:layout_marginEnd="16dp"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/cart_products_recycler_view" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button

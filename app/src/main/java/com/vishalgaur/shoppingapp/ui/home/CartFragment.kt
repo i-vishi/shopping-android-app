@@ -48,7 +48,7 @@ class CartFragment : Fragment() {
 	}
 
 	private fun setViews() {
-		binding.loaderLayout.circularLoader.visibility = View.GONE
+		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 		binding.cartAppBar.topAppBar.title = getString(R.string.cart_fragment_label)
 		binding.cartEmptyTextView.visibility = View.GONE
 		binding.cartCheckOutBtn.setOnClickListener {
@@ -68,12 +68,12 @@ class CartFragment : Fragment() {
 					binding.cartProductsRecyclerView.visibility = View.GONE
 					binding.cartCheckOutBtn.visibility = View.GONE
 					binding.cartEmptyTextView.visibility = View.GONE
-					binding.loaderLayout.circularLoader.visibility = View.VISIBLE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
 					binding.loaderLayout.circularLoader.showAnimationBehavior
 				}
 				else -> {
 					binding.loaderLayout.circularLoader.hideAnimationBehavior
-					binding.loaderLayout.circularLoader.visibility = View.GONE
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 				}
 			}
 		}
@@ -85,7 +85,7 @@ class CartFragment : Fragment() {
 						binding.cartProductsRecyclerView.visibility = View.VISIBLE
 						binding.cartCheckOutBtn.visibility = View.VISIBLE
 					} else if (itemList.isEmpty()) {
-						binding.loaderLayout.circularLoader.visibility = View.GONE
+						binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 						binding.loaderLayout.circularLoader.hideAnimationBehavior
 						binding.cartEmptyTextView.visibility = View.VISIBLE
 					}
