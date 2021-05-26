@@ -59,7 +59,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/price_card_shipping_label_string"
+            android:text="@string/price_card_status_label_string"
             android:textAppearance="@style/TextAppearance.MyTheme.Body2"
             android:textColor="@color/dark_gray"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,10 +69,13 @@
             android:id="@+id/order_summary_status_value_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
             android:textAppearance="@style/TextAppearance.MyTheme.Body2"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@+id/order_summary_status_label_tv"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/order_summary_status_label_tv"
             app:layout_constraintTop_toTopOf="@+id/order_summary_status_label_tv"
             tools:text="Shipping" />
 

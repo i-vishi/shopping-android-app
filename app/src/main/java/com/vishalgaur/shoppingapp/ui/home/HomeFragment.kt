@@ -71,8 +71,11 @@ class HomeFragment : Fragment() {
 						return when (productAdapter.getItemViewType(position)) {
 							2 -> 2 //ad
 							else -> {
+								val proCount = productAdapter.data.count { it is Product }
+								val adCount = productAdapter.data.size - proCount
+								val totalCount = proCount + (adCount * 2)
 								// product, full for last item
-								if (position + 1 == productAdapter.data.size && productAdapter.data.size % 2 == 1) 2 else 1
+								if (position + 1 == productAdapter.data.size && totalCount % 2 == 1) 2 else 1
 							}
 						}
 					}

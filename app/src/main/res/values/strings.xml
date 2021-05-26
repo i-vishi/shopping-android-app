@@ -164,5 +164,6 @@
     <string name="process_order_msg">Processing your Order…</string>
     <string name="redirect_home_timer_text">Redirecting to home in %s</string>
     <string name="status_dialog_title">Select Status of Product</string>
+    <string name="price_card_status_label_string">Order Status</string>
 
 </resources>
