@@ -1,6 +1,7 @@
 package com.vishalgaur.shoppingapp.ui.home
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,8 +50,23 @@ class OrderSuccessFragment : Fragment() {
 				else -> {
 					binding.orderConstraintGroup.visibility = View.VISIBLE
 					binding.loaderLayout.loaderCard.visibility = View.GONE
+					binding.redirectHomeTimerTv.text =
+						getString(R.string.redirect_home_timer_text, "5")
+					countDownTimer.start()
 				}
 			}
+		}
+	}
+
+	private val countDownTimer = object : CountDownTimer(5000, 1000) {
+		override fun onTick(millisUntilFinished: Long) {
+			val sec = millisUntilFinished / 1000
+			binding.redirectHomeTimerTv.text =
+				getString(R.string.redirect_home_timer_text, sec.toString())
+		}
+
+		override fun onFinish() {
+			findNavController().navigate(R.id.action_orderSuccessFragment_to_homeFragment)
 		}
 	}
 }

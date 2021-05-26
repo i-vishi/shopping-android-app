@@ -9,7 +9,8 @@
     <androidx.constraintlayout.widget.Group
         android:id="@+id/order_constraint_group"
         android:layout_width="wrap_content"
-        app:constraint_referenced_ids="order_success_image,order_success_label_tv,order_success_message_tv,back_to_home_btn"
+        app:constraint_referenced_ids="order_success_image,order_success_label_tv,
+        order_success_message_tv,back_to_home_btn, redirect_home_timer_tv"
         android:layout_height="wrap_content" />
 
     <include
@@ -17,6 +18,7 @@
         layout="@layout/layout_loader_card"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,6 +65,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline2" />
+
+    <TextView
+        android:id="@+id/redirect_home_timer_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back_to_home_btn"
+        tools:text="Redirecting to home in 5" />
 
     <Button
         android:id="@+id/back_to_home_btn"
