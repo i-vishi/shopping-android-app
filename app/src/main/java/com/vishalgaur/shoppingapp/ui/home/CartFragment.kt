@@ -83,9 +83,12 @@ class CartFragment : Fragment() {
 				orderViewModel.cartProducts.observe(viewLifecycleOwner) { itemList ->
 					if (itemList.isNotEmpty()) {
 						updateAdapter()
+						binding.cartEmptyTextView.visibility = View.GONE
 						binding.cartProductsRecyclerView.visibility = View.VISIBLE
 						binding.cartCheckOutBtn.visibility = View.VISIBLE
 					} else if (itemList.isEmpty()) {
+						binding.cartProductsRecyclerView.visibility = View.GONE
+						binding.cartCheckOutBtn.visibility = View.GONE
 						binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 						binding.loaderLayout.circularLoader.hideAnimationBehavior
 						binding.cartEmptyTextView.visibility = View.VISIBLE
