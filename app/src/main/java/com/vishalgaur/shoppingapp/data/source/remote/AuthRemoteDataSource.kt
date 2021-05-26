@@ -198,6 +198,7 @@ class AuthRemoteDataSource : UserDataSource {
 				}
 				val ownerOrder = UserData.OrderItem(
 					newOrder.orderId,
+					userId,
 					items,
 					itemPrices,
 					newOrder.deliveryAddress,
@@ -223,6 +224,52 @@ class AuthRemoteDataSource : UserDataSource {
 				.update(USERS_ORDERS_FIELD, FieldValue.arrayUnion(newOrder.toHashMap()))
 			usersCollectionRef().document(docId)
 				.update(USERS_CART_FIELD, ArrayList<UserData.CartItem>())
+		}
+	}
+
+	override suspend fun setStatusOfOrderByUserId(orderId: String, userId: String, status: String) {
+		// update on customer and owner
+		val userRef = usersCollectionRef().whereEqualTo(USERS_ID_FIELD, userId).get().await()
+		if (!userRef.isEmpty) {
+			val docId = userRef.documents[0].id
+			val ordersList =
+				userRef.documents[0].toObject(UserData::class.java)?.orders?.toMutableList()
+			val idx = ordersList?.indexOfFirst { it.orderId == orderId } ?: -1
+			if (idx != -1) {
+				val orderData = ordersList?.get(idx)
+				if (orderData != null) {
+					usersCollectionRef().document(docId)
+						.update(USERS_ORDERS_FIELD, FieldValue.arrayRemove(orderData.toHashMap()))
+					orderData.status = status
+					usersCollectionRef().document(docId)
+						.update(USERS_ORDERS_FIELD, FieldValue.arrayUnion(orderData.toHashMap()))
+
+					// updating customer status
+					val custRef =
+						usersCollectionRef().whereEqualTo(USERS_ID_FIELD, orderData.customerId)
+							.get().await()
+					if (!custRef.isEmpty) {
+						val did = custRef.documents[0].id
+						val orders =
+							custRef.documents[0].toObject(UserData::class.java)?.orders?.toMutableList()
+						val pos = orders?.indexOfFirst { it.orderId == orderId } ?: -1
+						if (pos != -1) {
+							val order = orders?.get(pos)
+							if (order != null) {
+								usersCollectionRef().document(did).update(
+									USERS_ORDERS_FIELD,
+									FieldValue.arrayRemove(order.toHashMap())
+								)
+								order.status = status
+								usersCollectionRef().document(did).update(
+									USERS_ORDERS_FIELD,
+									FieldValue.arrayUnion(order.toHashMap())
+								)
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 

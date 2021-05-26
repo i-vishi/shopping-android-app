@@ -13,6 +13,8 @@ import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.time.Month
+import java.util.*
 
 private const val TAG = "HomeViewModel"
 
@@ -291,6 +293,36 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 					_selectedOrder.value = null
 					_storeDataStatus.value = StoreDataStatus.ERROR
 				}
+			}
+		}
+	}
+
+	fun onSetStatusOfOrder(orderId: String, status: String) {
+		val currDate = Calendar.getInstance()
+		val dateString =
+			"${Month.values()[(currDate.get(Calendar.MONTH))].name} ${
+				currDate.get(Calendar.DAY_OF_MONTH)
+			}, ${currDate.get(Calendar.YEAR)}"
+		Log.d(TAG, "Selected Status is $status ON $dateString")
+		setStatusOfOrder(orderId, "$status ON $dateString")
+	}
+
+	private fun setStatusOfOrder(orderId: String, statusString: String) {
+		viewModelScope.launch {
+			_storeDataStatus.value = StoreDataStatus.LOADING
+			val deferredRes = async {
+				authRepository.setStatusOfOrder(orderId, currentUser!!, statusString)
+			}
+			val res = deferredRes.await()
+			if (res is Success) {
+				val orderData = _selectedOrder.value
+				orderData?.status = statusString
+				_selectedOrder.value = orderData
+				getOrderDetailsByOrderId(orderId)
+			} else {
+				_storeDataStatus.value = StoreDataStatus.ERROR
+				if (res is Error)
+					Log.d(TAG, "Error updating status, ${res.exception}")
 			}
 		}
 	}

@@ -189,8 +189,8 @@ class AuthRepository(
 				userLocalDataSource.likeProduct(productId, userId)
 			}
 			try {
-				remoteRes.await()
 				localRes.await()
+				remoteRes.await()
 				Success(true)
 			} catch (e: Exception) {
 				Error(e)
@@ -212,8 +212,8 @@ class AuthRepository(
 				userLocalDataSource.dislikeProduct(productId, userId)
 			}
 			try {
-				remoteRes.await()
 				localRes.await()
+				remoteRes.await()
 				Success(true)
 			} catch (e: Exception) {
 				Error(e)
@@ -321,8 +321,8 @@ class AuthRepository(
 				userLocalDataSource.insertCartItem(cartItem, userId)
 			}
 			try {
-				remoteRes.await()
 				localRes.await()
+				remoteRes.await()
 				Success(true)
 			} catch (e: Exception) {
 				Error(e)
@@ -344,8 +344,8 @@ class AuthRepository(
 				userLocalDataSource.updateCartItem(cartItem, userId)
 			}
 			try {
-				remoteRes.await()
 				localRes.await()
+				remoteRes.await()
 				Success(true)
 			} catch (e: Exception) {
 				Error(e)
@@ -364,8 +364,8 @@ class AuthRepository(
 				userLocalDataSource.deleteCartItem(itemId, userId)
 			}
 			try {
-				remoteRes.await()
 				localRes.await()
+				remoteRes.await()
 				Success(true)
 			} catch (e: Exception) {
 				Error(e)
@@ -392,6 +392,30 @@ class AuthRepository(
 			try {
 				remoteRes.await()
 				localRes.await()
+				Success(true)
+			} catch (e: Exception) {
+				Error(e)
+			}
+		}
+	}
+
+	override suspend fun setStatusOfOrder(
+		orderId: String,
+		userId: String,
+		status: String
+	): Result<Boolean> {
+		return supervisorScope {
+			val remoteRes = async {
+				Log.d(TAG, "onSetStatus: updating status on remote source")
+				authRemoteDataSource.setStatusOfOrderByUserId(orderId, userId, status)
+			}
+			val localRes = async {
+				Log.d(TAG, "onSetStatus: updating status on local source")
+				userLocalDataSource.setStatusOfOrderByUserId(orderId, userId, status)
+			}
+			try {
+				localRes.await()
+				remoteRes.await()
 				Success(true)
 			} catch (e: Exception) {
 				Error(e)

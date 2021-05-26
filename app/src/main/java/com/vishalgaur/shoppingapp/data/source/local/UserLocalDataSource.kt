@@ -197,6 +197,38 @@ class UserLocalDataSource internal constructor(
 			}
 		}
 
+	override suspend fun setStatusOfOrderByUserId(orderId: String, userId: String, status: String) =
+		withContext(ioDispatcher) {
+			try {
+				val uData = userDao.getById(userId)
+				if (uData != null) {
+					val orders = uData.orders.toMutableList()
+					val pos = orders.indexOfFirst { it.orderId == orderId }
+					if (pos >= 0) {
+						orders[pos].status = status
+						val custId = orders[pos].customerId
+						val custData = userDao.getById(custId)
+						if (custData != null) {
+							val orderList = custData.orders.toMutableList()
+							val idx = orderList.indexOfFirst { it.orderId == orderId }
+							if (idx >= 0) {
+								orderList[idx].status = status
+							}
+							custData.orders = orderList
+							userDao.updateUser(custData)
+						}
+					}
+					uData.orders = orders
+					userDao.updateUser(uData)
+				} else {
+					throw Exception("User Not Found")
+				}
+			} catch (e: Exception) {
+				Log.d("UserLocalSource", "onInsertCartItem: Error Occurred, ${e.message}")
+				throw e
+			}
+		}
+
 	override suspend fun clearUser() {
 		withContext(ioDispatcher) {
 			userDao.clear()

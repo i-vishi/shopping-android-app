@@ -105,8 +105,8 @@ class HomeFragment : Fragment() {
 					binding.productsRecyclerView.visibility = View.GONE
 				}
 				else -> {
-//					binding.loaderLayout.circularLoader.hideAnimationBehavior
-//					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+					binding.loaderLayout.circularLoader.hideAnimationBehavior
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 				}
 			}
 			if (status != null && status != StoreDataStatus.LOADING) {

@@ -270,6 +270,7 @@ class OrderViewModel(application: Application) : AndroidViewModel(application) {
 		if (deliveryAddress != null && paymentMethod != null && !items.isNullOrEmpty() && !itemPrices.isNullOrEmpty()) {
 			val newOrder = UserData.OrderItem(
 				orderId,
+				currentUser!!,
 				items,
 				itemPrices,
 				deliveryAddress,

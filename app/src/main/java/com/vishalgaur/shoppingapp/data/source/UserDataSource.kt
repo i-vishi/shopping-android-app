@@ -40,6 +40,8 @@ interface UserDataSource {
 
 	suspend fun placeOrder(newOrder: UserData.OrderItem, userId: String) {}
 
+	suspend fun setStatusOfOrderByUserId(orderId: String, userId: String, status: String) {}
+
 	suspend fun clearUser() {}
 
 	suspend fun getUserByMobile(phoneNumber: String): UserData? {

@@ -1,14 +1,17 @@
 package com.vishalgaur.shoppingapp.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.UserData
+import com.vishalgaur.shoppingapp.data.utils.OrderStatus
 import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentOrderDetailsBinding
 import com.vishalgaur.shoppingapp.ui.getCompleteAddress
@@ -76,15 +79,22 @@ class OrderDetailsFragment : Fragment() {
 				}
 				binding.orderDetailsProRecyclerView.adapter = productsAdapter
 				binding.orderDetailsProRecyclerView.adapter?.notifyDataSetChanged()
+			} else {
+				binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+				binding.loaderLayout.circularLoader.showAnimationBehavior
+				binding.orderDetailsConstraintGroup.visibility = View.GONE
 			}
 		}
 	}
 
 	private fun setAllViews(orderData: UserData.OrderItem) {
+		Log.d("OrderDetail", "set all views called")
 		if (viewModel.isUserASeller) {
 			binding.orderChangeStatusBtn.visibility = View.VISIBLE
 			binding.orderChangeStatusBtn.setOnClickListener {
-
+				val statusString = orderData.status.split(" ")[0]
+				val pos = OrderStatus.values().map { it.name }.indexOf(statusString)
+				showDialogWithItems(pos, orderData.orderId)
 			}
 		} else {
 			binding.orderChangeStatusBtn.visibility = View.GONE
@@ -128,6 +138,30 @@ class OrderDetailsFragment : Fragment() {
 		val likesList = viewModel.userLikes.value ?: emptyList()
 		val proList = viewModel.orderProducts.value ?: emptyList()
 		productsAdapter = OrderProductsAdapter(requireContext(), items, proList, likesList)
+	}
+
+	private fun showDialogWithItems(checkedOption: Int = 0, orderId: String) {
+		val categoryItems: Array<String> = OrderStatus.values().map { it.name }.toTypedArray()
+		var checkedItem = checkedOption
+		context?.let {
+			MaterialAlertDialogBuilder(it)
+				.setTitle(getString(R.string.status_dialog_title))
+				.setSingleChoiceItems(categoryItems, checkedItem) { _, which ->
+					checkedItem = which
+				}
+				.setNegativeButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
+					dialog.cancel()
+				}
+				.setPositiveButton(getString(R.string.pro_cat_dialog_ok_btn)) { dialog, _ ->
+					if (checkedItem == -1) {
+						dialog.cancel()
+					} else {
+						viewModel.onSetStatusOfOrder(orderId, categoryItems[checkedItem])
+					}
+					dialog.cancel()
+				}
+				.show()
+		}
 	}
 
 	private fun getItemsCount(cartItems: List<UserData.CartItem>): Int {

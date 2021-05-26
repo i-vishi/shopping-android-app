@@ -163,5 +163,6 @@
     <string name="otp_sent_msg">OTP Sent</string>
     <string name="process_order_msg">Processing your Order…</string>
     <string name="redirect_home_timer_text">Redirecting to home in %s</string>
+    <string name="status_dialog_title">Select Status of Product</string>
 
 </resources>

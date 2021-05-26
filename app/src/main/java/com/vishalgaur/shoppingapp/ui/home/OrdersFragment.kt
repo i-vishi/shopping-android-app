@@ -80,7 +80,7 @@ class OrdersFragment : Fragment() {
 			if (status != null && status != StoreDataStatus.LOADING) {
 				viewModel.userOrders.observe(viewLifecycleOwner) { orders ->
 					if (orders.isNotEmpty()) {
-						ordersAdapter.data = orders
+						ordersAdapter.data = orders.sortedByDescending { it.orderDate }
 						binding.orderAllOrdersRecyclerView.adapter?.notifyDataSetChanged()
 						binding.orderAllOrdersRecyclerView.visibility = View.VISIBLE
 					} else if (orders.isEmpty()) {
