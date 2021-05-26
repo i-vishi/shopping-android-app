@@ -27,6 +27,9 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 	private val _otpStatus = MutableLiveData<OTPStatus>()
 	val otpStatus: LiveData<OTPStatus> get() = _otpStatus
 
+	private val _isOTPSent = MutableLiveData<Boolean>()
+	val isOTPSent: LiveData<Boolean> get() = _isOTPSent
+
 	private val authRepository = (application as ShoppingApplication).authRepository
 
 	var isUserLoggedIn = MutableLiveData(false)
@@ -34,6 +37,9 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 	private var verificationInProgress = false
 	private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
+	init {
+		_isOTPSent.value = false
+	}
 
 	fun verifyOTP(otp: String) {
 		viewModelScope.launch {
@@ -89,6 +95,8 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 			// Save verification ID and resending token so we can use them later
 			storedVerificationId = verificationId
 			resendToken = token
+			Log.w(TAG, "OTP SENT")
+			_isOTPSent.value = true
 		}
 	}
 

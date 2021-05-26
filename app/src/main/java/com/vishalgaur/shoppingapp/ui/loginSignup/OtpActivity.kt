@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.databinding.ActivityOtpBinding
@@ -71,20 +72,20 @@ class OtpActivity : AppCompatActivity() {
 			}
 		}
 
-//        viewModel.loginStatus.observe(this) {
-//            if (it == LogInErrors.NONE) {
-//                if (fromWhere == getString(R.string.signup_fragment_label)) {
-//                    viewModel.signUp()
-//                }
-//                launchHome(this)
-//                finish()
-//            }
-//        }
+		viewModel.isOTPSent.observe(this) {
+			if(it == true) {
+				binding.loaderLayout.loaderCard.visibility = View.GONE
+				val contextView = binding.loaderLayout.loaderCard
+				Snackbar.make(contextView, R.string.otp_sent_msg, Snackbar.LENGTH_SHORT).show()
+			}
+		}
 	}
 
 	private fun setViews() {
 		binding.otpVerifyError.visibility = View.GONE
-
+		binding.loaderLayout.loaderCard.visibility = View.VISIBLE
+		binding.loaderLayout.loadingMessage.text = getString(R.string.sending_otp_msg)
+		binding.loaderLayout.circularLoader.showAnimationBehavior
 		binding.otpVerifyBtn.setOnClickListener {
 			onVerify()
 		}

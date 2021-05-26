@@ -159,5 +159,7 @@
     <string name="profile_img_desc">Profile Image</string>
     <string name="profile_email_label_text">Email</string>
     <string name="profile_mobile_label_text">Mobile Number</string>
+    <string name="sending_otp_msg">Sending OTP...</string>
+    <string name="otp_sent_msg">OTP Sent</string>
 
 </resources>
