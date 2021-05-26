@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -25,7 +24,9 @@ class OrderSuccessFragment : Fragment() {
 	): View? {
 		binding = FragmentOrderSuccessBinding.inflate(layoutInflater)
 
-		binding.loaderLayout.loaderFrameLayout.background = ResourcesCompat.getDrawable(resources, R.color.white, null)
+		binding.loaderLayout.loaderCard.visibility = View.VISIBLE
+		binding.loaderLayout.loadingMessage.text = getString(R.string.process_order_msg)
+		binding.loaderLayout.circularLoader.showAnimationBehavior
 		binding.orderConstraintGroup.visibility = View.GONE
 		setObservers()
 		return binding.root
@@ -43,13 +44,11 @@ class OrderSuccessFragment : Fragment() {
 		orderViewModel.orderStatus.observe(viewLifecycleOwner) { status ->
 			when (status) {
 				StoreDataStatus.LOADING -> {
-					binding.loaderLayout.circularLoader.showAnimationBehavior
-					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+					binding.loaderLayout.loaderCard.visibility = View.VISIBLE
 				}
 				else -> {
 					binding.orderConstraintGroup.visibility = View.VISIBLE
-					binding.loaderLayout.circularLoader.showAnimationBehavior
-					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+					binding.loaderLayout.loaderCard.visibility = View.GONE
 				}
 			}
 		}

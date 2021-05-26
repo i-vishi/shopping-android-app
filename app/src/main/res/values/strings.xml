@@ -161,5 +161,6 @@
     <string name="profile_mobile_label_text">Mobile Number</string>
     <string name="sending_otp_msg">Sending OTP...</string>
     <string name="otp_sent_msg">OTP Sent</string>
+    <string name="process_order_msg">Processing your Order...</string>
 
 </resources>
