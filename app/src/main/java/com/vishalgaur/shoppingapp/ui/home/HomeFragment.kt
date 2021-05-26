@@ -72,7 +72,7 @@ class HomeFragment : Fragment() {
 							2 -> 2 //ad
 							else -> {
 								// product, full for last item
-								if (position + 1 == productAdapter.data.size) 2 else 1
+								if (position + 1 == productAdapter.data.size && productAdapter.data.size % 2 == 1) 2 else 1
 							}
 						}
 					}
@@ -92,7 +92,8 @@ class HomeFragment : Fragment() {
 		binding.homeFabAddProduct.setOnClickListener {
 			showDialogWithItems(ProductCategories, 0, false)
 		}
-		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+		binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+		binding.loaderLayout.circularLoader.showAnimationBehavior
 	}
 
 	private fun setObservers() {
@@ -104,13 +105,15 @@ class HomeFragment : Fragment() {
 					binding.productsRecyclerView.visibility = View.GONE
 				}
 				else -> {
-					binding.loaderLayout.circularLoader.hideAnimationBehavior
-					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+//					binding.loaderLayout.circularLoader.hideAnimationBehavior
+//					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 				}
 			}
 			if (status != null && status != StoreDataStatus.LOADING) {
 				viewModel.products.observe(viewLifecycleOwner) { productsList ->
 					if (productsList.isNotEmpty()) {
+						binding.loaderLayout.circularLoader.hideAnimationBehavior
+						binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 						binding.productsRecyclerView.visibility = View.VISIBLE
 						binding.productsRecyclerView.adapter?.apply {
 							productAdapter.data =

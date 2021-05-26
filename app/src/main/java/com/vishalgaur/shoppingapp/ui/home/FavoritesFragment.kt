@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.Product
+import com.vishalgaur.shoppingapp.data.utils.StoreDataStatus
 import com.vishalgaur.shoppingapp.databinding.FragmentFavoritesBinding
 import com.vishalgaur.shoppingapp.ui.RecyclerViewPaddingItemDecoration
 import com.vishalgaur.shoppingapp.viewModels.HomeViewModel
@@ -35,6 +36,7 @@ class FavoritesFragment : Fragment() {
 	}
 
 	private fun setViews() {
+		viewModel.setDataLoading()
 		viewModel.getLikedProducts()
 		binding.favTopAppBar.topAppBar.title = "Favorite Products"
 		binding.favTopAppBar.topAppBar.setNavigationOnClickListener {
@@ -67,23 +69,29 @@ class FavoritesFragment : Fragment() {
 	}
 
 	private fun setObservers() {
-		viewModel.userLikes.observe(viewLifecycleOwner) {
-			if (it.isNotEmpty()) {
-				viewModel.getLikedProducts()
-				if (viewModel.likedProducts.value != null) {
-					productsAdapter.data = viewModel.likedProducts.value!!
-					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
-					binding.loaderLayout.circularLoader.hideAnimationBehavior
-					binding.favProductsRecyclerView.adapter = productsAdapter
-					binding.favProductsRecyclerView.adapter?.apply {
-						notifyDataSetChanged()
+		viewModel.dataStatus.observe(viewLifecycleOwner) { status ->
+			if (status == StoreDataStatus.LOADING) {
+				binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+				binding.loaderLayout.circularLoader.showAnimationBehavior
+				binding.favEmptyTextView.visibility = View.GONE
+			} else if (status != null) {
+				viewModel.likedProducts.observe(viewLifecycleOwner) {
+					if (it.isNotEmpty()) {
+						productsAdapter.data = viewModel.likedProducts.value!!
+						binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+						binding.loaderLayout.circularLoader.hideAnimationBehavior
+						productsAdapter.data = it
+						binding.favProductsRecyclerView.adapter = productsAdapter
+						binding.favProductsRecyclerView.adapter?.apply {
+							notifyDataSetChanged()
+						}
+					} else if (it.isEmpty()) {
+						binding.favEmptyTextView.visibility = View.VISIBLE
+						binding.favProductsRecyclerView.visibility = View.GONE
+						binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+						binding.loaderLayout.circularLoader.hideAnimationBehavior
 					}
 				}
-			} else if (it.isEmpty()) {
-				binding.favEmptyTextView.visibility = View.VISIBLE
-				binding.favProductsRecyclerView.visibility = View.GONE
-				binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
-				binding.loaderLayout.circularLoader.hideAnimationBehavior
 			}
 		}
 	}

@@ -129,6 +129,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 	}
 
+	fun setDataLoading() {
+		_dataStatus.value = StoreDataStatus.LOADING
+	}
+
 	private fun getProducts() {
 		_allProducts = Transformations.switchMap(productsRepository.observeProducts()) {
 			getProductsLiveData(it)
@@ -165,13 +169,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 			val allLikes = _userLikes.value ?: emptyList()
 			if (!allLikes.isNullOrEmpty()) {
 				Log.d(TAG, "alllikes = ${allLikes.size}")
+				_dataStatus.value = StoreDataStatus.DONE
 				allLikes.map { proId ->
 					_allProducts.value?.find { it.productId == proId } ?: Product()
 				}
 			} else {
+				_dataStatus.value = StoreDataStatus.ERROR
 				emptyList()
 			}
 		} else {
+			_dataStatus.value = StoreDataStatus.ERROR
 			emptyList()
 		}
 		_likedProducts.value = res

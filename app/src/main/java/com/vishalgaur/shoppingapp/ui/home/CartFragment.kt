@@ -48,7 +48,8 @@ class CartFragment : Fragment() {
 	}
 
 	private fun setViews() {
-		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+		binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+		binding.loaderLayout.circularLoader.showAnimationBehavior
 		binding.cartAppBar.topAppBar.title = getString(R.string.cart_fragment_label)
 		binding.cartEmptyTextView.visibility = View.GONE
 		binding.cartCheckOutBtn.setOnClickListener {
