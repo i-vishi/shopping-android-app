@@ -15,6 +15,7 @@ Some other features are as following:
 - Place Order.
 - Modify status of order for Seller.
 - Add/Edit Address
+- Tested using Espresso. Written unit, instrumentation and UI tests.
 
 ## Some Screenshots
 
