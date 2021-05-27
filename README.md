@@ -1,5 +1,5 @@
 # Shopping Android App
-An e-commerce android application written in Kotlin where users can sell and but products such as shoes, etc. 
+An e-commerce android application written in Kotlin where users can sell and buy products. 
 
 
 ## Overview
@@ -18,7 +18,7 @@ Some other features are as following:
 
 ## Some Screenshots
 
-|         Application Launcher         |             Application Home              |           Product Detail            |
+|             Splash Screen            |             Application Home              |           Product Detail            |
 | :----------------------------------: | :---------------------------------------: | :----------------------------------:|
 | ![](snapshots/shopping-launcher.png) | ![](snapshots/shopping-home-customer.png) | ![](snapshots/shopping-product.png) |
 
