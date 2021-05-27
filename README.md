@@ -30,7 +30,7 @@ Some other features are as following:
 | :------------------------------: | :----------------------------------------: | :-------------------------------------:| :---------------------------------------: |
 | ![](snapshots/shopping-cart.png) | ![](snapshots/shopping-select-address.png) | ![](snapshots/shopping-choose-pay.png) | ![](snapshots/shopping-order-success.png) |
 
-|          Add Product For Seller         |             All Orders             |                Order Detail              |               Sign Out               |
+|               Add Product               |             All Orders             |                Order Detail              |               Sign Out               |
 | :-------------------------------------: | :--------------------------------: | :---------------------------------------:| :----------------------------------: |
 | ![](snapshots/shopping-add-product.png) | ![](snapshots/shopping-orders.png) | ![](snapshots/shopping-order-detail.png) | ![](snapshots/shopping-sign-out.png) |
 
