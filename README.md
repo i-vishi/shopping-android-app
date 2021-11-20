@@ -35,6 +35,20 @@ Some other features are as following:
 | :-------------------------------------: | :--------------------------------: | :---------------------------------------:| :----------------------------------: |
 | ![](snapshots/shopping-add-product.png) | ![](snapshots/shopping-orders.png) | ![](snapshots/shopping-order-detail.png) | ![](snapshots/shopping-sign-out.png) |
 
+## Project Setup
+
+### Clone and install
+
+Clone this repository and import into Android Studio
+```
+git clone https://github.com/i-vishi/shopping-android-app.git
+```
+
+### Configuration
+- The project requires Firebase. So follow the steps given [here (Add Firebase to Android Project)](https://firebase.google.com/docs/android/setup) to add firebase to you android project.
+- Download the firebase config file **google-services.json**
+- Move the config file to module directory **(app)** of the project.
+
 ## Built With
 - Kotlin
 - Firebase
