@@ -3,7 +3,7 @@ An e-commerce android application written in Kotlin where users can sell and buy
 
 
 ## Overview
-The application contains list of products such as shoes, slippers on which user can click to view itd details and then, add them to cart. User can like and dislike the product as well. Also, User can sell products, if he/she signed up as a Seller.
+The application contains list of products such as shoes, slippers on which user can click to view its details and then, add them to cart. User can like and dislike the product as well. Also, User can sell products, if he/she signed up as a Seller.
 Some other features are as following:
 - Login / Signup with OTP Verification.
 - Recyclerview with variable span size to show products.
