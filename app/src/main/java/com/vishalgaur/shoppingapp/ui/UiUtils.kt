@@ -26,7 +26,7 @@ enum class SignUpViewErrors { NONE, ERR_EMAIL, ERR_MOBILE, ERR_EMAIL_MOBILE, ERR
 
 enum class LoginViewErrors { NONE, ERR_EMPTY, ERR_MOBILE }
 
-enum class OTPStatus { NONE, CORRECT, WRONG }
+enum class OTPStatus { NONE, CORRECT, WRONG, INVALID_REQ }
 
 enum class AddProductViewErrors { NONE, EMPTY, ERR_PRICE_0 }
 

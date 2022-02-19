@@ -55,6 +55,11 @@ class OtpActivity : AppCompatActivity() {
 		viewModel.otpStatus.observe(this) {
 			when (it) {
 				OTPStatus.WRONG -> binding.otpVerifyError.visibility = View.VISIBLE
+				OTPStatus.INVALID_REQ -> {
+					binding.loaderLayout.loaderCard.visibility = View.GONE
+					val contextView = binding.loaderLayout.loaderCard
+					Snackbar.make(contextView, R.string.otp_invalid_req_failure, Snackbar.LENGTH_SHORT).show()
+				}
 				else -> binding.otpVerifyError.visibility = View.GONE
 			}
 		}

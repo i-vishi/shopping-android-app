@@ -82,28 +82,39 @@ class AuthRepository(
 	): SignUpErrors? {
 		Log.d(TAG, "on SignUp: Checking email and mobile")
 		var sErr: SignUpErrors? = null
-		val queryResult = authRemoteDataSource.getEmailsAndMobiles()
-		if (queryResult != null) {
-			val mob = queryResult.mobiles.contains(mobile)
-			val em = queryResult.emails.contains(email)
-			if (!mob && !em) {
-				sErr = SignUpErrors.NONE
-			} else {
-				sErr = SignUpErrors.SERR
-				when {
-					!mob && em -> makeErrToast("Email is already registered!", context)
-					mob && !em -> makeErrToast("Mobile is already registered!", context)
-					mob && em -> makeErrToast("Email and mobile is already registered!", context)
+		try {
+			val queryResult = authRemoteDataSource.getEmailsAndMobiles()
+			if (queryResult != null) {
+				val mob = queryResult.mobiles.contains(mobile)
+				val em = queryResult.emails.contains(email)
+				if (!mob && !em) {
+					sErr = SignUpErrors.NONE
+				} else {
+					sErr = SignUpErrors.SERR
+					when {
+						!mob && em -> makeErrToast("Email is already registered!", context)
+						mob && !em -> makeErrToast("Mobile is already registered!", context)
+						mob && em -> makeErrToast(
+							"Email and mobile is already registered!",
+							context
+						)
+					}
 				}
 			}
+		} catch (e: Exception) {
+			makeErrToast("Some Error Occurred", context)
 		}
 		return sErr
 	}
 
 	override suspend fun checkLogin(mobile: String, password: String): UserData? {
 		Log.d(TAG, "on Login: checking mobile and password")
-		val queryResult =
-			authRemoteDataSource.getUserByMobileAndPassword(mobile, password)
+		var queryResult = mutableListOf<UserData>()
+		try {
+			queryResult = authRemoteDataSource.getUserByMobileAndPassword(mobile, password)
+		} catch (e: Exception) {
+			// No Handling
+		}
 		return if (queryResult.size > 0) {
 			queryResult[0]
 		} else {
@@ -115,25 +126,32 @@ class AuthRepository(
 		credential: PhoneAuthCredential,
 		isUserLoggedIn: MutableLiveData<Boolean>, context: Context
 	) {
-		firebaseAuth.signInWithCredential(credential)
-			.addOnCompleteListener { task ->
-				if (task.isSuccessful) {
-					Log.d(TAG, "signInWithCredential:success")
-					val user = task.result?.user
-					if (user != null) {
-						isUserLoggedIn.postValue(true)
-					}
+		try {
+			firebaseAuth.signInWithCredential(credential)
+				.addOnCompleteListener { task ->
+					if (task.isSuccessful) {
+						Log.d(TAG, "signInWithCredential:success")
+						val user = task.result?.user
+						if (user != null) {
+							isUserLoggedIn.postValue(true)
+						}
 
-				} else {
-					Log.w(TAG, "signInWithCredential:failure", task.exception)
-					if (task.exception is FirebaseAuthInvalidCredentialsException) {
-						Log.d(TAG, "createUserWithMobile:failure", task.exception)
-						isUserLoggedIn.postValue(false)
-						makeErrToast("Wrong OTP!", context)
+					} else {
+						Log.w(TAG, "signInWithCredential:failure", task.exception)
+						if (task.exception is FirebaseAuthInvalidCredentialsException) {
+							Log.d(TAG, "createUserWithMobile:failure", task.exception)
+							isUserLoggedIn.postValue(false)
+							makeErrToast("Wrong OTP!", context)
+						}
 					}
-
+				}.addOnFailureListener {
+					Log.d(TAG, "createUserWithMobile:failure", it)
+					isUserLoggedIn.postValue(false)
+					makeErrToast("Invalid Request!", context)
 				}
-			}
+		} catch (e: Exception) {
+			makeErrToast("Some Error Occurred", context)
+		}
 	}
 
 	override suspend fun signOut() {
