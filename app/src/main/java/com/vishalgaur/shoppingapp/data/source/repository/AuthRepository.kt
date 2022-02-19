@@ -144,6 +144,10 @@ class AuthRepository(
 							makeErrToast("Wrong OTP!", context)
 						}
 					}
+				}.addOnFailureListener {
+					Log.d(TAG, "createUserWithMobile:failure", it)
+					isUserLoggedIn.postValue(false)
+					makeErrToast("Invalid Request!", context)
 				}
 		} catch (e: Exception) {
 			makeErrToast("Some Error Occurred", context)

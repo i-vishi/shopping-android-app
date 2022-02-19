@@ -161,6 +161,7 @@
     <string name="profile_mobile_label_text">Mobile Number</string>
     <string name="sending_otp_msg">Sending OTP…</string>
     <string name="otp_sent_msg">OTP Sent</string>
+    <string name="otp_invalid_req_failure">Request Failure</string>
     <string name="process_order_msg">Processing your Order…</string>
     <string name="redirect_home_timer_text">Redirecting to home in %s</string>
     <string name="status_dialog_title">Select Status of Product</string>

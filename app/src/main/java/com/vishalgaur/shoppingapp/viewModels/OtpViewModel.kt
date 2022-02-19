@@ -75,12 +75,13 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 
 		override fun onVerificationCompleted(credential: PhoneAuthCredential) {
 			Log.d(TAG, "onVerificationCompleted:$credential")
+			_otpStatus.value = OTPStatus.CORRECT
 			authRepository.signInWithPhoneAuthCredential(credential, isUserLoggedIn, application.applicationContext)
 		}
 
 		override fun onVerificationFailed(e: FirebaseException) {
 			Log.w(TAG, "onVerificationFailed", e)
-
+			_otpStatus.value = OTPStatus.INVALID_REQ
 			if (e is FirebaseAuthInvalidCredentialsException) {
 				Log.w(TAG, "onVerificationFailed, invalid request, ", e)
 			} else if (e is FirebaseTooManyRequestsException) {
@@ -97,6 +98,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 			resendToken = token
 			Log.w(TAG, "OTP SENT")
 			_isOTPSent.value = true
+			_otpStatus.value = OTPStatus.NONE
 		}
 	}
 
@@ -106,6 +108,7 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 			authRepository.signInWithPhoneAuthCredential(credential, isUserLoggedIn, getApplication<ShoppingApplication>().applicationContext)
 		} catch (e: Exception) {
 			Log.d(TAG, "onVerifyWithCode: Exception Occurred: ${e.message}")
+			_otpStatus.value = OTPStatus.INVALID_REQ
 		}
 	}
 }
