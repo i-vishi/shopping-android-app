@@ -102,6 +102,7 @@ class AuthRepository(
 				}
 			}
 		} catch (e: Exception) {
+			makeErrToast(e.toString(), context)
 			makeErrToast("Some Error Occurred", context)
 		}
 		return sErr

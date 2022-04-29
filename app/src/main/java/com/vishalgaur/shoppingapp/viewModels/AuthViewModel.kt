@@ -84,7 +84,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 								UserData(
 									uId,
 									name.trim(),
-									"+91" + mobile.trim(),
+									"+84" + mobile.trim(),
 									email.trim(),
 									pwd1.trim(),
 									ArrayList(),
@@ -122,7 +122,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 				_errorStatusLoginFragment.value = LoginViewErrors.ERR_MOBILE
 			} else {
 				_errorStatusLoginFragment.value = LoginViewErrors.NONE
-				logIn("+91" + mobile.trim(), password)
+				logIn("+84" + mobile.trim(), password)
 			}
 		}
 	}

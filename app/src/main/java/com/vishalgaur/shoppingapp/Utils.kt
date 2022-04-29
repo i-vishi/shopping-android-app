@@ -29,7 +29,7 @@ internal fun isEmailValid(email: String): Boolean {
 }
 
 internal fun isPhoneValid(phone: String): Boolean {
-	val PHONE_PATTERN = Pattern.compile("^\\s*[6-9]\\d{9}\\s*\$")
+	val PHONE_PATTERN = Pattern.compile("^\\s*\\d{9}\\s*\$")
 	return if (phone.isEmpty()) {
 		false
 	} else {
