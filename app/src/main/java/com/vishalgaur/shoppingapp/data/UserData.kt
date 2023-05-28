@@ -7,7 +7,7 @@ import androidx.room.TypeConverters
 import com.vishalgaur.shoppingapp.data.utils.ObjectListTypeConvertor
 import com.vishalgaur.shoppingapp.data.utils.OrderStatus
 import com.vishalgaur.shoppingapp.data.utils.UserType
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 import kotlin.collections.ArrayList
 
