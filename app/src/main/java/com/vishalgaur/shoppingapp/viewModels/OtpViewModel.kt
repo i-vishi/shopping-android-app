@@ -15,6 +15,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.vishalgaur.shoppingapp.ShoppingApplication
 import com.vishalgaur.shoppingapp.data.UserData
+import com.vishalgaur.shoppingapp.shouldBypassOTPValidation
 import com.vishalgaur.shoppingapp.ui.OTPStatus
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -69,6 +70,11 @@ class OtpViewModel(application: Application, private val uData: UserData) :
 		PhoneAuthProvider.verifyPhoneNumber(options)
 
 		verificationInProgress = true
+	}
+
+	fun manuallyOverrideVerification() {
+		if (shouldBypassOTPValidation())
+			isUserLoggedIn.value = true
 	}
 
 	private val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {

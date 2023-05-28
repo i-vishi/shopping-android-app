@@ -10,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.vishalgaur.shoppingapp.R
 import com.vishalgaur.shoppingapp.data.UserData
 import com.vishalgaur.shoppingapp.databinding.ActivityOtpBinding
+import com.vishalgaur.shoppingapp.shouldBypassOTPValidation
 import com.vishalgaur.shoppingapp.ui.OTPStatus
 import com.vishalgaur.shoppingapp.ui.launchHome
 import com.vishalgaur.shoppingapp.viewModels.OtpViewModel
@@ -43,7 +44,11 @@ class OtpActivity : AppCompatActivity() {
 			viewModel =
 				ViewModelProvider(this, viewModelFactory).get(OtpViewModel::class.java)
 
-			viewModel.verifyPhoneOTPStart(uData.mobile, this)
+			if (shouldBypassOTPValidation()) {
+				viewModel.manuallyOverrideVerification()
+			} else {
+				viewModel.verifyPhoneOTPStart(uData.mobile, this)
+			}
 		}
 		setViews()
 

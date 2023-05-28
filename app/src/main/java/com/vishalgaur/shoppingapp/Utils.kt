@@ -69,4 +69,6 @@ internal fun getAddressId(userId: String): String {
 	return "$userId-$uniqueId"
 }
 
-
+internal fun shouldBypassOTPValidation() : Boolean {
+	return false
+}
