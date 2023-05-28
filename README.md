@@ -49,6 +49,7 @@ git clone https://github.com/i-vishi/shopping-android-app.git
 - Download the firebase config file `google-services.json`
 - Move the config file to `(app)` module of the project.
 - Also, add Cloud Firestore for storing users, products, orders and addresses data. Follow instructions [here (Add Cloud Firestore to your app)](https://firebase.google.com/docs/firestore/quickstart) to add Cloud Firestore to your app.
+- There need to be two collections - `users` for Users data and `products` for Products Data.
 - This project also, requires OTP based authentication. So, you just need to enable Phone Number sign-in in your firebase project. Follow instructions [here (Enable Phone Number sign-in)](https://firebase.google.com/docs/auth/android/phone-auth) to enable Phone Number sign-in. 
 - Do not forget to enable app verification for your firebase project. Follow instructions [here (Enable app verification)](https://firebase.google.com/docs/auth/android/phone-auth#enable-app-verification) to enable app verification. Add both SHA-1 and SHA-256 fingerprints.
 
