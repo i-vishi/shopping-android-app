@@ -48,6 +48,8 @@ git clone https://github.com/i-vishi/shopping-android-app.git
 - The project requires Firebase. So follow the steps given [here (Add Firebase to Android Project)](https://firebase.google.com/docs/android/setup) to add firebase to your android project.
 - Download the firebase config file `google-services.json`
 - Move the config file to `(app)` module of the project.
+- Also, add Cloud Firestore for storing users, products, orders and addresses data. Follow instructions [here (Add Cloud Firestore to your app)](https://firebase.google.com/docs/firestore/quickstart) to add Cloud Firestore to your app.
+- This project also, requires OTP based authentication. So, you just need to enable Phone Number sign-in in your firebase project.
 
 ## Built With
 - Kotlin
