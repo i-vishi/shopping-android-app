@@ -52,13 +52,18 @@ git clone https://github.com/i-vishi/shopping-android-app.git
 - This project also, requires OTP based authentication. So, you just need to enable Phone Number sign-in in your firebase project. Follow instructions [here (Enable Phone Number sign-in)](https://firebase.google.com/docs/auth/android/phone-auth) to enable Phone Number sign-in. 
 - Do not forget to enable app verification for your firebase project. Follow instructions [here (Enable app verification)](https://firebase.google.com/docs/auth/android/phone-auth#enable-app-verification) to enable app verification. Add both SHA-1 and SHA-256 fingerprints.
 
+Tried everything but still not able to explore the app due to OTP errors? Don't worry, you can by-pass the OTP screen and explore the app.
+- Go to `app/src/main/java/com/vishalgaur/shoppingapp/Utils.kt` file.
+- Change the return value for function `shouldBypassOTPValidation()` to `true`.
+- You are good to go now. Just run the app and explore.
+- And take your time to setup the OTP verification. :wink:
+
 ## Built With
 - Kotlin
 - Firebase
 - Room
 - Material
 - Glide
-
 
 
 ---
