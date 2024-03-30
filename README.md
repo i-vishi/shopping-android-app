@@ -59,6 +59,18 @@ Tried everything but still not able to explore the app due to OTP errors? Don't 
 - You are good to go now. Just run the app and explore.
 - And take your time to setup the OTP verification. :wink:
 
+
+## Star History
+
+<a href="https://star-history.com/#i-vishi/shopping-android-app&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=i-vishi/shopping-android-app&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=i-vishi/shopping-android-app&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=i-vishi/shopping-android-app&type=Date" />
+ </picture>
+</a>
+
+
 ## Built With
 - Kotlin
 - Firebase
